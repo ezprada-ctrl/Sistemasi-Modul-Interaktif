@@ -1699,9 +1699,8 @@ function ReflectionFields({ block, onChange, inp, ta }: { block: Block; onChange
         Jawaban per nama &amp; NIP bisa diunduh di Command Center.
       </p>
       <p className="hint" style={{ fontSize: 11, margin: '-2px 0 8px' }}>
-        <b>Satu poin satu gambar latar.</b> Gambar tiap poin dipakai di belakang kartu poin itu; di sela-sela dua
-        poin, gambar melebur halus ke gambar berikutnya (tanpa garis batas), dan latar bergerak pelan di belakang
-        kartu yang meluncur (parallax). Rasio gambar bebas; yang rasionya jauh beda dari layar akan dipotong tepinya.
+        Gambar latar tiap poin otomatis <b>disatukan jadi satu latar panjang</b> tanpa batas antar gambar, dan
+        bergerak parallax di belakang kartu-kartunya. Urutannya mengikuti urutan poin; rasio gambar bebas.
       </p>
 
       <label style={{ display: 'flex', gap: 6, alignItems: 'center', fontSize: 12, fontWeight: 600, margin: '4px 0' }}>
@@ -1788,6 +1787,15 @@ function ReflectionFields({ block, onChange, inp, ta }: { block: Block; onChange
           <label style={lbl}>Gambar latar poin ini</label>
           <ImageUploadField value={it.img || ''} onUploaded={src => patch(i, { img: src })} />
           {it.img && <button onClick={() => patch(i, { img: '' })}>Hapus gambar</button>}
+          {/* Gambar latar disambung jadi satu pita: gambar yang sama di dua poin
+              terlihat berulang di belakang satu pertanyaan. Yang terdeteksi cuma
+              file/URL yang persis sama (mis. hasil salin atau impor JSON). */}
+          {it.img && items.some((o, x) => x !== i && o.img === it.img) && (
+            <p style={{ fontSize: 11, margin: '4px 0 0', color: '#9a5b00' }}>
+              ⚠ Gambar ini sama dengan gambar poin {items.findIndex((o, x) => x !== i && o.img === it.img) + 1}. Pakai gambar
+              yang berbeda supaya latarnya tidak terlihat berulang.
+            </p>
+          )}
         </div>
       ))}
       <div style={{ display: 'flex', gap: 6 }}>

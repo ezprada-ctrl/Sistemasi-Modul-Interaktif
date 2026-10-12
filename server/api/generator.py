@@ -688,7 +688,7 @@ def render_knowledge(b):
 
 def render_reflection(b):
     """Rangkaian poin refleksi: opening opsional, lalu satu panel per poin
-    di atas latar yang melebur antar poin dan digulir parallax, lalu tombol Kirim di ujung.
+    di atas latar menyatu yang digulir parallax, lalu tombol Kirim di ujung.
 
     Semua perilaku (batas pilihan, kolom "Lainnya", pengingat poin yang belum
     dijawab, kirim + kunci, efek parallax) ada di bagian REFLEKSI di
@@ -708,14 +708,12 @@ def render_reflection(b):
     def id_poin(it, n):
         return esc(str(it.get('id') or f'p{n}'))
 
-    # Satu poin = satu gambar latar. Gambar-gambar itu TIDAK jadi kotak sendiri-
-    # sendiri dan TIDAK disambung jadi pita panjang (itu membuat satu layar memuat
-    # potongan beberapa gambar): semuanya ditumpuk di SATU lapisan (.refl-stage)
-    # yang menempel pada layar dan hanyut pelan; pergantian gambar melebur sebentar
-    # saat tengah layar melewati celah antar dua kartu. Di belakang kartu yang
-    # sedang dibaca cuma ada gambar poin itu. Tinggi, kecepatan, dan pemilihan
-    # gambarnya dihitung di reflTataStage / reflPilihGambar (shell-template.html);
-    # di sini cuma urutan gambar, ditandai poin pemiliknya (data-untuk).
+    # Gambar latar tiap poin TIDAK jadi kotak sendiri-sendiri: semuanya disatukan
+    # jadi SATU latar panjang (.refl-stage) di belakang seluruh rangkaian kartu,
+    # digeser lebih lambat dari gulir dan disambung halus antar gambar. Tinggi,
+    # kecepatan, dan sambungannya dihitung di reflTataStage (shell-template.html);
+    # di sini cuma urutan gambarnya, ditandai poin pemiliknya (data-untuk) supaya
+    # tiap gambar dipasang sejajar dengan kartunya.
     # `reflBgImg` = peninggalan versi sebelumnya (satu gambar untuk semua poin);
     # masih dihormati, dan kalau ada ia satu-satunya gambar latar.
     bg_lama = (b.get('reflBgImg') or '').strip()
@@ -736,10 +734,9 @@ def render_reflection(b):
                   '<div class="refl-scroll-cue">Gulir untuk mulai refleksi ↓</div></section>')
 
     if gambar:
-        imgs = ''.join(f'<div class="refl-lap" data-untuk="{pid}"><img src="{esc(src)}" alt="" decoding="async"></div>'
-                       for pid, src in gambar)
-        # Sampul ikut DI DALAM latar menyatu (bukan kotak sendiri di atasnya),
-        # supaya sampul dan pertanyaan pertama tampil sebagai satu rangkaian.
+        imgs = ''.join(f'<img src="{esc(src)}" alt="" decoding="async" data-untuk="{pid}">' for pid, src in gambar)
+        # Sampul ikut DI DALAM latar menyatu sebagai "poster melayang" di atas
+        # gambar pertama, supaya sampul dan pertanyaan tampil sebagai satu rangkaian.
         parts.append(f'<div class="refl-stage"><div class="refl-sbg" aria-hidden="true">{imgs}</div>{sampul}')
     else:
         parts.append(sampul)
