@@ -1875,9 +1875,7 @@ body.demo-paused #demo-badge:hover{background:rgba(17,17,20,.92);}
 .refl-sbg.siap .refl-lap{transition:opacity .7s ease;}
 @media (prefers-reduced-motion:reduce){.refl-sbg.siap .refl-lap{transition:none;}}
 .refl-lap img{position:absolute;left:0;top:0;display:block;width:100%;height:100%;object-fit:cover;object-position:center;}
-/* Rasio gambar jauh beda dari kotaknya (panorama, layar HP): tampil UTUH di atas
-   salinannya yang diburamkan, bukan dipotong habis. */
-.refl-lap.utuh img{object-fit:contain;}
+
 /* Jarak antar kartu ~ satu layar: kartu-kartu bergantian mengisi layar, dan
    peleburan gambar terjadi sebentar di celah di antara dua kartu. */
 .refl-stage .refl-panel{background:none;overflow:visible;isolation:auto;border-radius:0;min-height:min(90vh,900px);}
@@ -7753,11 +7751,11 @@ function reflPilihGambar(sbg, tata, C){
    sedikit sebelum jadi target sampai sedikit sesudah ia digantikan (EXT px gulir,
    menutup peleburan yang masih berjalan kalau gulirnya cepat). Jadi tingginya
    hanya V + sedikit, bukan seluruh lapisan - gambar tak banyak terpotong.
+   Gambar selalu memenuhi kotaknya (cover). Mode "utuh + salinan buram" pernah
+   ada dan dibuang: di Live Preview hasilnya potongan tajam bergaris keras di
+   atas blur.
    Poin tanpa gambar ikut memakai gambar poin di atasnya, sampai gambar poin
-   berikutnya masuk menjelang kartunya.
-   Kalau memenuhi kotaknya menuntut memotong lebih dari 60% gambar (panorama,
-   atau layar HP yang sempit), gambar ditampilkan UTUH (contain) di atas salinannya
-   yang diburamkan, bukan dipotong habis. */
+   berikutnya masuk menjelang kartunya. */
 function reflTataStage(stage, sbg, Hc, V, W){
   const lap = Array.prototype.slice.call(sbg.querySelectorAll('.refl-lap'));
   const m = lap.length;
@@ -7795,22 +7793,6 @@ function reflTataStage(stage, sbg, Hc, V, W){
     const tinggi = sampai - dari;
     l.el.style.top = dari.toFixed(1) + 'px';
     l.el.style.height = tinggi.toFixed(1) + 'px';
-
-    const g = gambar[j];
-    const rb = W / tinggi;
-    const rg = g.naturalWidth ? g.naturalWidth / g.naturalHeight : 16 / 9;
-    const tampak = Math.min(rb, rg) / Math.max(rb, rg);
-    const utuh = !!g.naturalWidth && tampak < 0.4;
-    l.el.classList.toggle('utuh', utuh);
-    let blur = l.el.querySelector('.refl-bg-blur');
-    if(utuh && !blur){
-      blur = document.createElement('div');
-      blur.className = 'refl-bg-blur';
-      blur.style.backgroundImage = 'url("' + (g.currentSrc || g.src).replace(/"/g, '%22') + '")';
-      l.el.insertBefore(blur, g);
-    } else if(!utuh && blur){
-      blur.remove();
-    }
   });
   /* Gambar yang sedang tampil (target) dan timernya dibawa melewati tata ulang. */
   const lama = sbg._tata;
