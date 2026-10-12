@@ -1886,11 +1886,15 @@ body.demo-paused #demo-badge:hover{background:rgba(17,17,20,.92);}
 /* Gambar sampul tampil UTUH sesuai rasionya: tanpa zoom, tanpa parallax. Zoom
    (dulu scale 1.12) memotong ~6% tiap sisi, dan teks di gambar ikut terpotong. */
 .refl-open-img img{display:block;width:100%;height:auto;}
-/* Sampul di dalam latar menyatu: tanpa bingkai, tanpa salinan buram, tanpa jarak -
-   gambarnya selebar rangkaian dan langsung bersambung ke pertanyaan pertama. */
-.refl-stage .refl-opening{padding:0;min-height:0;background:none;border-radius:0;overflow:hidden;}
+/* Sampul di dalam latar menyatu, gaya "poster melayang": kartu bersudut bulat
+   dengan bingkai putih tipis + bayangan, melayang di atas gambar pertanyaan
+   pertama - jelas terbaca sebagai sampul, tapi tetap satu pemandangan. Bergerak
+   sedikit lebih cepat dari latar (reflParallax), sama seperti kartu pertanyaan. */
+.refl-stage .refl-opening{padding:clamp(18px,5vw,56px) clamp(14px,5vw,56px) 0;min-height:0;background:none;border-radius:0;overflow:visible;}
 .refl-stage .refl-opening .refl-bg-blur{display:none;}
-.refl-stage .refl-open-img{border-radius:0;box-shadow:none;transform:none!important;}
+.refl-stage .refl-open-img{border-radius:var(--radius-lg);border:2px solid rgba(255,255,255,.55);
+  box-shadow:0 26px 54px -18px rgba(5,10,25,.7),0 0 0 6px rgba(255,255,255,.08);}
+.refl-stage .refl-opening .refl-scroll-cue{bottom:-14px;}
 .refl-scroll-cue{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:rgba(10,18,40,.62);color:#fff;
   font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;animation:reflBob 1.8s ease-in-out infinite;white-space:nowrap;}
 @keyframes reflBob{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,5px);}}
@@ -7685,7 +7689,11 @@ function reflParallax(){
     if(panel.classList.contains('refl-opening')){
       const w = panel.querySelector('.refl-open-img');
       const blur = panel.querySelector('.refl-bg-blur');
-      if(w) w.style.transform = 'translate3d(0,' + (-pad * 0.85 * t).toFixed(1) + 'px,0)';
+      /* Di dalam latar menyatu sampul berperan sebagai lapisan depan (seperti
+         kartu): sedikit lebih CEPAT dari gulir. Di luar itu: bingkai bergeser
+         pelan di atas salinannya yang buram. */
+      const geserSampul = panel.closest('.refl-stage') ? Math.min(pad * 0.9, 36) * t : -pad * 0.85 * t;
+      if(w) w.style.transform = 'translate3d(0,' + geserSampul.toFixed(1) + 'px,0)';
       if(blur) blur.style.transform = 'translate3d(0,' + (-pad * 0.4 * t).toFixed(1) + 'px,0) scale(1.08)';
       return;
     }
