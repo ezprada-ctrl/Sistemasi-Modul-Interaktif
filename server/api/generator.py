@@ -729,15 +729,20 @@ def render_reflection(b):
                 gambar.append((id_poin(it, n), src))
 
     parts = [f'<div class="refl" data-refl="{bid}">']
+    sampul = ''
     if b.get('reflOpening') and b.get('reflOpeningImg'):
-        parts.append('<section class="refl-panel refl-opening">'
-                     f'<div class="refl-open-img"><img src="{esc(b["reflOpeningImg"])}" alt=""></div>'
-                     '<div class="refl-scroll-cue">Gulir untuk mulai refleksi ↓</div></section>')
+        sampul = ('<section class="refl-panel refl-opening">'
+                  f'<div class="refl-open-img"><img src="{esc(b["reflOpeningImg"])}" alt=""></div>'
+                  '<div class="refl-scroll-cue">Gulir untuk mulai refleksi ↓</div></section>')
 
     if gambar:
         imgs = ''.join(f'<div class="refl-lap" data-untuk="{pid}"><img src="{esc(src)}" alt="" decoding="async"></div>'
                        for pid, src in gambar)
-        parts.append(f'<div class="refl-stage"><div class="refl-sbg" aria-hidden="true">{imgs}</div>')
+        # Sampul ikut DI DALAM latar menyatu (bukan kotak sendiri di atasnya),
+        # supaya sampul dan pertanyaan pertama tampil sebagai satu rangkaian.
+        parts.append(f'<div class="refl-stage"><div class="refl-sbg" aria-hidden="true">{imgs}</div>{sampul}')
+    else:
+        parts.append(sampul)
 
     total = len(items)
     for n, it in enumerate(items, 1):

@@ -1886,6 +1886,11 @@ body.demo-paused #demo-badge:hover{background:rgba(17,17,20,.92);}
 /* Gambar sampul tampil UTUH sesuai rasionya: tanpa zoom, tanpa parallax. Zoom
    (dulu scale 1.12) memotong ~6% tiap sisi, dan teks di gambar ikut terpotong. */
 .refl-open-img img{display:block;width:100%;height:auto;}
+/* Sampul di dalam latar menyatu: tanpa bingkai, tanpa salinan buram, tanpa jarak -
+   gambarnya selebar rangkaian dan langsung bersambung ke pertanyaan pertama. */
+.refl-stage .refl-opening{padding:0;min-height:0;background:none;border-radius:0;overflow:hidden;}
+.refl-stage .refl-opening .refl-bg-blur{display:none;}
+.refl-stage .refl-open-img{border-radius:0;box-shadow:none;transform:none!important;}
 .refl-scroll-cue{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:rgba(10,18,40,.62);color:#fff;
   font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;animation:reflBob 1.8s ease-in-out infinite;white-space:nowrap;}
 @keyframes reflBob{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,5px);}}
@@ -7767,7 +7772,7 @@ function reflTataStage(stage, sbg, Hc, V, W){
   sbg.dataset.kunci = kunci;
 
   const SIGMA = 0.16, EXT = 450;
-  const panel = Array.prototype.slice.call(stage.querySelectorAll('.refl-panel'));
+  const panel = Array.prototype.slice.call(stage.querySelectorAll('.refl-panel[data-item]'));
   /* Tepi atas & bawah kartu tiap poin (koordinat rangkaian). Yang dipakai
      kartunya, bukan panelnya: panel lebih tinggi dari kartu. */
   const kartuAtas = panel.map(function(p){ const c = p.querySelector('.refl-card'); return p.offsetTop + (c ? c.offsetTop : 0); });
