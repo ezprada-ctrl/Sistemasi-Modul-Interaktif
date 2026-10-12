@@ -1865,7 +1865,7 @@ body.demo-paused #demo-badge:hover{background:rgba(17,17,20,.92);}
    Tanpa JS gambarnya bertumpuk diam (yang terakhir menutupi), tapi isi kartu
    tetap terbaca. */
 .refl-stage{position:relative;isolation:isolate;overflow:hidden;border-radius:var(--radius-lg);
-  background:linear-gradient(160deg,var(--navy-soft),var(--accent-soft));}
+  background:#0f1729;}
 .refl-stage::after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;
   background:linear-gradient(180deg,rgba(10,18,40,.04),rgba(10,18,40,.26));}
 .refl-sbg{position:absolute;left:0;right:0;top:0;height:100%;z-index:-2;will-change:transform;}
@@ -7764,7 +7764,9 @@ function reflPilihGambar(sbg, tata, C){
    sedikit sebelum jadi target sampai sedikit sesudah ia digantikan (EXT px gulir,
    menutup peleburan yang masih berjalan kalau gulirnya cepat). Jadi tingginya
    hanya V + sedikit, bukan seluruh lapisan - gambar tak banyak terpotong.
-   Gambar selalu memenuhi kotaknya (cover). Mode "utuh + salinan buram" pernah
+   Gambar tampil utuh selebar rangkaian; sisa atas-bawah memudar ke latar
+   gelap (lihat di bawah). Sebelumnya gambar memenuhi kotak (cover) dan
+   terpotong ~45% kiri-kanan pada gambar 16:9. Mode "utuh + salinan buram" pernah
    ada dan dibuang: di Live Preview hasilnya potongan tajam bergaris keras di
    atas blur.
    Poin tanpa gambar ikut memakai gambar poin di atasnya, sampai gambar poin
@@ -7806,6 +7808,21 @@ function reflTataStage(stage, sbg, Hc, V, W){
     const tinggi = sampai - dari;
     l.el.style.top = dari.toFixed(1) + 'px';
     l.el.style.height = tinggi.toFixed(1) + 'px';
+
+    /* Gambar ditampilkan UTUH selebar rangkaian (tidak di-zoom & dipotong kiri-
+       kanan). Kalau lebih pendek dari kotaknya, ia diletakkan di tengah dan tepi
+       atas-bawahnya memudar halus ke warna latar - tanpa garis keras, tanpa blur. */
+    const g = gambar[j];
+    const asli = g.naturalWidth ? W * g.naturalHeight / g.naturalWidth : 0;
+    if(asli && asli < tinggi){
+      const pudar = 'linear-gradient(180deg,transparent 0,#000 14%,#000 86%,transparent 100%)';
+      g.style.top = ((tinggi - asli) / 2).toFixed(1) + 'px';
+      g.style.height = asli.toFixed(1) + 'px';
+      g.style.webkitMaskImage = pudar;
+      g.style.maskImage = pudar;
+    } else {
+      g.style.top = g.style.height = g.style.webkitMaskImage = g.style.maskImage = '';
+    }
   });
   /* Gambar yang sedang tampil (target) dan timernya dibawa melewati tata ulang. */
   const lama = sbg._tata;
