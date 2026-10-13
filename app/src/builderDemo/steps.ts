@@ -255,6 +255,16 @@ export const BUILDER_DEMO_STEPS: DemoStep[] = [
         await D.type(field[i], entri.isi![i]);
       }
 
+      /* 2a. Blok yang dipamerkan sesudahnya KARYA ORANG LAIN (lihat
+             `inputCaption` di blokTur.ts): kertas kerja yang barusan
+             diketik dikelilingi dulu, supaya "begini cara mengisinya"
+             selesai diceritakan sebelum panggung pindah ke hasil jadinya. */
+      if (entri.inputCaption) {
+        await D.say(entri.inputCaption, 0);
+        await D.kelilingi(baris, 1);
+        await D.sleep(1600);
+      }
+
       /* 2b. Bentuk akhirnya dipasang sekaligus. Lihat catatan panjang di
              blokTur.ts: mengetik dua field pertama saja meninggalkan blok
              setengah jadi, dan pengunjung booth menilai PRODUKNYA dari
@@ -296,7 +306,7 @@ export const BUILDER_DEMO_STEPS: DemoStep[] = [
           if (entri.cobaCaption) await D.say(entri.cobaCaption, 0);
           for (const c of entri.coba) {
             D.chk();
-            if (c.gulir) await D.fgulir(c.gulir);
+            if (c.gulir) await D.fgulir(c.gulir, undefined, c.dalam);
             else if (c.ketik && c.sel) await D.fketik(c.sel, c.ketik);
             else if (c.sel) await D.fklik(c.sel);
             await D.sleep(c.jeda == null ? 1100 : c.jeda);

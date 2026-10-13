@@ -105,8 +105,10 @@ export interface DemoCtx {
   fteks: (sel: string, panggung?: Panggung) => string;
   /** gulir PELAN #viewport di dalam iframe sejauh px. Ada untuk blok yang
       fiturnya justru gerakan saat digulir (Refleksi: latar parallax) -
-      dilompat dengan scrollIntoView, efeknya tidak pernah kelihatan. */
-  fgulir: (px: number, panggung?: Panggung) => Promise<boolean>;
+      dilompat dengan scrollIntoView, efeknya tidak pernah kelihatan.
+      `dalam` = selektor iframe ANAK di dalam pratinjau: yang digulir halaman
+      di dalam iframe itu, bukan #viewport modulnya (lihat SAMBUNG_FRAME). */
+  fgulir: (px: number, panggung?: Panggung, dalam?: string) => Promise<boolean>;
 }
 
 /** Iframe mana yang jadi panggung: pratinjau slide di samping editor
@@ -143,14 +145,43 @@ function frameEl(panggung: Panggung = 'slide'): HTMLIFrameElement | null {
    diperkecil pakai transform, jadi satu piksel di dalamnya bukan satu piksel
    di layar. Skalanya DIHITUNG (lebar tampak / lebar layout), tidak disalin
    dari komponennya: angkanya berubah mengikuti lebar panel. */
-function titikFrame(el: Element, panggung: Panggung = 'slide'): { x: number; y: number } | null {
+function titikFrame(el: Element, panggung: Panggung = 'slide', anak: HTMLIFrameElement | null = null): { x: number; y: number } | null {
   const ifr = frameEl(panggung);
   if (!ifr) return null;
   const ir = ifr.getBoundingClientRect();
   const s = ifr.offsetWidth ? ir.width / ifr.offsetWidth : 1;
   const r = el.getBoundingClientRect();
   if (!r.width && !r.height) return null;   // elemennya sudah lepas dari dokumen
-  return { x: ir.left + (r.left + r.width / 2) * s, y: ir.top + (r.top + r.height / 2) * s };
+  /* Elemen di dalam iframe ANAK: koordinatnya relatif ke jendela iframe anak
+     itu, jadi digeser dulu sejauh posisi iframe anaknya di dokumen pratinjau. */
+  let dx = 0, dy = 0;
+  if (anak) {
+    const ar = anak.getBoundingClientRect();
+    dx = ar.left + anak.clientLeft;
+    dy = ar.top + anak.clientTop;
+  }
+  return { x: ir.left + (dx + r.left + r.width / 2) * s, y: ir.top + (dy + r.top + r.height / 2) * s };
+}
+
+/* Selektor bertingkat: "iframe.peta >>> #tombol" = cari iframe.peta di dalam
+   pratinjau, lalu #tombol di DALAM iframe itu. Dipakai blok HTML Bebas yang
+   menanam halaman interaktif utuh lewat <iframe srcdoc>: srcdoc mewarisi
+   origin induknya, jadi isinya tetap bisa disentuh dari sini. Selektor tanpa
+   " >>> " berperilaku persis seperti dulu. */
+const SAMBUNG_FRAME = ' >>> ';
+function cariDiFrame(sel: string, panggung: Panggung = 'slide'): { el: HTMLElement; anak: HTMLIFrameElement | null } | null {
+  try {
+    const doc = frameEl(panggung)?.contentDocument;
+    if (!doc) return null;
+    const [luar, dalam] = sel.split(SAMBUNG_FRAME);
+    if (dalam == null) {
+      const el = doc.querySelector<HTMLElement>(luar);
+      return el ? { el, anak: null } : null;
+    }
+    const anak = doc.querySelector<HTMLIFrameElement>(luar);
+    const el = anak?.contentDocument?.querySelector<HTMLElement>(dalam) || null;
+    return anak && el ? { el, anak } : null;
+  } catch { return null; }   // dokumen sedang berganti
 }
 
 /* React memasang setter-nya sendiri di properti `value`, jadi `el.value = x`
@@ -512,8 +543,7 @@ export class BuilderDemo {
         const habis = Date.now() + (batas == null ? 4000 : batas);
         for (;;) {
           chk();
-          let el: HTMLElement | null = null;
-          try { el = frameEl(panggung)?.contentDocument?.querySelector<HTMLElement>(sel) || null; } catch { /* dokumen sedang berganti */ }
+          const el = cariDiFrame(sel, panggung)?.el || null;
           if (el) return el;
           if (Date.now() > habis) return null;
           await sleep(140);
@@ -526,15 +556,23 @@ export class BuilderDemo {
            mengganti srcDoc iframe-nya, dan elemen yang dipegang pemanggil
            bisa saja sudah milik dokumen yang barusan dibuang - kliknya
            "berhasil" tapi tidak ada yang bergerak di layar. */
-        let el: HTMLElement | null = null;
-        try { el = frameEl(panggung)?.contentDocument?.querySelector<HTMLElement>(sel) || null; } catch { /* dokumen sedang berganti */ }
-        if (!el) return false;
+        const hit = cariDiFrame(sel, panggung);
+        if (!hit) return false;
+        const { el, anak } = hit;
         /* Digulirkan DI DALAM iframe dulu, lalu diukur: elemen yang berada di
            luar jendela iframe menghasilkan koordinat di luar kotak
-           pratinjaunya, dan kursor palsunya mendarat entah di mana. */
-        try { el.scrollIntoView({ block: 'center' }); } catch { /* jsdom / browser lama */ }
+           pratinjaunya, dan kursor palsunya mendarat entah di mana.
+           Di iframe anak: 'instant', karena halaman tempelan sering memasang
+           scroll-behavior:smooth dan pengukuran 360ms kemudian mendarat di
+           tengah animasi gulirnya. */
+        try {
+          if (anak) {
+            anak.scrollIntoView({ block: 'nearest', behavior: 'instant' as ScrollBehavior });
+            el.scrollIntoView({ block: 'center', behavior: 'instant' as ScrollBehavior });
+          } else el.scrollIntoView({ block: 'center' });
+        } catch { /* jsdom / browser lama */ }
         await sleep(360);
-        const p = titikFrame(el, panggung);
+        const p = titikFrame(el, panggung, anak);
         if (p) await cursorKe(p.x, p.y);
         await ping();
         el.click();
@@ -543,12 +581,29 @@ export class BuilderDemo {
       },
 
       fteks: (sel, panggung) => {
-        try { return frameEl(panggung)?.contentDocument?.querySelector(sel)?.textContent?.trim() || ''; }
-        catch { return ''; }
+        return cariDiFrame(sel, panggung)?.el.textContent?.trim() || '';
       },
 
-      fgulir: async (px, panggung) => {
+      fgulir: async (px, panggung, dalam) => {
         chk();
+        if (dalam) {
+          /* Halaman di dalam iframe anak: yang digulir jendelanya sendiri.
+             scrollBy 'instant' - lihat catatan scroll-behavior di fklik. */
+          let anak: HTMLIFrameElement | null = null;
+          try { anak = frameEl(panggung)?.contentDocument?.querySelector<HTMLIFrameElement>(dalam) || null; } catch { /* dokumen sedang berganti */ }
+          const win = anak?.contentWindow;
+          if (!anak || !win) return false;
+          const p = titikFrame(anak, panggung);
+          if (p) await cursorKe(p.x, p.y);
+          const n = Math.max(10, Math.round(Math.abs(px) / 18));
+          for (let i = 0; i < n; i++) {
+            chk();
+            win.scrollBy({ top: px / n, behavior: 'instant' as ScrollBehavior });
+            await sleep(45);
+          }
+          await sleep(300);
+          return true;
+        }
         let vp: HTMLElement | null = null;
         try { vp = frameEl(panggung)?.contentDocument?.getElementById('viewport') || null; } catch { /* dokumen sedang berganti */ }
         if (!vp) return false;
@@ -568,10 +623,10 @@ export class BuilderDemo {
 
       fketik: async (sel, teks, panggung) => {
         chk();
-        let el: HTMLInputElement | null = null;
-        try { el = frameEl(panggung)?.contentDocument?.querySelector<HTMLInputElement>(sel) || null; } catch { /* dokumen sedang berganti */ }
-        if (!el) return false;
-        const p = titikFrame(el, panggung);
+        const hit = cariDiFrame(sel, panggung);
+        if (!hit) return false;
+        const el = hit.el as HTMLInputElement;
+        const p = titikFrame(el, panggung, hit.anak);
         if (p) await cursorKe(p.x, p.y);
         try { el.focus(); } catch { /* iframe belum boleh menerima fokus */ }
         /* Setter polos + event 'input' sudah cukup DI SINI, tidak perlu akal

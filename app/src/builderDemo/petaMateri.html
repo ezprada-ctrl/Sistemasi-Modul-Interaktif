@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peta Materi — Pemeriksaan Pajak</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070b14;
+  --bg-2:#0c1324;
+  --surface:rgba(255,255,255,.035);
+  --surface-2:rgba(255,255,255,.06);
+  --border:rgba(255,255,255,.09);
+  --border-strong:rgba(255,255,255,.18);
+  --text:#eef1f8;
+  --text-dim:#9aa7c4;
+  --text-faint:#5c6788;
+  --gold:#d4a94a;
+  --gold-2:#f0c876;
+  --gold-glow:rgba(212,169,74,.45);
+  --gold-soft:rgba(212,169,74,.12);
+  --cyan:#2dd4cf;
+  --cyan-2:#8bf3ef;
+  --cyan-glow:rgba(45,212,207,.4);
+  --radius-lg:22px;
+  --radius-md:16px;
+  --shadow-lg:0 30px 70px -30px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:
+    radial-gradient(circle at 12% 8%, rgba(212,169,74,.10), transparent 40%),
+    radial-gradient(circle at 88% 18%, rgba(45,212,207,.10), transparent 42%),
+    radial-gradient(circle at 50% 95%, rgba(45,212,207,.06), transparent 45%),
+    linear-gradient(180deg,var(--bg),var(--bg-2) 40%,var(--bg));
+  background-attachment:fixed;
+  color:var(--text);
+  font-family:'Inter',ui-sans-serif,system-ui,sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+}
+h1,h2,h3,.font-display{font-family:'Plus Jakarta Sans',ui-sans-serif,system-ui,sans-serif;}
+::selection{background:var(--cyan-glow);color:#04211f;}
+* { scrollbar-width: thin; scrollbar-color: var(--gold) rgba(255,255,255,.04); }
+::-webkit-scrollbar{width:10px;}
+::-webkit-scrollbar-track{background:rgba(255,255,255,.03);}
+::-webkit-scrollbar-thumb{border-radius:10px;background:linear-gradient(180deg,var(--gold),var(--gold-2));}
+
+/* faint dot-grid tech texture */
+.grid-veil{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(rgba(255,255,255,.09) 1px, transparent 1px);
+  background-size:26px 26px;
+  mask-image:radial-gradient(ellipse 90% 70% at 50% 20%, black 40%, transparent 85%);
+  opacity:.5;
+}
+
+/* ---------------- Intro screen ---------------- */
+.intro-screen{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:24px;transition:opacity .5s ease, visibility .5s ease;
+}
+.intro-screen.hide{opacity:0;visibility:hidden;position:absolute;inset:0;pointer-events:none;}
+.hero{
+  position:relative;z-index:1;
+  max-width:920px;margin:0 auto;padding:24px;text-align:center;
+}
+.eyebrow-badge{
+  position:relative;display:inline-flex;align-items:center;
+  font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--cyan-2);background:rgba(45,212,207,.09);
+  padding:9px 22px;border-radius:40px;margin-bottom:22px;
+  animation:eyebrowPulse 2.8s ease-in-out infinite;
+}
+@keyframes eyebrowPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(45,212,207,.28);}
+  50%{box-shadow:0 0 20px 3px rgba(45,212,207,.28);}
+}
+.eyebrow-trace{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;}
+/* Base outline (always visible, faint) + a bright "comet" segment that
+   travels along that SAME outline via animated stroke-dashoffset - the
+   light reads as part of the line itself, not a dot floating near it. */
+.eyebrow-trace-rail{fill:none;stroke:rgba(45,212,207,.25);stroke-width:1.3;}
+.eyebrow-trace-comet{
+  fill:none;stroke:var(--cyan-2);stroke-width:2.2;stroke-linecap:round;
+  filter:drop-shadow(0 0 4px var(--cyan)) drop-shadow(0 0 10px rgba(45,212,207,.75));
+  animation:eyebrowTravel 3.2s linear infinite;
+}
+@keyframes eyebrowTravel{ to{ stroke-dashoffset:var(--travel-end,0); } }
+.hero h1{
+  font-size:clamp(30px,4.6vw,48px);font-weight:800;line-height:1.15;letter-spacing:-.01em;
+  background:linear-gradient(180deg,#ffffff,#c7d0e8);-webkit-background-clip:text;background-clip:text;color:transparent;
+  margin-bottom:16px;
+}
+.hero h1 span{background:linear-gradient(90deg,var(--gold),var(--gold-2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.hero p{color:var(--text-dim);font-size:15.5px;line-height:1.7;max-width:620px;margin:0 auto;}
+.hero p b{color:var(--text);font-weight:600;}
+
+.btn-enter{
+  display:inline-flex;align-items:center;gap:8px;margin-top:36px;
+  font-family:'Plus Jakarta Sans';font-weight:700;font-size:14.5px;color:#2a1c04;
+  background:linear-gradient(135deg,var(--gold),var(--gold-2));
+  border:none;padding:15px 30px;border-radius:40px;cursor:pointer;
+  box-shadow:0 14px 30px -12px var(--gold-glow);transition:.2s;
+}
+.btn-enter:hover{transform:translateY(-2px);box-shadow:0 18px 36px -12px var(--gold-glow);}
+.btn-enter:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;}
+
+/* ---------------- Journey ---------------- */
+.journey-wrap{display:none;}
+.journey-wrap.show{display:block;}
+.journey{
+  position:relative;z-index:1;
+  max-width:1000px;margin:0 auto;padding:20px 24px 100px;
+}
+.path-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+.path-svg path.rail{fill:none;stroke:rgba(255,255,255,.08);stroke-width:2;}
+.path-svg path.glow{fill:none;stroke:url(#railGrad);stroke-width:2;stroke-linecap:round;filter:drop-shadow(0 0 6px rgba(212,169,74,.35));}
+.travel-dot{filter:drop-shadow(0 0 8px var(--cyan)) drop-shadow(0 0 16px var(--cyan-glow));}
+
+.stop{
+  position:relative;z-index:1;
+  margin-bottom:64px;
+  opacity:0;transform:translateY(28px);
+  transition:opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1);
+}
+.stop.in-view{opacity:1;transform:translateY(0);}
+.stop:last-child{margin-bottom:0;}
+
+/* Marker + card live in their own mini-grid (.stop-top). stop-detail is a
+   plain block sibling BELOW it, not a grid item - animating max-height on
+   a grid item whose row track is auto-sized is fragile (the row's own
+   auto-height contribution can end up pinned to the item's collapsed
+   size instead of tracking its content), so the expanding panel is kept
+   out of the grid entirely. */
+.stop-top{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:8px;}
+.stop--right .stop-top .stop-card{grid-column:2;}
+.stop--right .stop-top .stop-marker-wrap{grid-column:1;justify-self:end;}
+.stop--left .stop-top .stop-card{grid-column:1;}
+.stop--left .stop-top .stop-marker-wrap{grid-column:2;justify-self:start;}
+/* Without this, Grid's sparse auto-placement bumps whichever item's
+   explicit column comes "before" the placement cursor onto its own new
+   row instead of sharing one with its sibling - bites here because
+   left/right stops swap which side is column 1 vs 2 while DOM order
+   stays marker-then-card. */
+.stop-top .stop-marker-wrap,.stop-top .stop-card{grid-row:1;}
+
+.stop-marker-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.stop-marker{
+  width:84px;height:84px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  background:radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 60%), linear-gradient(155deg,#141d33,#0a1224);
+  border:1px solid var(--border-strong);
+  box-shadow:0 0 0 6px rgba(255,255,255,.02), var(--shadow-lg);
+  position:relative;
+  cursor:pointer;transition:.25s;
+}
+.stop-marker::after{
+  content:'';position:absolute;inset:-6px;border-radius:50%;
+  border:1px solid rgba(212,169,74,.35);opacity:0;transition:.25s;
+}
+.stop-marker:hover{transform:translateY(-3px);box-shadow:0 0 0 6px rgba(212,169,74,.08), 0 20px 40px -16px var(--gold-glow);}
+.stop-marker:hover::after{opacity:1;inset:-10px;}
+.stop-marker:focus-visible,.stop-card:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;}
+.stop.active .stop-marker{border-color:var(--gold);box-shadow:0 0 0 6px var(--gold-soft), 0 0 30px -4px var(--gold-glow);}
+.stop-marker .ic{font-size:26px;line-height:1;}
+.stop-marker .n{
+  position:absolute;top:-8px;left:-8px;
+  width:26px;height:26px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#2a1c04;
+  font-family:'Plus Jakarta Sans';font-weight:800;font-size:12px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px -2px var(--gold-glow);
+}
+.stop-marker-label{
+  position:relative;z-index:2;
+  font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em;text-align:center;max-width:110px;
+  background:var(--bg-2);padding:3px 9px;border-radius:20px;
+  box-shadow:0 0 0 6px var(--bg-2);
+}
+
+.stop-card{
+  /* Solid-ish (not the faint --surface tint) so the winding path behind it
+     never bleeds through into the text - a decorative line crossing readable
+     copy is exactly what breaks legibility. */
+  background:rgba(12,19,36,.94);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:22px 24px;backdrop-filter:blur(6px);
+  cursor:pointer;transition:.2s;
+}
+.stop-card:hover{border-color:var(--border-strong);background:rgba(16,24,44,.96);}
+.stop.active .stop-card{border-color:rgba(212,169,74,.4);}
+.stop-tag{
+  display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--cyan-2);background:rgba(45,212,207,.08);border:1px solid rgba(45,212,207,.22);
+  padding:4px 10px;border-radius:20px;margin-bottom:10px;
+}
+.stop-card h3{font-size:19px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.3;}
+.stop-card .desc{font-size:13.5px;color:var(--text-dim);line-height:1.6;}
+.stop-toggle{
+  display:flex;align-items:center;gap:6px;margin-top:14px;
+  font-size:12.5px;font-weight:600;color:var(--gold-2);
+}
+.stop-toggle .chev{
+  display:inline-flex;transition:transform .25s;
+  animation:chevPulse 2s ease-in-out infinite;
+}
+.stop.active .stop-toggle .chev{transform:rotate(180deg);animation:none;}
+@keyframes chevPulse{0%,100%{transform:translateY(0);}50%{transform:translateY(3px);}}
+
+.stop-detail{
+  max-height:0;overflow:hidden;
+  transition:max-height .45s cubic-bezier(.16,1,.3,1);
+}
+.stop.active .stop-detail{max-height:600px;}
+.stop-detail-inner{
+  margin-top:18px;padding:20px 22px;border-radius:var(--radius-md);
+  background:rgba(9,14,27,.94);
+  border:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;
+}
+.subtopic{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--border);
+  font-size:13px;color:var(--text-dim);line-height:1.5;
+}
+.subtopic .bullet{
+  flex-shrink:0;width:22px;height:22px;border-radius:7px;
+  background:var(--gold-soft);color:var(--gold-2);
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;
+  font-family:'Plus Jakarta Sans';
+}
+.subtopic b{color:var(--text);font-weight:600;}
+
+/* sequential (stage) variant for Tahapan Pemeriksaan */
+.subtopic.seq .bullet{background:var(--cyan-glow);color:#04211f;}
+
+/* ---------------- Footer ---------------- */
+.footer{
+  position:relative;z-index:1;text-align:center;padding:40px 24px 60px;
+  color:var(--text-faint);font-size:12px;
+}
+.footer b{color:var(--text-dim);}
+
+/* Compact-but-still-2-column tier - keeps the winding path + side-by-side
+   marker/card layout (what makes this look "keren") down to a much
+   narrower width than before. Matters because embedding this as a
+   Storyline Web Object often means it renders in something narrower than
+   a full desktop browser tab even at "full slide" size. Only genuinely
+   phone-narrow widths (below the second breakpoint) fall back to a
+   stacked, path-less layout. */
+@media (max-width:900px){
+  .journey{max-width:100%;padding:16px 14px 80px;}
+  .stop{margin-bottom:46px;}
+  .stop-top{gap:6px;}
+  .stop-marker{width:64px;height:64px;}
+  .stop-marker .ic{font-size:22px;}
+  .stop-marker .n{width:22px;height:22px;font-size:10.5px;top:-6px;left:-6px;}
+  .stop-marker-label{font-size:10px;max-width:92px;}
+  .stop-card{padding:16px 18px;}
+  .stop-tag{font-size:9.5px;padding:3px 9px;}
+  .stop-card h3{font-size:16.5px;}
+  .stop-card .desc{font-size:12.5px;}
+  .stop-detail-inner{padding:14px 16px;}
+}
+
+@media (max-width:520px){
+  .stop-top{grid-template-columns:1fr;gap:14px;}
+  .stop--right .stop-top .stop-card,.stop--left .stop-top .stop-card{grid-column:1;}
+  .stop--right .stop-top .stop-marker-wrap,.stop--left .stop-top .stop-marker-wrap{grid-column:1;justify-self:start;flex-direction:row;}
+  .stop-marker{width:60px;height:60px;}
+  .stop-marker .ic{font-size:20px;}
+  .stop-marker .n{width:20px;height:20px;font-size:10px;top:-6px;left:-6px;}
+  .stop-marker-label{display:none;}
+  .path-svg{display:none;}
+  .stop-detail-inner{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="grid-veil"></div>
+
+<section class="intro-screen" id="introScreen">
+  <header class="hero">
+    <span class="eyebrow-badge" id="eyebrowBadge">
+      Peta Materi
+      <svg class="eyebrow-trace" id="eyebrowTrace">
+        <rect class="eyebrow-trace-rail" id="eyebrowRail"/>
+        <rect class="eyebrow-trace-comet" id="eyebrowComet"/>
+      </svg>
+    </span>
+    <h1>Perjalanan Belajar<br><span>Metode Pemeriksaan Pajak</span></h1>
+    <p>Dari gambaran umum sampai teknik pemeriksaan, klik tiap pemberhentian untuk lihat sub-topik singkatnya.</p>
+    <button class="btn-enter" id="btnEnter">Lanjut →</button>
+  </header>
+</section>
+
+<div class="journey-wrap" id="journeyWrap">
+  <main class="journey" id="journey">
+    <svg class="path-svg" id="pathSvg">
+      <defs>
+        <linearGradient id="railGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#d4a94a"/>
+          <stop offset="50%" stop-color="#2dd4cf"/>
+          <stop offset="100%" stop-color="#d4a94a"/>
+        </linearGradient>
+      </defs>
+      <path class="rail" id="railPath" d=""/>
+      <path class="glow" id="glowPath" d="" stroke-dasharray="14 10"/>
+      <circle class="travel-dot" id="travelDot" r="4.5" fill="#8bf3ef"/>
+    </svg>
+  </main>
+
+  <footer class="footer">
+    Presented by: <b>Fungsional Pengembang Teknologi Pembelajaran</b>
+  </footer>
+</div>
+
+<script>
+const STOPS = [
+  {
+    n: 1, icon: '🔍', tag: 'Modul 1 · Section A',
+    title: 'Gambaran Umum Pemeriksaan',
+    desc: 'Dasar, aturan main, dan siapa saja yang terlibat dalam Pemeriksaan Pajak.',
+    subtopics: [
+      'Pengertian, Tujuan &amp; Dasar Hukum Pemeriksaan',
+      'Tipe, Jenis &amp; Ruang Lingkup Pemeriksaan',
+      'Kriteria Pemeriksaan — Menguji Kepatuhan &amp; Tujuan Lain',
+      'Standar Pemeriksaan — Umum, Pelaksanaan &amp; Pelaporan',
+      'Jangka Waktu Pemeriksaan',
+      'Unit Pelaksana, Pemeriksa Pajak &amp; SP2',
+    ],
+  },
+  {
+    n: 2, icon: '🧭', tag: 'Modul 1 · Alur Kegiatan', sequential: true,
+    title: 'Tahapan Pemeriksaan',
+    desc: 'Alur kegiatan pemeriksaan dari penugasan sampai penerbitan produk hukum.',
+    subtopics: [
+      'Penugasan Pemeriksaan (Penerbitan SP2)',
+      'Tahap Persiapan Pemeriksaan',
+      'Tahap Pelaksanaan Pemeriksaan',
+      'Tahap Pelaporan Hasil Pemeriksaan',
+    ],
+  },
+  {
+    n: 3, icon: '⚖️', tag: 'Modul 1 · Section B & C',
+    title: 'Aspek Hukum Pemeriksaan Pajak',
+    desc: 'Kedudukan hukum, hak-kewajiban para pihak, hingga etika profesi pemeriksa.',
+    subtopics: [
+      'Dasar Hukum &amp; Kedudukan Pemeriksaan dalam Hukum Pajak',
+      'Kewenangan &amp; Kewajiban Pemeriksa',
+      'Hak, Kewajiban &amp; Kuasa Wajib Pajak',
+      'Ketentuan Pidana &amp; Kerahasiaan Jabatan',
+      'Etika Profesi &amp; Kode Etik Pemeriksa',
+    ],
+  },
+  {
+    n: 4, icon: '🧮', tag: 'Modul 2 · Seluruh Section',
+    title: 'Metode, Teknik & Prosedur Pemeriksaan',
+    desc: 'Cara kerja teknis pemeriksa menguji angka dan menemukan bukti di lapangan.',
+    subtopics: [
+      'Tujuan Pemeriksaan atas Pos yang Diperiksa',
+      'Bukti Pemeriksaan',
+      'Metode Pemeriksaan — Langsung &amp; Tidak Langsung',
+      'Teknik &amp; Prosedur Pemeriksaan (17 teknik)',
+    ],
+  },
+];
+
+function renderStops(){
+  const journey = document.getElementById('journey');
+  STOPS.forEach((s, i) => {
+    const side = i % 2 === 0 ? 'left' : 'right';
+    const el = document.createElement('article');
+    el.className = `stop stop--${side}`;
+    el.id = `stop-${s.n}`;
+    el.innerHTML = `
+      <div class="stop-top">
+        <div class="stop-marker-wrap">
+          <div class="stop-marker" data-toggle="${s.n}" role="button" tabindex="0" aria-expanded="false">
+            <span class="n">${s.n}</span>
+            <span class="ic">${s.icon}</span>
+          </div>
+          <span class="stop-marker-label">${s.title}</span>
+        </div>
+        <div class="stop-card" data-toggle="${s.n}" role="button" tabindex="0" aria-expanded="false">
+          <span class="stop-tag">${s.tag}</span>
+          <h3>${s.title}</h3>
+          <p class="desc">${s.desc}</p>
+          <div class="stop-toggle"><span>Lihat sub-topik</span><span class="chev">▾</span></div>
+        </div>
+      </div>
+      <div class="stop-detail">
+        <div class="stop-detail-inner">
+          ${s.subtopics.map((t, ti) => `
+            <div class="subtopic${s.sequential ? ' seq' : ''}">
+              <span class="bullet">${s.sequential ? (ti + 1) : '✓'}</span>
+              <span>${t}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+    journey.appendChild(el);
+  });
+}
+
+function toggleStop(n){
+  const stop = document.getElementById(`stop-${n}`);
+  const willOpen = !stop.classList.contains('active');
+  document.querySelectorAll('.stop.active').forEach(s => {
+    if (s !== stop) { s.classList.remove('active'); s.querySelectorAll('[data-toggle]').forEach(t => t.setAttribute('aria-expanded', 'false')); }
+  });
+  stop.classList.toggle('active', willOpen);
+  stop.querySelectorAll('[data-toggle]').forEach(t => t.setAttribute('aria-expanded', String(willOpen)));
+  if (willOpen) setTimeout(() => stop.scrollIntoView({ behavior: 'smooth', block: 'center' }), 120);
+  // Expanding/collapsing a stop's detail panel pushes every stop below it up
+  // or down - the connecting path was drawn against the OLD marker positions,
+  // so without this it can end up curving straight through a panel that just
+  // grew taller. Redraw once now (rough) and again after the max-height
+  // transition settles (exact final layout).
+  drawPath();
+  setTimeout(drawPath, 480);
+}
+function bindToggles(){
+  document.querySelectorAll('[data-toggle]').forEach(el => {
+    el.addEventListener('click', () => toggleStop(el.dataset.toggle));
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleStop(el.dataset.toggle); }
+    });
+  });
+}
+
+/* ---------------- Connecting path (SVG, computed from marker positions) ---------------- */
+let travelRAF = null;
+function drawPath(){
+  const svg = document.getElementById('pathSvg');
+  const journey = document.getElementById('journey');
+  const rect = journey.getBoundingClientRect();
+  svg.setAttribute('viewBox', `0 0 ${rect.width} ${rect.height}`);
+  svg.setAttribute('width', rect.width);
+  svg.setAttribute('height', rect.height);
+
+  const markers = STOPS.map(s => document.querySelector(`#stop-${s.n} .stop-marker`));
+  const points = markers.map(m => {
+    const r = m.getBoundingClientRect();
+    return { x: r.left + r.width / 2 - rect.left, y: r.top + r.height / 2 - rect.top };
+  });
+  if (points.length < 2) return;
+
+  let d = `M ${points[0].x} ${points[0].y}`;
+  for (let i = 1; i < points.length; i++) {
+    const p0 = points[i - 1], p1 = points[i];
+    const midY = (p0.y + p1.y) / 2;
+    d += ` C ${p0.x} ${midY}, ${p1.x} ${midY}, ${p1.x} ${p1.y}`;
+  }
+  document.getElementById('railPath').setAttribute('d', d);
+  const glowPath = document.getElementById('glowPath');
+  glowPath.setAttribute('d', d);
+
+  startTravelDot(glowPath);
+}
+
+function startTravelDot(pathEl){
+  if (travelRAF) cancelAnimationFrame(travelRAF);
+  const dot = document.getElementById('travelDot');
+  const len = pathEl.getTotalLength();
+  if (!len) return;
+  let t = 0;
+  function tick(){
+    t = (t + 0.0032) % 1;
+    const pt = pathEl.getPointAtLength(t * len);
+    dot.setAttribute('cx', pt.x);
+    dot.setAttribute('cy', pt.y);
+    travelRAF = requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+function bindReveal(){
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
+  }, { threshold: 0.2 });
+  document.querySelectorAll('.stop').forEach(el => io.observe(el));
+}
+
+/* ---------------- Eyebrow badge: light traveling around its own outline ---------------- */
+function drawEyebrowTrace(){
+  const badge = document.getElementById('eyebrowBadge');
+  const svg = document.getElementById('eyebrowTrace');
+  const rail = document.getElementById('eyebrowRail');
+  const comet = document.getElementById('eyebrowComet');
+  const w = badge.offsetWidth, h = badge.offsetHeight;
+  if (!w || !h) return;
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  svg.setAttribute('width', w);
+  svg.setAttribute('height', h);
+  const r = h / 2;
+  [rail, comet].forEach(el => {
+    el.setAttribute('x', 1);
+    el.setAttribute('y', 1);
+    el.setAttribute('width', w - 2);
+    el.setAttribute('height', h - 2);
+    el.setAttribute('rx', r - 1);
+    el.setAttribute('ry', r - 1);
+  });
+
+  // Comet = a short bright stroke segment on the SAME outline as the rail,
+  // made to look like it's "traveling" by animating stroke-dashoffset one
+  // full perimeter (a plain CSS animation, not a per-frame JS loop, so it
+  // isn't tied to requestAnimationFrame timing at all).
+  const len = rail.getTotalLength();
+  if (!len) return;
+  const cometLen = Math.max(24, len * 0.16);
+  comet.style.strokeDasharray = `${cometLen} ${len - cometLen}`;
+  comet.style.setProperty('--travel-end', -len);
+}
+
+function bindEnter(){
+  document.getElementById('btnEnter').addEventListener('click', () => {
+    document.getElementById('introScreen').classList.add('hide');
+    const wrap = document.getElementById('journeyWrap');
+    wrap.classList.add('show');
+    drawPath();
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  });
+}
+
+renderStops();
+bindToggles();
+bindReveal();
+bindEnter();
+drawEyebrowTrace();
+window.addEventListener('resize', () => {
+  clearTimeout(window._rt);
+  window._rt = setTimeout(() => {
+    drawEyebrowTrace();
+    if (document.getElementById('journeyWrap').classList.contains('show')) drawPath();
+  }, 150);
+});
+</script>
+</body>
+</html>

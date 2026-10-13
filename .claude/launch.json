@@ -23,6 +23,14 @@
       ],
       "port": 4173,
       "cwd": "app"
+    },
+    {
+      "name": "backend",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "server/api/index.py"
+      ],
+      "port": 5800
     }
   ]
 }
