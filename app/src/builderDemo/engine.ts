@@ -103,6 +103,10 @@ export interface DemoCtx {
       di sana membuat langkahnya memamerkan "tidak ditemukan", persis
       kebalikan dari yang mau ditunjukkan. */
   fteks: (sel: string, panggung?: Panggung) => string;
+  /** gulir PELAN #viewport di dalam iframe sejauh px. Ada untuk blok yang
+      fiturnya justru gerakan saat digulir (Refleksi: latar parallax) -
+      dilompat dengan scrollIntoView, efeknya tidak pernah kelihatan. */
+  fgulir: (px: number, panggung?: Panggung) => Promise<boolean>;
 }
 
 /** Iframe mana yang jadi panggung: pratinjau slide di samping editor
@@ -541,6 +545,25 @@ export class BuilderDemo {
       fteks: (sel, panggung) => {
         try { return frameEl(panggung)?.contentDocument?.querySelector(sel)?.textContent?.trim() || ''; }
         catch { return ''; }
+      },
+
+      fgulir: async (px, panggung) => {
+        chk();
+        let vp: HTMLElement | null = null;
+        try { vp = frameEl(panggung)?.contentDocument?.getElementById('viewport') || null; } catch { /* dokumen sedang berganti */ }
+        if (!vp) return false;
+        const p = titikFrame(vp, panggung);
+        if (p) await cursorKe(p.x, p.y);
+        /* Langkah kecil berjeda: tiap langkah memicu event scroll di dalam
+           iframe, dan dari situlah latarnya bergeser lebih lambat dari kartu. */
+        const n = Math.max(10, Math.round(Math.abs(px) / 18));
+        for (let i = 0; i < n; i++) {
+          chk();
+          vp.scrollTop += px / n;
+          await sleep(45);
+        }
+        await sleep(300);
+        return true;
       },
 
       fketik: async (sel, teks, panggung) => {

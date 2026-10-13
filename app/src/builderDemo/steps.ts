@@ -290,12 +290,15 @@ export const BUILDER_DEMO_STEPS: DemoStep[] = [
            dalam iframe. Kalau sampai batas tetap tidak ada - jaringan booth
            sedang buruk - seluruh bagian ini dilewati, dan yang sudah
            ditonton penonton (perakitan + bentuk jadinya) tetap utuh. */
-        const siap = await D.ftunggu(entri.coba[0].sel, 9000);
+        const pertama = entri.coba.find(c => c.sel)?.sel;
+        const siap = pertama ? await D.ftunggu(pertama, 9000) : null;
         if (siap) {
           if (entri.cobaCaption) await D.say(entri.cobaCaption, 0);
           for (const c of entri.coba) {
             D.chk();
-            await D.fklik(c.sel);
+            if (c.gulir) await D.fgulir(c.gulir);
+            else if (c.ketik && c.sel) await D.fketik(c.sel, c.ketik);
+            else if (c.sel) await D.fklik(c.sel);
             await D.sleep(c.jeda == null ? 1100 : c.jeda);
           }
         }
@@ -585,7 +588,7 @@ export const BUILDER_DEMO_STEPS: DemoStep[] = [
   {
     id: 'command',
     label: 'Command Center',
-    caption: 'Sesudah modulnya dipakai, rekaman belajar peserta masuk ke sini — per orang, per slide. Terkunci password, isinya data sungguhan.',
+    caption: 'Sesudah modulnya dipakai, rekaman belajar peserta masuk ke sini — per orang, per slide, per video, lengkap dengan panduan cara membaca tabelnya. Jawaban Refleksi per nama & NIP pun terkumpul di sini dan bisa diunduh sebagai Excel. Terkunci password, isinya data sungguhan.',
     run: async (D, cap) => {
       const t = T('command');
       if (!t) return false;

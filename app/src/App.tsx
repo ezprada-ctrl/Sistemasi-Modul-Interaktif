@@ -365,8 +365,18 @@ function App() {
      sebelumnya. */
   useEffect(() => {
     if (!demoBooth || !hydrated) return;
+    /* ?langkah=<id>[,<id>] (bersama ?demo=1) memutar langkah tertentu saja -
+       buat penjaga booth yang mau mengecek satu fitur tanpa menunggu satu
+       putaran penuh. Id yang tidak ada diabaikan; kalau tidak ada yang cocok,
+       demo jalan utuh seperti biasa. */
+    let langkah = BUILDER_DEMO_STEPS;
+    try {
+      const pilih = (new URLSearchParams(window.location.search).get('langkah') || '').split(',').filter(Boolean);
+      const cocok = BUILDER_DEMO_STEPS.filter(st => pilih.includes(st.id));
+      if (cocok.length) langkah = cocok;
+    } catch { /* URL tak terbaca: demo utuh */ }
     const demo = new BuilderDemo(
-      BUILDER_DEMO_STEPS,
+      langkah,
       () => resetHistory(sampleProject()),
       /* Jalur data buat yang mustahil lewat UI di booth - memilih berkas
          gambar. Lihat catatannya di DemoCtx.patch. setModule, bukan

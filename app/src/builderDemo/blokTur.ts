@@ -1,4 +1,4 @@
-import { GAMBAR_SAMPUL_CONTOH } from './sampleAssets';
+import { GAMBAR_SAMPUL_CONTOH, LATAR_REFLEKSI_CONTOH, POSTER_REFLEKSI_CONTOH } from './sampleAssets';
 
 /* Isian contoh tiap tipe blok buat Demo Booth Penyusun.
  *
@@ -50,8 +50,11 @@ export interface EntriBlok {
       dicari ULANG tiap klik - sebagian sasaran (tombol tutup popup, pilihan
       jawaban sesudah umpan balik) memang baru lahir akibat klik sebelumnya.
       Yang tidak ketemu dilewati diam-diam; satu sasaran meleset tidak boleh
-      menjatuhkan sisa bloknya. */
-  coba?: { sel: string; jeda?: number }[];
+      menjatuhkan sisa bloknya.
+
+      Selain klik: `gulir` = gulir pelan di dalam pratinjau sejauh px (buat
+      fitur yang hidupnya saat digulir), `ketik` = ketik teks ke `sel`. */
+  coba?: { sel?: string; jeda?: number; gulir?: number; ketik?: string }[];
   /** Kalimat yang menemani `coba`. Dipisah dari `caption` karena tugasnya
       beda: caption menjelaskan blok APA ini, yang ini menjelaskan apa yang
       barusan terjadi di layar. */
@@ -317,25 +320,44 @@ export const TUR_BLOK: EntriBlok[] = [
   },
   {
     tipe: 'reflection',
-    caption: 'Refleksi — rangkaian poin renungan bergambar yang digulir parallax. Jawaban tiap peserta tercatat per nama & NIP dan bisa diunduh sebagai Excel.',
-    cobaCaption: 'Batas pilihan ditegakkan sendiri — centang melebihi batas ditolak dengan pemberitahuan.',
+    caption: 'Refleksi — poin renungan di atas latar bergambar. Gambar tiap poin disambung jadi satu pemandangan panjang yang bergerak lebih lambat dari kartunya (parallax), dibuka poster sampul yang melayang.',
+    cobaCaption: 'Dicoba seperti peserta: digulir, latarnya mengalir pelan; batas pilihan ditegakkan sendiri; poin yang terlewat diingatkan sebelum dikirim. Jawaban terkirim sekali lalu terkunci, tercatat per nama & NIP, dan bisa diunduh sebagai Excel dari Command Center.',
     coba: [
-      { sel: '.refl-panel[data-item] .refl-opt:nth-child(1)', jeda: 900 },
-      { sel: '.refl-panel[data-item] .refl-opt:nth-child(2)', jeda: 900 },
-      { sel: '.refl-panel[data-item] .refl-opt:nth-child(3)', jeda: 2400 },
+      { sel: '.refl-opening', jeda: 900 },
+      { gulir: 520, jeda: 500 },
+      { sel: '.refl-panel[data-item="demo-r1"] .refl-opt:nth-child(1)', jeda: 700 },
+      { sel: '.refl-panel[data-item="demo-r1"] .refl-opt:nth-child(2)', jeda: 700 },
+      /* Pilihan ketiga melebihi batas 2 - DITOLAK, dan pemberitahuannya muncul. */
+      { sel: '.refl-panel[data-item="demo-r1"] .refl-opt:nth-child(3)', jeda: 2200 },
+      { gulir: 700, jeda: 400 },
+      { sel: '.refl-panel[data-item="demo-r2"] .refl-text', ketik: 'Bagaimana mempercepat pertanggungjawaban akhir tahun?', jeda: 600 },
+      { gulir: 900, jeda: 400 },
+      /* Poin 3 SENGAJA dibiarkan kosong: tombol Kirim lalu memperlihatkan
+         pengingat poin yang terlewat, dan "Kembali mengisi" mengantar ke
+         poinnya. Tidak pernah benar-benar mengirim - kiriman mengunci blok
+         (tersimpan di perangkat) dan putaran demo berikutnya mewarisinya. */
+      { sel: '.refl-submit', jeda: 2600 },
+      { sel: '.refl-dlg-act button.utama', jeda: 1800 },
     ],
     isi: ['Titik mana yang paling butuh perhatian di unit Anda?'],
     lengkap: {
+      reflOpening: true,
+      reflOpeningImg: POSTER_REFLEKSI_CONTOH,
       reflItems: [
         {
-          id: 'demo-r1', kind: 'pilihan', max: 2, lainnya: true,
+          id: 'demo-r1', kind: 'pilihan', max: 2, lainnya: true, img: LATAR_REFLEKSI_CONTOH[0],
           q: 'Titik mana yang paling butuh perhatian di unit Anda?',
           opts: ['Perencanaan anggaran', 'Pelaksanaan pembayaran', 'Pertanggungjawaban'],
         },
         {
-          id: 'demo-r2', kind: 'isian',
+          id: 'demo-r2', kind: 'isian', img: LATAR_REFLEKSI_CONTOH[1],
           q: 'Satu pertanyaan apa yang ingin Anda bawa ke sesi klasikal?',
           placeholder: 'Tulis jawaban Anda di sini (1–2 kalimat).',
+        },
+        {
+          id: 'demo-r3', kind: 'pilihan', max: 1, img: LATAR_REFLEKSI_CONTOH[2],
+          q: 'Seberapa siap unit Anda menerapkan materi ini besok?',
+          opts: ['Siap sepenuhnya', 'Perlu pendampingan', 'Belum siap'],
         },
       ],
     },

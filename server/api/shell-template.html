@@ -6789,6 +6789,63 @@ const DEMO_ACTIONS = {
     if(lanjut) await D.click(lanjut);
   },
 
+  /* Refleksi dipakai seperti peserta: digulir pelan (latar parallax-nya cuma
+     kelihatan saat bergerak), dicentang sampai batasnya ditolak, diisi, lalu
+     Kirim ditekan dengan satu poin SENGAJA kosong - yang tampil pengingat
+     poin terlewat, dan "Kembali mengisi" mengantar ke poinnya. Tidak pernah
+     benar-benar mengirim: kiriman mengunci blok di perangkat (localStorage),
+     dan putaran demo berikutnya akan mewarisi blok yang terkunci. */
+  'reflection': async (D, cap) => {
+    const idx = demoSlideIdx('refl-panel');
+    if(idx < 0) return false;
+    await D.goTo(idx); presRevealAll();
+    await D.say(cap, 0);
+    const vp = document.getElementById('viewport');
+    const panels = demoQA('.refl-panel[data-item]');
+    if(!vp || !panels.length) return false;
+    const kePanel = async (p) => {
+      const jarak = p.getBoundingClientRect().top - vp.getBoundingClientRect().top - vp.clientHeight * 0.15;
+      await D.scrollBy(jarak, Math.max(18, Math.round(Math.abs(jarak) / 22)));
+      await D.sleep(500);
+    };
+    let kosongDisisakan = false;
+    for(let i = 0; i < panels.length; i++){
+      D.chk();
+      const p = panels[i];
+      await kePanel(p);
+      /* Poin terakhir dibiarkan kosong (kalau ada lebih dari satu poin) -
+         itu yang memunculkan pengingat saat Kirim. */
+      if(i === panels.length - 1 && panels.length > 1){ kosongDisisakan = true; continue; }
+      if(p.dataset.kind === 'isian'){
+        const t = p.querySelector('.refl-text');
+        if(t) await D.type(t, 'Bagaimana mempercepat pertanggungjawaban di akhir tahun?');
+      } else {
+        const max = parseInt(p.dataset.max || '0', 10);
+        const opsi = Array.prototype.slice.call(p.querySelectorAll('.refl-opt'))
+          .filter(function(o){ return o.querySelector('input').value !== 'lainnya'; });
+        /* Satu lebih dari batasnya, supaya penolakannya kelihatan. */
+        const n = Math.min(opsi.length, max > 1 ? max + 1 : 1);
+        for(let k = 0; k < n; k++){ await D.click(opsi[k]); }
+        if(max > 1 && n > max) await D.sleep(1600);
+      }
+    }
+    const kirim = demoQ('.refl-submit');
+    if(kirim){
+      await D.click(kirim);
+      await D.sleep(2200);
+      /* Pengingat: tombol utamanya "Kembali mengisi". Kalau semua terisi
+         (blok satu poin), yang muncul konfirmasi - tombol non-utamanya
+         "Periksa lagi". Dua-duanya TIDAK mengirim. */
+      const tombol = kosongDisisakan
+        ? document.querySelector('.refl-dlg-act button.utama')
+        : document.querySelector('.refl-dlg-act button:not(.utama)');
+      if(tombol) await D.click(tombol);
+      await D.sleep(1400);
+    }
+    document.querySelectorAll('.refl-dlg').forEach(function(d){ d.remove(); });
+    demoLogEvent('reflection_answer', panels.length + ' poin refleksi · per nama & NIP');
+  },
+
   /* Dua bagian, karena captionnya menjanjikan dua hal: MENCATAT di slide,
      lalu MENINJAU semuanya dari satu tempat. Sampai sebelum ini langkahnya
      tidak pernah jalan sama sekali - #coc-fab tidak ada di berkas demo (lihat

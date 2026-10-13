@@ -156,6 +156,12 @@ export const DEMO_STEPS: DemoStep[] = [
     applies: (_m, f) => f.blockTypes.has('knowledge'),
   },
   {
+    id: 'reflection',
+    label: 'Refleksi (jawaban peserta)',
+    defaultCaption: 'Refleksi: peserta menjawab poin demi poin di atas latar bergambar yang mengalir pelan saat digulir. Batas pilihan dijaga, poin yang terlewat diingatkan — lalu jawaban dikirim sekali, terkunci, dan tercatat per nama & NIP.',
+    applies: (_m, f) => f.blockTypes.has('reflection'),
+  },
+  {
     id: 'cocreation',
     label: 'Co-creation (catatan peserta)',
     defaultCaption: 'Peserta mencatat apa pun yang terbesit di tiap slide, lalu meninjaunya dari satu tempat.',
