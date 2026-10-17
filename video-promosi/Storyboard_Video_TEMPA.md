@@ -64,16 +64,19 @@ Catatan: panel browser di sesi ini gagal memuat aplikasi online (berkas utamanya
 
 ---
 
-## C. Panduan gaya (ringkas; rincian ikut mesin `panjang.html`)
+## C. Panduan gaya — "Bara TEMPA" (revisi 4, menggantikan gaya biru-malam yang sama dengan ORBIT)
 
-- **Latar:** biru malam `#0B1220` dengan gradasi ke `#14203A`, aurora pelan, kisi titik. Aksen `#0A84FF` / `#7CC4FF`, kata negatif `#FF9F0A`. Huruf Inter, label mono JetBrains Mono.
-- **Kartu layar:** foto asli aplikasi dalam kartu kaca, skala 0,86. Kartu lama menyusut, memudar, dan mengabur; kartu baru muncul dari 1,06.
-- **Teks:** pil kaca di sepertiga bawah, muncul per kata (naik + kabur → tajam), **bukan efek ketik**, maksimal 2 baris, bertahan ≥1,2 detik setelah lengkap.
-- **Label menu:** pil mono kecil di kiri atas kartu, misalnya `TEMPA · 6 Command Center`.
-- **Penanda beruntun:** bunyi `tik` yang **sama** (tidak menaik), selang 0,2 detik.
-- **Logo:** tiga ubin kaca gelap bercahaya biru (logo-1, logo-2, logo-3, urutan tetap). Versi kecil di kanan bawah sejak adegan 2, versi besar di penutup.
-- **Kamera:** setiap zoom menjaga seluruh deretan tab/tombol yang disorot tetap di dalam bingkai.
-- **Efek suara yang dipakai:** `kertas`, `tik`, `klik`, `whoosh`, `sapu`, `denting`, `stempel`, `kunci`, `buka` (jendela muncul), `akor` (penutup). **Tanpa musik dan tanpa dengung latar.**
+Dipilih pemilik lewat pertanyaan penajaman: arah **Bara TEMPA**, transisi **sapuan panel**, teks **kolom samping**, penanda **coretan tangan**.
+
+- **Latar:** arang hangat (`#15100D`→`#1A120E`) bertekstur butir halus, cahaya bara oranye-merah bernapas pelan dari bawah, percikan bara kecil naik perlahan. Tanpa aurora, tanpa kisi titik, tanpa biru.
+- **Huruf:** Bricolage Grotesque (teks & judul), IBM Plex Mono (label & rujukan), Caveat (tulisan tangan di nomor dan catatan).
+- **Layar aplikasi:** di kanan (skala 0,85), bingkai tegas cokelat tua, **bayangan blok bara** 18 px; tanpa kaca/blur.
+- **Teks narasi:** kolom kiri selebar 540 px, rata kiri, garis bara di sisi kiri, dipusatkan tegak; kata muncul bergeser dari kiri (bukan efek ketik, tanpa kabur). Kata kunci → oranye bara, kata negatif → merah bata.
+- **Pergantian adegan:** panel bara bergaris diagonal menyapu layar aplikasi dari kiri (0,22 dtk), menahan, lalu membuka ke kanan; kartu ditukar di balik panel.
+- **Penanda:** sorotan = coretan spidol oranye yang tergambar mengelilingi elemen (hijau/kuning untuk benar/peringatan); nomor = lingkaran gores bertulisan tangan; balon = catatan kertas tempel miring; stabilo = sapuan oranye tidak rata.
+- **Label menu:** kode bara + teks mono kapital di kiri atas kolom teks. **Nama blok** (karya tim) = pita oranye miring di pojok kiri atas layar. **Rujukan** = kotak mono di kiri bawah kolom teks.
+- **Logo:** tiga ubin gelap berbingkai bara; kecil di kanan bawah, besar di penutup. Penutup: kartu mengecil ke tengah atas → ubin logo → "TEMPA" → "Pusat Pendidikan dan Pelatihan Pajak" → baris mono.
+- **Suara:** tetap efek suara saja, tanpa musik; sapuan panel memakai bunyi `sapu`; penanda beruntun bunyi `tik` yang sama.
 
 ---
 
