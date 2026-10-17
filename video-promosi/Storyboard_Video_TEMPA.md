@@ -86,40 +86,40 @@ Catatan: panel browser di sesi ini gagal memuat aplikasi online (berkas utamanya
 | 3 | Setelah diunggah, laporan durasi bisa menipu: \| yang modulnya {{ditinggal makan siang}} tampak paling rajin. | 10,3 – 15,4 | — |
 | 4 | Rekap peserta lintas modul? \| {{Digabung sendiri di Excel.}} | 15,7 – 20,2 | — |
 | 5 | Kenalkan: [[TEMPA,]] ekosistem modul interaktif. | 20,8 – 24,8 | Beranda |
-| 6 | Dari file PowerPoint sampai [[rekaman belajar peserta,]] \| dalam satu aplikasi, tanpa menulis kode. | 25,1 – 30,0 | Beranda |
+| 6 | Dari file PowerPoint sampai [[laporan aktivitas peserta,]] \| tanpa menulis satu baris kode pun. | 25,1 – 30,0 | Beranda |
 | 7 | [[Enam tab,]] berurutan seperti alur kerjamu. | 30,3 – 33,8 | Beranda |
-| 8 | Unggah PPTX yang biasa kamu pakai mengajar. \| Teks, gambar, dan tabel [[diambil otomatis.]] | 34,2 – 39,4 | 1 Import PPTX |
+| 8 | File presentasi yang biasa dipakai mengajar langsung jadi sumber. \| Teks, gambar, dan tabel [[diambil otomatis.]] | 34,2 – 39,4 | 1 Import PPTX |
 | 9 | Susun slide dengan [[menyeret,]] \| seperti menata kartu di meja. | 40,0 – 45,0 | 2 Susun Modul |
 | 10 | Ketik di kiri, [[hasilnya langsung tampil]] di kanan. \| Tidak perlu ekspor dulu. | 45,3 – 50,2 | 2 Susun Modul |
 | 11 | [[19 jenis blok]] siap pakai. \| Begini wujudnya di modul buatan tim: | 50,6 – 55,4 | 2 Susun Modul · karya tim |
-| 12 | Akordeon, tab, diagram alur, popup, \| semuanya [[bisa diklik peserta.]] | 55,7 – 60,8 | 2 Susun Modul · karya tim |
-| 13 | Video yang [[terekam lama tontonnya,]] \| dan cek paham sebelum pindah slide. | 61,1 – 66,0 | 2 Susun Modul · karya tim |
-| 14 | Paket [[Articulate]] dan halaman HTML buatan sendiri \| ikut hidup di dalam slide. | 66,3 – 71,2 | 2 Susun Modul · karya tim |
+| 12 | Akordeon, tab, diagram alur, popup: \| materi dipecah supaya [[tidak membebani sekaligus.]] | 55,7 – 60,8 | 2 Susun Modul · karya tim |
+| 13 | Lama tonton video [[ikut terekam,]] \| dan cek paham muncul sebelum pindah slide. | 61,1 – 66,0 | 2 Susun Modul · karya tim |
+| 14 | Paket [[Articulate]] yang pernah dibuat tim, juga HTML sendiri, \| berjalan apa adanya di dalam slide. | 66,3 – 71,2 | 2 Susun Modul · karya tim |
 | 15 | Lalu [[Refleksi:]] peserta memilih, \| lalu menuliskan renungannya sendiri. | 71,5 – 76,8 | 2 Susun Modul · karya tim |
 | 16 | [[Enam tema warna,]] sepuluh gaya grafis. \| Satu klik, seluruh modul ikut berubah. | 77,4 – 82,2 | 3 Tema |
-| 17 | Di sini juga ada satu centang penting: \| [[rekam aktivitas peserta.]] | 82,5 – 87,2 | 3 Tema |
-| 18 | Kuis [[per bagian,]] kunci jawabannya ditandai di tempat. \| Posisi jawaban benar diacak otomatis. | 87,6 – 92,4 | 4 Kuis |
+| 17 | Satu centang menghidupkan [[rekam aktivitas peserta,]] \| dan kesiapan sistemnya langsung dicek. | 82,5 – 87,2 | 3 Tema |
+| 18 | Kuis [[per bagian]] jadi gerbang: lulus dulu, baru lanjut. \| Posisi jawaban benar diacak otomatis. | 87,6 – 92,4 | 4 Kuis |
 | 19 | Jalankan modulnya utuh, \| [[persis seperti yang dilihat peserta.]] | 92,8 – 97,6 | 5 Preview & Export |
-| 20 | Hasilnya satu [[berkas HTML mandiri,]] \| atau [[paket SCORM]] siap unggah ke LMS. | 97,9 – 103,0 | 5 Preview & Export |
-| 21 | Saat dipakai, yang melewati slide terlalu cepat \| [[diingatkan sebelum masuk kuis.]] | 103,4 – 108,8 | Sisi peserta |
+| 20 | Hasilnya satu [[berkas HTML mandiri]] tanpa server, \| atau [[paket SCORM]] siap unggah ke LMS. | 97,9 – 103,0 | 5 Preview & Export |
+| 21 | Slide yang dibuka jauh di bawah [[waktu baca wajar]] \| memicu peringatan sebelum kuis. | 103,4 – 108,8 | Sisi peserta |
 | 22 | Semua jejak belajar itu bermuara ke sini: \| [[Command Center.]] | 109,2 – 113,8 | 6 Command Center |
 | 23 | Isinya data pribadi, jadi [[dikunci password]] \| yang diperiksa di server. | 114,1 – 119,0 | 6 Command Center |
 | 24 | Mau belajar membacanya dulu? \| Ada [[mode contoh]] berisi data karangan. | 119,3 – 124,2 | 6 Command Center |
 | 25 | Satu data, [[tiga cara baca:]] \| per modul, per peserta, dan catatan peserta. | 124,5 – 129,2 | 6 Command Center |
 | 26 | [[Empat angka]] jadi tempat mendarat, \| termasuk siapa yang {{perlu ditindaklanjuti.}} | 129,5 – 134,6 | 6 Command Center |
-| 27 | Waktu [[tatap layar]] dipisah dari waktu {{ditinggal.}} \| Diam 4 menit atau pindah tab, hitungan berhenti. | 134,9 – 140,6 | 6 Command Center |
-| 28 | Kolom slide menunjukkan [[sejauh mana materi dibuka,]] \| termasuk yang bolak-balik. | 140,9 – 146,0 | 6 Command Center |
-| 29 | Klik peringatan: kelihatan [[slide mana]] \| yang dilewati terlalu cepat. | 146,3 – 151,6 | 6 Command Center |
+| 27 | Waktu [[tatap layar]] dipisah dari waktu {{ditinggal:}} \| berhenti dihitung saat pindah tab atau diam lebih dari 4 menit. | 134,9 – 140,6 | 6 Command Center |
+| 28 | Kolom slide langsung menjawab: \| [[ada materi yang terlewat atau tidak.]] | 140,9 – 146,0 | 6 Command Center |
+| 29 | Klik peringatan: kelihatan [[slide mana]] \| yang dibuka kurang dari separuh waktu bacanya. | 146,3 – 151,6 | 6 Command Center |
 | 30 | Video juga: [[berapa persen ditonton,]] \| yang di bawah 20% ditandai. | 151,9 – 157,0 | 6 Command Center |
 | 31 | Kuis dihitung dari [[berapa kali gagal,]] \| termasuk yang menyerah tanpa mengulang. | 157,3 – 162,4 | 6 Command Center |
-| 32 | Cek paham dan paket [[Articulate]] pun \| ikut tercatat per peserta. | 162,7 – 167,2 | 6 Command Center |
+| 32 | Cek paham dicatat terpisah dari kuis: \| [[mengukur pemahaman,]] bukan kelulusan. | 162,7 – 167,2 | 6 Command Center |
 | 33 | Tampilan per peserta merangkum [[satu orang lintas modul,]] \| lengkap dengan nilai tiap modulnya. | 167,5 – 172,8 | 6 Command Center |
 | 34 | Satu NIP dengan nama berbeda? \| [[Ditandai,]] bukan disembunyikan. | 173,1 – 177,8 | 6 Command Center |
 | 35 | Semua bisa [[diunduh ke Excel:]] \| per sesi, per peserta, per slide, per video. | 178,1 – 183,2 | 6 Command Center |
-| 36 | Catatan peserta terkumpul [[mengikuti alur materi,]] \| lengkap dengan siapa yang menulisnya. | 183,5 – 188,8 | 6 Command Center |
+| 36 | Catatan peserta terkumpul [[mengikuti alur materi:]] \| bagian mana yang paling dipertanyakan, dan oleh siapa. | 183,5 – 188,8 | 6 Command Center |
 | 37 | Jawaban [[Refleksi]] per nama dan NIP \| ikut terkumpul, siap diunduh. ⚠ *lihat keputusan F2* | 189,1 – 193,8 | 6 Command Center |
 | 38 | Bingung arti kolomnya? [[Cara baca tabel]] menjelaskan \| kenapa begini, dan kapan perlu curiga. | 194,1 – 199,6 | 6 Command Center |
-| 39 | Dari sini kelihatan bagian modul mana \| yang [[perlu diperbaiki di modul berikutnya.]] | 199,9 – 205,0 | 6 Command Center |
+| 39 | Dari sini terbaca bagian modul yang [[paling menarik perhatian,]] \| dan yang perlu diperbaiki di modul berikutnya. | 199,9 – 205,0 | 6 Command Center |
 | 40 | Pekerjaan [[tersimpan sendiri,]] salah langkah bisa dibatalkan, \| beberapa project jalan bersamaan. | 205,6 – 210,6 | — |
 | 41 | Modul tanpa centang rekam [[tidak mengirim data apa pun.]] \| Paket SCORM-nya sudah diuji unggah ke KLC. | 211,0 – 216,2 | — |
 | 42 | Bahannya sudah ada di PowerPoint-mu. \| Sisanya [[cukup disusun.]] | 216,5 – 221,2 | — |
@@ -337,3 +337,26 @@ Keputusan F1–F6 dari draf pertama sempat kamu setujui dengan pilihan default s
 | HTML Bebas | **Peta Materi Pemeriksaan Pajak** (pilihan pemilik, G8) | Endy (rangkuman KB1–KB4, Shadow Economy ×2) | Karya Endy mengubah seluruh tampilan modul jadi krem |
 
 Modul utama untuk layar editor, pratinjau, dan sisi peserta (adegan 4, 5, 6, 7, 8): **Salma — *Gambaran Umum dan Tahapan Pemeriksaan*** (24 slide, 15 jenis blok, bergambar sampul). Modul ini paling beragam isinya dan tiga bloknya juga terpilih di atas.
+
+---
+
+## I. Sumber teks layar & label rujukan (revisi 3, atas arahan pemilik)
+
+Teks penjelasan di layar kini dirujuk ke tiga sumber:
+1. **Panduan Fitur** (`Panduan-Fitur-Template-Modul-Ikram.html`): kalimat resmi tiap fitur, mis. "tanpa perlu menulis satu baris kode pun", "file presentasi yang sudah dipakai untuk mengajar langsung bisa dipakai sebagai sumber", "bagian mana yang paling dipertanyakan, dan oleh siapa", "mana yang perlu diperbaiki di modul berikutnya".
+2. **Panduan cara baca Command Center** (tersimpan di server, `/api/panduan-cc`): alasan per kolom, mis. "Pecahan langsung menjawab 'ada yang kelewat atau tidak'", Knowledge Check "mengukur pemahaman, bukan kelulusan", status Articulate "diambil dari laporan paket itu".
+3. **Catatan dasar riset** di memori proyek lama (`~/.claude/projects/...-pilar-kolaborasi-pajak/memory/`): `project_idle_threshold_riset.md`, `project_reading_speed_brysbaert.md`, `project_rekap_peserta_popup.md` (bagian "TEORI PEMBELAJARAN").
+
+Label kecil **RUJUKAN** muncul di kiri bawah hanya pada momen yang berdasar riset:
+
+| Momen | Label | Kaitan fitur–riset |
+|---|---|---|
+| Karya tim: akordeon/tab/alur/popup (0:56–1:00,6) | Beban kognitif · Sweller (1988); Mayer & Moreno (2003) | **Disimpulkan** — teori ada di daftar "teori pembelajaran untuk paparan", pemetaannya ke blok buka-tutup belum tertulis eksplisit |
+| Karya tim: video (1:01,3–1:03,2) | Keterlibatan video · Guo, Kim & Rubin (2014) | **Disimpulkan** (idem) |
+| Karya tim: cek paham (1:03,6–1:05,8) | *Testing effect* · Roediger & Karpicke (2006) | **Disimpulkan** (idem) |
+| Kuis per bagian (1:27,9–1:32,2) | *Mastery learning* · Bloom (1968) | Eksplisit: catatan menyebut gerbang kuis = Mastery Learning |
+| Peringatan baca cepat (1:43,7–1:48,6) | 238 kata/menit · Brysbaert (2019), meta-analisis 190 studi | Eksplisit |
+| Tatap layar vs ditinggal (2:15,2–2:20,4) | Ambang diam 3–5 menit · Hubstaff; Huang, White & Buscher (2012) | Eksplisit (keputusan ambang 4 menit) |
+| Rincian peringatan (2:26,6–2:31,4) | Waktu baca minimum = kata ÷ 238 × 60 detik · Brysbaert (2019) | Eksplisit |
+
+Teori lain di catatan yang belum dipakai di layar: Kulhavy (1977) dan Hattie & Timperley (2007) untuk umpan balik, Black & Wiliam (1998) untuk asesmen formatif, Mayer & Moreno (2002) untuk modalitas, Knowles (1975, 1980) untuk navigasi bebas setelah kuis terbuka, dan Deci & Ryan (1985/2000) untuk nada "Ringkasan Belajarmu".
