@@ -16,7 +16,7 @@ const exe = ['C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', 'C:
   const err = await kirim('Runtime.evaluate', { expression: 'typeof window.__tl', returnByValue: true }); console.log('tl:', err.result.result.value);
   fs.mkdirSync(path.join(__dirname, '..', 'pratinjau'), { recursive: true });
   for (const t of process.argv.slice(2)) {
-    await kirim('Runtime.evaluate', { expression: 'window.__tl.seek(' + t + ', true); 1' }); await tunda(400);
+    await kirim('Runtime.evaluate', { expression: 'window.__tl.seek(' + t + ', true); window.__vidSeek && window.__vidSeek(); 1' }); await tunda(1500);
     const g = await kirim('Page.captureScreenshot', { format: 'jpeg', quality: 80 });
     fs.writeFileSync(path.join(__dirname, '..', 'pratinjau', 't-' + t + '.jpg'), Buffer.from(g.result.data, 'base64'));
   }

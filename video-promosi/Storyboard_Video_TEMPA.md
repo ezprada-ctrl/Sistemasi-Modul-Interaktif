@@ -1,6 +1,6 @@
 # Storyboard Video Promosi — TEMPA (versi panjang)
 
-**Durasi:** ±3:48 (228 detik) · **Format:** 16:9, 1920 × 1080 · **Tanpa narator, tanpa musik** — efek suara saja.
+**Durasi:** ±3:57 (237 detik) · **Format:** 16:9, 1920 × 1080 · **Tanpa narator, tanpa musik** — efek suara saja.
 **Penonton:** PTP (Pengembang Teknologi Pembelajaran) · **Sapaan:** "kamu", santai semi-formal.
 **Bentuk jadi:** halaman animasi `video-promosi/panjang.html` (mesin disalin dari video Simulator Pajak Minimum Global), direkam pemilik dengan Win + Alt + R.
 **Status:** DISETUJUI & DIBANGUN (`panjang.html`) — revisi 2 — tiap blok yang dipamerkan kini memakai **karya penyusun sungguhan yang terbaik** (lihat bagian H). Menunggu persetujuan pemilik sebelum foto layar dan pembangunan video.
@@ -211,6 +211,20 @@ Setiap blok tampil sebagai kartu foto **hasil jadi modul sungguhan** (bukan cont
 | 1:32,6 | Foto **preview** (modul contoh tampil utuh: sampul/slide + menu samping) | Kartu masuk; kamera mendorong pelan 1,0 → 1,1 | #19 | — |
 | 1:37,9 | Foto **export** (tombol ekspor HTML & "Export SCORM (.zip)") | Silang; sorot dua tombol bergantian | #20 | `tik` ×2 |
 | 1:40,0 | Sama | Kursor klik "Export SCORM (.zip)"; ikon berkas `.zip` terbang keluar dari tombol ke pojok kartu | #20 | `klik`, `whoosh` |
+
+### Adegan 7b — Paket Modul: banyak modul jadi satu berkas (1:43,0 – 1:52,0, sisipan revisi 5)
+
+Semua adegan sesudahnya bergeser **+9 dtk** dari jam yang tertulis di storyboard ini (di kode lewat `GESER`).
+
+| Detik | Yang tampil | Efek | Teks | Suara |
+|---|---|---|---|---|
+| 1:43,0 | Foto **paket-isi**: dialog Export Paket Modul berisi tiga modul seri Pemeriksaan (Salma Modul 1, Deswita Modul 2, Cindi Modul 3), nama pelatihan terisi | Coretan di tiga nama modul (beruntun 0,2 dtk); catatan "seri Pemeriksaan: modul Salma, Deswita, Cindi" | "Beberapa modul bisa dirakit jadi [[satu paket:]] \| dashboard di depan, modulnya tertanam di dalam." | `tik` ×3 |
+| 1:45,8 | Foto **paket-kisi**: kisi 10 gaya | Nomor 1–10 (selang 0,12 dtk) | — | `tik` ×10 (sama) |
+| 1:47,9 – 1:51,8 | **paket-gaya-0…9** (Panel, Indeks, Orbit, Terminal, Kartu, Linimasa, Metro, Majalah, Rak, Fokus) dalam mode "Coba ukuran penuh" | Berganti tiap 0,38 dtk, nama gaya di pita oranye | "[[Sepuluh tampilan dashboard,]] \| semuanya bisa diintip dulu sebelum dipilih." | `tik` tiap ganti |
+
+Daftar draft (memuat nama penyusun) tidak ikut terpotret; alamat draft di daftar urutan disamarkan menjadi "draft penyusun". Sumber kalimat: tur demo aplikasi (`builderDemo/steps.ts`, langkah "Banyak modul jadi satu").
+
+**Blok Video (adegan 4b):** video asli karya Endy kini benar-benar diputar ±1,6 dtk (dari detik ke-8 video, tanpa suara) di atas fotonya, diambil langsung dari penyimpanan modul — butuh internet saat merekam.
 
 ### Adegan 8 — Sisi peserta (1:43,2 – 1:48,8) · label `Sisi peserta`
 

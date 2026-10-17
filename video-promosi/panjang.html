@@ -73,6 +73,7 @@ body.rekam,body.rekam *{cursor:none!important}
 .baris-seret img{position:absolute;left:-44px;top:-441px;width:1366px;height:768px}
 .rujukan{position:absolute;left:40px;bottom:40px;display:flex;gap:12px;align-items:center;max-width:820px;padding:11px 18px;border-radius:12px;background:rgba(11,18,32,.72);border:1px solid var(--tepi);backdrop-filter:blur(12px);font:500 18px/1.3 var(--mono);color:#cfd8ea;opacity:0;z-index:21}
 .rujukan b{font:600 13px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--latar);background:var(--aksen-terang);padding:6px 8px;border-radius:6px;flex:none}
+.vid-karya{position:absolute;object-fit:contain;background:#000;border-radius:12px}
 /* kartu kaca */
 .kartu{position:absolute;left:277px;top:41.25px;width:1366px;height:768px;border-radius:24px;opacity:0;transform:scale(.86)}
 .kartu::before{content:"";position:absolute;inset:-60px;border-radius:80px;background:radial-gradient(closest-side,rgba(10,132,255,.35),transparent);filter:blur(30px);z-index:-1}
@@ -250,8 +251,8 @@ body.rekam,body.rekam *{cursor:none!important}
 <div id="kontrol">
   <button id="btnPutar" class="utama" type="button">Jeda</button>
   <button id="btnUlang" type="button">Ulang</button>
-  <input id="geser" type="range" min="0" max="228.2" step="0.01" value="0" aria-label="Posisi video">
-  <span id="waktu">0:00,0 / 3:48</span>
+  <input id="geser" type="range" min="0" max="237.2" step="0.01" value="0" aria-label="Posisi video">
+  <span id="waktu">0:00,0 / 3:57</span>
   <button id="btnSuara" type="button">Suara: nyala</button>
   <button id="btnPenuh" type="button">Layar penuh</button>
   <button id="btnRekam" type="button">Rekam bersih</button>
@@ -262,7 +263,7 @@ body.rekam,body.rekam *{cursor:none!important}
 'use strict';
 const P = document.getElementById('panggung');
 const $ = (id) => document.getElementById(id);
-const DURASI = 228.2;
+const DURASI = 228.2;   /* + 9 dtk sisipan Paket Modul lewat GESER = 3:57,2 */
 
 /* ---------- skala panggung ---------- */
 function skala() { const s = Math.min(innerWidth / 1920, innerHeight / 1080); P.style.transform = 'translate(' + (innerWidth - 1920 * s) / 2 + 'px,' + (innerHeight - 1080 * s) / 2 + 'px) scale(' + s + ')'; }
@@ -329,6 +330,12 @@ function buatTeks(teks, tag) { const t = el('div', 'teks', $('teks-wadah'), (tag
 
 /* ---------- linimasa ---------- */
 const tl = gsap.timeline({ paused: true });
+/* Sisipan adegan "Paket Modul" (9 dtk) setelah Preview & Export: semua posisi waktu >= 103,0 yang ditulis
+   di linimasa otomatis digeser +9 dtk, KECUALI saat GESER.aktif dimatikan (adegan sisipan ditulis dengan
+   waktu sebenarnya). Dengan begini angka-angka adegan lain di storyboard tetap bisa dicocokkan (+9). */
+const GESER = { aktif: true, mulai: 103.15, dt: 9 };
+['to', 'fromTo', 'set', 'call'].forEach((m) => { const asli = tl[m].bind(tl); const idx = { to: 2, fromTo: 3, set: 2, call: 2 }[m];
+  tl[m] = function () { const a = [...arguments]; if (GESER.aktif && typeof a[idx] === 'number' && a[idx] >= GESER.mulai) a[idx] += GESER.dt; return asli(...a); }; });
 const sfx = (nama, t) => tl.call(() => Suara.bunyi(nama), null, t);
 
 function teksMasuk(t, at) {
@@ -399,7 +406,7 @@ function balon(teks, at, titik, akhir, gelap) {
   tl.to(b, { opacity: 0, y: -8, duration: .25 }, akhir);
 }
 
-/* ====================== VIDEO PANJANG TEMPA (±3:48) — tanpa narator, tanpa musik, teks tampil penuh ====================== */
+/* ====================== VIDEO PANJANG TEMPA (±3:57) — tanpa narator, tanpa musik, teks tampil penuh ====================== */
 const svgNS = 'http://www.w3.org/2000/svg';
 /* teks dua baris: " | " = pindah baris */
 let __akhir = -1;
@@ -570,6 +577,16 @@ p = keP(560, 654, c.k); kursor(58.3, p, .6); klik(59.0, p);
 jendela(c.K, 'karya-popup-2', R([480, 172, 720, 423])).buka(59.1);
 c = karya(['karya-video-1', 'karya-video-2'], 60.8, 63.4, 'Video', 1.15, 840, 500);
 p = keP(840, 504, c.k); kursor(60.9, p, .5); klik(61.5, p); silang(c.K, 'karya-video-2', 61.6, .3);
+/* video asli karya Endy benar-benar diputar ±3 dtk di atas fotonya (bisu: video tanpa narator/musik) */
+const vid = el('video', 'vid-karya', c.K.lapis); vid.src = 'https://fhlivnsasjgedeltaopv.supabase.co/storage/v1/object/public/modul-media/1788853313716-003g10q9xumja.mp4';
+Object.assign(vid, { muted: true, playsInline: true, preload: 'auto' }); vid.muted = true;
+Object.assign(vid.style, { left: '382px', top: '237px', width: '915px', height: '534px', opacity: 0 });
+c.K.kamera.insertBefore(vid, c.K.lapis);
+tl.call(() => { try { vid.currentTime = 8; if (!tl.paused()) vid.play().catch(() => {}); } catch (e) {} }, null, 61.55);
+tl.set(vid, { opacity: 1 }, 61.6);
+tl.call(() => vid.pause(), null, 63.2);
+const vidSeek = () => { const t = tl.time(); if (t >= 61.6 && t < 63.4) { try { vid.currentTime = 8 + (t - 61.6); } catch (e) {} } };
+window.__vidSeek = vidSeek;
 kalimat('Lama tonton video [[ikut terekam,]] | dan cek paham muncul sebelum pindah slide.', 61.1, 66.0);
 rujukan('Keterlibatan video · Guo, Kim &amp; Rubin (2014)', 61.3, 63.2);
 rujukan('<i>Testing effect</i> · Roediger &amp; Karpicke (2006)', 63.6, 65.8);
@@ -645,7 +662,30 @@ const zip = el('div', 'zip', P, '.zip'); const pz = keP(319, 356, kE);
 tl.fromTo(zip, { left: pz.x - 50, top: pz.y - 30, opacity: 0, scale: .4 }, { opacity: 1, scale: 1, duration: .25 }, 100.5)
   .to(zip, { left: 1500, top: 140, duration: .7, ease: 'power3.in' }, 100.8).to(zip, { opacity: 0, duration: .2 }, 101.4);
 sfx('whoosh', 100.8); kursorHilang(101.0);
-kartuKeluar(B7, 103.0);
+kartuKeluar(B7, 102.6);
+
+/* ===== ADEGAN 7b — Paket Modul: banyak modul jadi satu berkas (1:43,0–1:52,0, waktu sebenarnya) ===== */
+GESER.aktif = false;
+{
+  const akhirSimpan = __akhir; const jumlahSapuan = SAPUAN.length;
+  const gaya = Array.from({ length: 10 }, (_, i) => 'paket-gaya-' + i);
+  const PK = buatKartu(['paket-isi', 'paket-kisi'].concat(gaya));
+  tl.set(PK.el, { opacity: 1, scale: KS }, 102.86);   /* menumpang sapuan keluarnya Preview & Export (102,6) */
+  pita('5 · Preview & Export · paket', 103.1, 111.8);
+  kalimat('Beberapa modul bisa dirakit jadi [[satu paket:]] | dashboard di depan, modulnya tertanam di dalam.', 103.3, 107.5);
+  [[387, 99, 583, 38], [387, 233, 583, 38], [387, 367, 583, 38]].forEach((a, i) => { sorotan(PK, R(a), 103.9 + i * .2, 105.6, '', 1, 4, false); sfx('tik' + i, 103.9 + i * .2); });
+  balon('seri Pemeriksaan: modul Salma, Deswita, Cindi', 104.6, keP(700, 420, kam(1, 683, 384)), 105.7);
+  silang(PK, 'paket-kisi', 105.8, .3);
+  const kisi = [[348, 39, 218, 84], [574, 39, 218, 84], [800, 39, 218, 84], [348, 131, 218, 105], [574, 131, 218, 105], [800, 131, 218, 105], [348, 244, 218, 84], [574, 244, 218, 84], [800, 244, 218, 84], [348, 336, 218, 84]];
+  kisi.forEach((a, i) => { const r = R(a); nomor(String(i + 1), keP(r.x + 16, r.y + 14, kam(1, 683, 384)), 106.2 + i * .12, 107.7); sfx('tik' + (i % 8), 106.2 + i * .12); });
+  kalimat('[[Sepuluh tampilan dashboard,]] | semuanya bisa diintip dulu sebelum dipilih.', 107.8, 111.8);
+  gaya.forEach((n, i) => { silang(PK, n, 107.9 + i * .38, .14); sfx('tik' + (i % 8), 107.9 + i * .38); });
+  const nm = ['Panel', 'Indeks', 'Orbit', 'Terminal', 'Kartu', 'Linimasa', 'Metro', 'Majalah', 'Rak', 'Fokus'];
+  nm.forEach((n, i) => { const pl = el('div', 'pil-blok', P, n); tl.fromTo(pl, { opacity: 0 }, { opacity: 1, duration: .08 }, 107.9 + i * .38).to(pl, { opacity: 0, duration: .06 }, i < 9 ? 108.26 + i * .38 : 111.75); });
+  sapuan(112.2); tl.set(PK.el, { opacity: 0 }, 112.46);
+  __akhir = akhirSimpan; SAPUAN.length = 0; SAPUAN.push(103.2);   /* penanda: kartu Sisi Peserta (103,2 → 112,2) menumpang sapuan 112,2 */   /* adegan berikutnya tetap membaca waktunya sendiri */
+}
+GESER.aktif = true;
 
 /* ===== ADEGAN 8 — sisi peserta (1:43,2–1:48,8) ===== */
 const B8 = buatKartu(['peserta-slide', 'peserta-peringatan']);
@@ -803,7 +843,7 @@ const garisUbin = el('div', 'garis-ubin', P); tl.fromTo(garisUbin, { scaleX: 0, 
 tl.to(ubin[1], { boxShadow: '0 0 0 2px #0A84FF, 0 0 40px rgba(10,132,255,.6)', duration: .4 }, 213.2);
 sfx('kunci', 213.2);
 
-/* ===== ADEGAN 12 — penutup (3:36,4–3:48,2) ===== */
+/* ===== ADEGAN 12 — penutup (3:36,4–3:57,2) ===== */
 const BZ = buatKartu(['beranda-gelap']);
 kartuMasuk(BZ, 216.4);
 kalimat('Bahannya sudah ada di PowerPoint-mu. | Sisanya [[cukup disusun.]]', 216.5, 221.2);
@@ -881,13 +921,13 @@ const Suara = (function () {
 /* ---------- kontrol ---------- */
 const geser = $('geser'), waktu = $('waktu'), btnPutar = $('btnPutar');
 const fmt = (t) => Math.floor(t / 60) + ':' + String(Math.floor(t % 60)).padStart(2, '0') + ',' + Math.floor((t % 1) * 10);
-tl.eventCallback('onUpdate', () => { geser.value = tl.time(); waktu.textContent = fmt(tl.time()) + ' / 3:48'; });
+tl.eventCallback('onUpdate', () => { if (tl.paused() && window.__vidSeek) window.__vidSeek(); geser.value = tl.time(); waktu.textContent = fmt(tl.time()) + ' / 3:57'; });
 tl.eventCallback('onComplete', () => { btnPutar.textContent = 'Putar'; Suara.jeda(); if (document.body.classList.contains('rekam')) setTimeout(keluarRekam, 800); });
 function putar() { Suara.aktifkan(); if (tl.progress() >= 1) tl.restart(); else tl.play(); btnPutar.textContent = 'Jeda'; }
 function jeda() { tl.pause(); btnPutar.textContent = 'Putar'; Suara.jeda(); }
 btnPutar.onclick = () => (tl.paused() || tl.progress() >= 1 ? putar() : jeda());
 $('btnUlang').onclick = () => { tl.restart(); Suara.aktifkan(); btnPutar.textContent = 'Jeda'; };
-geser.oninput = () => { tl.pause(); tl.seek(+geser.value, true); btnPutar.textContent = 'Putar'; Suara.jeda(); waktu.textContent = fmt(+geser.value) + ' / 3:48'; };
+geser.oninput = () => { tl.pause(); tl.seek(+geser.value, true); btnPutar.textContent = 'Putar'; Suara.jeda(); waktu.textContent = fmt(+geser.value) + ' / 3:57'; };
 $('btnSuara').onclick = () => { Suara.setBisu(!Suara.bisu()); $('btnSuara').textContent = 'Suara: ' + (Suara.bisu() ? 'mati' : 'nyala'); };
 function penuh() { const d = document.documentElement; if (!document.fullscreenElement && d.requestFullscreen) d.requestFullscreen().catch(() => {}); }
 $('btnPenuh').onclick = () => (document.fullscreenElement ? document.exitFullscreen() : penuh());
