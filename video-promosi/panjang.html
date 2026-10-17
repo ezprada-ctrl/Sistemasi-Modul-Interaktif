@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Video Promosi TEMPA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+/* Panggung 1920×1080 diskalakan ke jendela. Kartu kaca berisi foto asli aplikasi TEMPA & modul hasilnya (1366×768 css px) + lapisan efek. */
+:root{
+  --latar:#0B1220; --latar-2:#14203A; --putih:#FFFFFF; --redup:#9FB0CF;
+  --aksen:#0A84FF; --aksen-terang:#7CC4FF; --oranye:#FF9F0A; --hijau:#30D158; --merah:#FF453A; --stabilo:rgba(255,214,10,.38);
+  --kaca:rgba(11,18,32,.62); --tepi:rgba(255,255,255,.16);
+  --huruf:"Inter","SF Pro Display",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:var(--huruf);color:var(--putih)}
+body.rekam,body.rekam *{cursor:none!important}
+
+#panggung{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden;background:var(--latar)}
+/* latar: gradasi, aurora pelan, kisi titik (selaras latar diagram M3) */
+.latar{position:absolute;inset:0;background:radial-gradient(1200px 700px at 85% 110%,var(--latar-2),transparent 70%),radial-gradient(900px 600px at 0% 0%,#101a33,transparent 70%),var(--latar)}
+.aurora{position:absolute;width:900px;height:900px;border-radius:50%;filter:blur(120px);opacity:.28;mix-blend-mode:screen}
+.aurora.a1{background:#1E5BFF;left:-200px;top:-300px;animation:melayang1 22s ease-in-out infinite alternate}
+.aurora.a2{background:#7A3CFF;right:-300px;bottom:-400px;opacity:.2;animation:melayang2 26s ease-in-out infinite alternate}
+@keyframes melayang1{to{transform:translate(260px,180px)}}
+@keyframes melayang2{to{transform:translate(-220px,-160px)}}
+.kisi{position:absolute;inset:-40px;background-image:radial-gradient(rgba(124,196,255,.22) 1.2px,transparent 1.3px);background-size:32px 32px;
+  mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);animation:geser 40s linear infinite;opacity:.55}
+@keyframes geser{to{transform:translate(32px,32px)}}
+#mekar{position:absolute;left:50%;top:50%;width:1400px;height:900px;margin:-450px 0 0 -700px;border-radius:50%;background:radial-gradient(closest-side,rgba(10,132,255,.35),transparent);opacity:0;filter:blur(30px)}
+
+/* tumpukan halaman peraturan (adegan 1) */
+#tumpukan{position:absolute;left:0;top:0;width:1920px;height:1080px}
+.lembar{position:absolute;left:760px;top:120px;width:420px;height:560px;background:#F4F5F7;border-radius:6px;box-shadow:0 30px 60px rgba(0,0,0,.45);padding:44px 40px;color:#1d2433}
+.lembar .lg{font:700 13px/1.4 var(--huruf);letter-spacing:.14em;text-align:center;color:#4a5468}
+.lembar .jd{font:800 20px/1.25 var(--huruf);text-align:center;margin:10px 0 22px}
+.lembar .brs{height:9px;border-radius:4px;background:#C9CED8;margin:11px 0}
+.lembar .brs.p{width:72%}.lembar .brs.q{width:88%}.lembar .brs.r{width:60%}
+
+
+/* adegan pembuka TEMPA: slide PowerPoint generik, ikon kode, batang durasi, lembar spreadsheet */
+.ppt{position:absolute;left:720px;top:170px;width:480px;height:270px;background:#F4F5F7;border-radius:8px;box-shadow:0 30px 60px rgba(0,0,0,.45);padding:26px 30px;opacity:0}
+.ppt .pj{height:26px;width:62%;border-radius:5px;background:#C0392B;opacity:.85;margin-bottom:22px}
+.ppt .pb{height:11px;border-radius:5px;background:#C9CED8;margin:13px 0}
+.ppt .pb.p{width:82%}.ppt .pb.q{width:66%}.ppt .pb.r{width:74%}
+.kode-ikon{position:absolute;left:50%;top:300px;transform:translateX(-50%);padding:26px 44px;border-radius:26px;background:rgba(40,22,4,.85);border:3px solid var(--oranye);color:var(--oranye);font:700 110px/1 var(--mono);box-shadow:0 0 50px rgba(255,159,10,.45);opacity:0;z-index:15}
+.kode-ikon i{display:inline-block;width:8px;height:96px;margin-left:12px;vertical-align:-10px;background:var(--oranye);animation:kedip 1s steps(2) infinite}
+@keyframes kedip{50%{opacity:0}}
+.batang{position:absolute;left:640px;top:150px;width:640px;height:560px;display:flex;align-items:flex-end;gap:120px;justify-content:center;opacity:0;z-index:15}
+.batang .bt{position:relative;width:170px;border-radius:16px 16px 6px 6px;background:linear-gradient(#2a3a5e,#1a2440);border:1px solid var(--tepi)}
+.batang .tinggi{height:520px;background:linear-gradient(#5a3a10,#2e1d06);border-color:rgba(255,159,10,.6)}
+.batang .pendek{height:110px;background:linear-gradient(#0A84FF,#0a3f80)}
+.batang span{position:absolute;left:50%;bottom:-48px;transform:translateX(-50%);white-space:nowrap;font:500 22px/1 var(--mono);color:var(--redup)}
+.batang b{position:absolute;left:50%;top:-74px;transform:translateX(-50%);font-size:52px}
+.sheet{position:absolute;width:520px;height:380px;border-radius:10px;background-color:#F4F5F7;box-shadow:0 30px 60px rgba(0,0,0,.45);opacity:0;
+  background-image:linear-gradient(#1D6F42 0 34px,transparent 34px),repeating-linear-gradient(0deg,transparent 0 31px,#cfd5df 31px 32px),repeating-linear-gradient(90deg,transparent 0 103px,#cfd5df 103px 104px)}
+.panah-alir{position:absolute;width:28px;height:4px;border-radius:2px;background:var(--aksen-terang);box-shadow:0 0 14px var(--aksen);opacity:0}
+.panah-alir::after{content:"";position:absolute;right:-6px;top:-6px;border:8px solid transparent;border-left:10px solid var(--aksen-terang)}
+.pil-blok{position:absolute;right:373px;top:30px;padding:10px 20px;border-radius:999px;background:var(--kaca);border:1px solid var(--tepi);backdrop-filter:blur(14px);font:600 22px/1 var(--huruf);color:var(--aksen-terang);opacity:0;z-index:22}
+.lencana19{position:absolute;left:300px;top:150px;padding:14px 26px;border-radius:18px;background:var(--aksen);color:#fff;font:800 64px/1 var(--huruf);box-shadow:0 18px 40px rgba(10,132,255,.45);opacity:0;z-index:22}
+.lencana19 small{font:700 24px/1 var(--huruf);margin-left:8px}
+.ketik-tutup{position:absolute;background:#1b2338;border-radius:4px}
+.zip{position:absolute;padding:14px 22px;border-radius:14px;background:var(--aksen);color:#fff;font:700 26px/1 var(--mono);box-shadow:0 12px 30px rgba(10,132,255,.5);opacity:0;z-index:26;white-space:nowrap}
+.jam{position:absolute;left:50%;top:120px;transform:translateX(-50%);padding:12px 22px;border-radius:999px;background:rgba(20,28,46,.92);border:1px solid var(--tepi);font:600 24px/1 var(--mono);color:#FFD60A;opacity:0;z-index:24}
+
+.baris-seret{position:absolute;overflow:hidden;border-radius:10px;border:2px solid var(--aksen);box-shadow:0 22px 40px rgba(10,132,255,.45),0 0 0 6px rgba(10,132,255,.18)}
+.baris-seret img{position:absolute;left:-44px;top:-441px;width:1366px;height:768px}
+/* kartu kaca */
+.kartu{position:absolute;left:277px;top:41.25px;width:1366px;height:768px;border-radius:24px;opacity:0;transform:scale(.86)}
+.kartu::before{content:"";position:absolute;inset:-60px;border-radius:80px;background:radial-gradient(closest-side,rgba(10,132,255,.35),transparent);filter:blur(30px);z-index:-1}
+.layar{position:absolute;inset:0;border-radius:24px;overflow:hidden;border:1.5px solid var(--tepi);box-shadow:0 50px 140px rgba(0,0,0,.6),0 0 0 1px rgba(124,196,255,.08);background:#111}
+.kamera{position:absolute;left:0;top:0;width:1366px;height:768px;transform-origin:0 0}
+.kamera img{position:absolute;left:0;top:0;width:1366px;height:768px;display:block;user-select:none}
+.lapis{position:absolute;inset:0;pointer-events:none}
+.sorot{position:absolute;border:3px solid var(--aksen);border-radius:12px;box-shadow:0 0 18px rgba(10,132,255,.75),inset 0 0 12px rgba(10,132,255,.25);opacity:0}
+.sorot.redupkan{box-shadow:0 0 0 4000px rgba(5,10,22,.38),0 0 18px rgba(10,132,255,.75)}
+.sorot.merah{border-color:var(--merah);box-shadow:0 0 18px rgba(255,69,58,.7)}
+.sorot.hijau{border-color:var(--hijau);box-shadow:0 0 22px rgba(48,209,88,.7)}
+.sorot.kuning{border-color:#FFD60A;box-shadow:0 0 18px rgba(255,214,10,.7)}
+.stabilo{position:absolute;background:var(--stabilo);mix-blend-mode:multiply;border-radius:3px;transform-origin:0 50%;transform:scaleX(0)}
+.jejak-cahaya{fill:none;stroke:#7FE3FF;stroke-linecap:round;filter:drop-shadow(0 0 6px #33C8FF) drop-shadow(0 0 14px #0A84FF)}
+
+/* elemen di ruang panggung */
+.label{position:absolute;left:373px;top:34px;display:flex;gap:10px;align-items:center;font:500 22px/1 var(--mono);color:var(--aksen-terang);opacity:0;letter-spacing:.02em}
+.label b{font:600 15px/1 var(--mono);color:var(--latar);background:var(--aksen-terang);padding:7px 10px;border-radius:8px}
+.lencana{position:absolute;right:373px;top:30px;display:flex;gap:10px;align-items:center;padding:10px 18px;border-radius:999px;background:var(--kaca);border:1px solid var(--tepi);backdrop-filter:blur(14px);font:500 19px/1 var(--huruf);opacity:0}
+.lencana svg{width:20px;height:20px}
+#kursor{position:absolute;left:0;top:0;width:38px;height:38px;opacity:0;z-index:30;filter:drop-shadow(0 4px 8px rgba(0,0,0,.45))}
+.riak{position:absolute;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;border:3px solid var(--aksen-terang);opacity:0;z-index:29;box-shadow:0 0 16px rgba(10,132,255,.8)}
+.balon{position:absolute;padding:12px 20px;border-radius:14px;background:rgba(10,132,255,.92);font:600 22px/1.2 var(--huruf);box-shadow:0 12px 30px rgba(10,132,255,.35);opacity:0;white-space:nowrap;z-index:25}
+.balon.gelap{background:rgba(20,28,46,.92);border:1px solid var(--tepi)}
+.nomor{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;background:var(--aksen);display:grid;place-items:center;font:700 22px/1 var(--huruf);box-shadow:0 0 0 4px rgba(10,132,255,.25),0 0 20px rgba(10,132,255,.8);opacity:0;z-index:26}
+.mengambang{position:absolute;font:700 30px/1 var(--mono);color:var(--aksen-terang);text-shadow:0 0 22px rgba(10,132,255,.9);opacity:0;letter-spacing:.06em;z-index:24}
+
+/* teks narasi: pil kaca, muncul per kata (naik + kabur menajam) */
+.teks{position:absolute;left:50%;bottom:92px;max-width:1760px;transform:translateX(-50%);padding:22px 36px;border-radius:22px;background:var(--kaca);border:1px solid var(--tepi);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);font:600 42px/1.25 var(--huruf);letter-spacing:-.01em;text-align:center;opacity:0;white-space:nowrap;z-index:20;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.teks .kt{display:inline-block;will-change:transform,filter,opacity}
+.teks .tag{display:inline-block;font:600 22px/1 var(--mono);color:var(--latar);background:var(--aksen-terang);padding:9px 12px;border-radius:9px;margin-right:16px;vertical-align:6px}
+.teks .coret{position:absolute;left:28px;right:28px;top:50%;height:4px;margin-top:-2px;border-radius:2px;background:var(--aksen);box-shadow:0 0 14px var(--aksen);transform:scaleX(0);transform-origin:0 50%}
+
+/* judul */
+.teks .br{display:block;height:0}
+.seret{position:absolute;display:flex;align-items:center;padding:0 16px;border-radius:12px;background:#fff;border:1.5px solid #0A84FF;box-shadow:0 14px 30px rgba(10,132,255,.35);font:500 16px/1 var(--huruf);color:#1d1d1f;opacity:0;z-index:5}
+.keycap{position:absolute;left:50%;top:330px;width:150px;height:150px;margin-left:-75px;border-radius:28px;background:linear-gradient(#1d2a48,#121c33);border:1.5px solid rgba(124,196,255,.45);box-shadow:0 10px 0 #0a1530,0 0 40px rgba(10,132,255,.45);display:grid;place-items:center;font:600 84px/1 var(--mono);color:#fff;opacity:0;z-index:26}
+.ubin{position:absolute;top:360px;width:260px;height:220px;margin-left:0;border-radius:24px;background:var(--kaca);border:1px solid var(--tepi);backdrop-filter:blur(14px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:0 14px;font:600 22px/1.25 var(--huruf);text-align:center;opacity:0;z-index:20}
+.ubin svg{width:84px;height:84px}
+.garis-ubin{position:absolute;left:660px;width:600px;top:470px;height:2px;background:linear-gradient(90deg,transparent,#0A84FF,transparent);transform-origin:50% 50%;opacity:0;z-index:19}
+.hal-lencana{position:absolute;left:470px;top:120px;padding:14px 26px;border-radius:18px;background:#FF9F0A;color:#1a1000;font:800 64px/1 var(--huruf);box-shadow:0 18px 40px rgba(255,159,10,.45);opacity:0;z-index:15}
+.hal-lencana small{font:700 26px/1 var(--huruf)}
+#judulM3{position:absolute;left:0;right:0;top:420px;text-align:center;font:800 110px/1 var(--huruf);letter-spacing:-.03em;opacity:0;z-index:22}
+#judulM3 span{display:inline-block}
+#hitam{position:absolute;inset:0;background:#000;z-index:40}
+#pembeda{position:absolute;left:0;right:0;top:470px;text-align:center;font:800 96px/1 var(--huruf);letter-spacing:-.03em;z-index:41;opacity:0}
+#pembeda .kt{display:inline-block}
+#stempel{position:absolute;left:1215px;top:395px;transform:translateX(-50%) rotate(-6deg);padding:18px 34px;border:5px solid var(--hijau);border-radius:18px;color:var(--hijau);font:800 64px/1 var(--huruf);letter-spacing:-.01em;background:rgba(8,30,18,.72);backdrop-filter:blur(6px);opacity:0;z-index:23;box-shadow:0 0 40px rgba(48,209,88,.35);white-space:nowrap}
+#toast{position:absolute;left:50%;top:22px;transform:translateX(-50%);display:flex;gap:14px;align-items:center;padding:16px 26px;border-radius:999px;background:rgba(28,28,30,.94);border:1px solid var(--tepi);font:500 24px/1 var(--huruf);opacity:0;z-index:23;box-shadow:0 18px 40px rgba(0,0,0,.45);white-space:nowrap}
+#toast i{width:30px;height:30px;border-radius:50%;background:var(--hijau);display:grid;place-items:center;font-style:normal;font-weight:700;color:#06210f}
+#tooltipTema{position:absolute;padding:10px 16px;border-radius:12px;background:rgba(28,28,30,.94);border:1px solid var(--tepi);font:500 20px/1 var(--huruf);opacity:0;z-index:23;white-space:nowrap}
+
+/* logo: tanda air kanan-bawah dan versi besar di penutup (pil putih supaya warna logo terbaca di latar gelap) */
+.logo{position:absolute;display:flex;align-items:center;gap:23px}
+.logo span{display:grid;place-items:center;width:142px;height:119px;border-radius:25px;background:radial-gradient(120% 120% at 50% 0,rgba(124,196,255,.16),rgba(255,255,255,.03));border:1px solid rgba(124,196,255,.25);box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 19px 46px rgba(0,0,0,.4);backdrop-filter:blur(10px)}
+.logo img{display:block;height:77px;width:auto;filter:drop-shadow(0 0 .5px rgba(255,255,255,.9))}
+#logoKecil{right:40px;bottom:36px;gap:8px;opacity:0;z-index:21}
+#logoKecil span{width:60px;height:50px;border-radius:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 8px 20px rgba(0,0,0,.35)}
+#logoKecil img{height:32px}
+#logoBesar{left:50%;top:530px;transform:translateX(-50%);opacity:0;z-index:21}
+#penutup{position:absolute;left:0;right:0;top:690px;text-align:center;z-index:21}
+#penutup .j{font:800 76px/1.05 var(--huruf);letter-spacing:-.025em}
+#penutup .t{font:500 40px/1.2 var(--huruf);color:var(--redup);margin-top:20px}
+#penutup .t .kunci{color:var(--putih)}
+#penutup .d{font:500 22px/1 var(--mono);color:var(--redup);margin-top:34px;letter-spacing:.06em;opacity:0}
+#penutup .kt{display:inline-block}
+
+/* kontrol (tidak ikut terekam saat "Rekam bersih") */
+#kontrol{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;gap:10px;align-items:center;padding:10px 14px;border-radius:16px;background:rgba(20,24,36,.88);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(12px);z-index:100;transition:opacity .3s;font:500 14px/1 var(--huruf);max-width:calc(100vw - 32px);flex-wrap:wrap}
+#kontrol button{font:600 14px/1 var(--huruf);color:#fff;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:10px 14px;cursor:pointer}
+#kontrol button:hover{background:rgba(255,255,255,.18)}
+#kontrol button:focus-visible{outline:2px solid var(--aksen-terang);outline-offset:2px}
+#kontrol button.utama{background:var(--aksen);border-color:var(--aksen)}
+#kontrol input[type=range]{width:300px;accent-color:var(--aksen)}
+#waktu{font:500 14px/1 var(--mono);color:#cfd8ea;min-width:96px;text-align:center;font-variant-numeric:tabular-nums}
+#kontrol.sembunyi{opacity:0;pointer-events:none}
+#mulai[hidden]{display:none}
+#mulai{position:fixed;inset:0;z-index:90;display:grid;place-items:center;background:rgba(0,0,0,.55)}
+#mulai button{font:700 22px/1 var(--huruf);color:#fff;background:var(--aksen);border:0;border-radius:999px;padding:22px 40px;cursor:pointer;box-shadow:0 10px 40px rgba(10,132,255,.5)}
+#mulai p{margin:18px 0 0;text-align:center;color:#cfd8ea;font:400 15px/1.5 var(--huruf)}
+</style>
+</head>
+<body>
+<div id="panggung">
+  <div class="latar"></div><div class="aurora a1"></div><div class="aurora a2"></div><div class="kisi"></div><div id="mekar"></div>
+  <div id="tumpukan"></div>
+  <div id="kartu-wadah"></div>
+  <div class="logo" id="logoKecil"><span><img src="aset/logo-1.png" alt="Logo Kementerian Keuangan"></span><span><img src="aset/logo-2.png" alt="Logo"></span><span><img src="aset/logo-3.png" alt="Logo"></span></div>
+  <div class="logo" id="logoBesar"><span><img src="aset/logo-1.png" alt="Logo Kementerian Keuangan"></span><span><img src="aset/logo-2.png" alt="Logo"></span><span><img src="aset/logo-3.png" alt="Logo"></span></div>
+  <div id="penutup"><div class="j" id="pJudul"></div><div class="t" id="pTag"></div><div class="d" id="pDis">Ekosistem Modul Interaktif · Data demo</div></div>
+  <div id="teks-wadah"></div>
+  <svg id="kursor" viewBox="0 0 24 24"><path d="M4 2.5l15.5 9.2-6.6 1.5 3.9 7.2-3.1 1.6-3.8-7.3L4.8 18.9z" fill="#fff" stroke="#0B1220" stroke-width="1.4" stroke-linejoin="round"/></svg>
+  <div class="riak" id="riak"></div>
+  <div id="hitam"></div>
+  <div id="pembeda"></div>
+</div>
+
+<div id="mulai"><div><button id="btnMulai" type="button">▶ Putar video</button><p>Spasi: putar/jeda · R: ulang · F: layar penuh · H: sembunyikan kontrol</p></div></div>
+<div id="kontrol">
+  <button id="btnPutar" class="utama" type="button">Jeda</button>
+  <button id="btnUlang" type="button">Ulang</button>
+  <input id="geser" type="range" min="0" max="228.2" step="0.01" value="0" aria-label="Posisi video">
+  <span id="waktu">0:00,0 / 3:48</span>
+  <button id="btnSuara" type="button">Suara: nyala</button>
+  <button id="btnPenuh" type="button">Layar penuh</button>
+  <button id="btnRekam" type="button">Rekam bersih</button>
+</div>
+
+<script>
+(function () {
+'use strict';
+const P = document.getElementById('panggung');
+const $ = (id) => document.getElementById(id);
+const DURASI = 228.2;
+
+/* ---------- skala panggung ---------- */
+function skala() { const s = Math.min(innerWidth / 1920, innerHeight / 1080); P.style.transform = 'translate(' + (innerWidth - 1920 * s) / 2 + 'px,' + (innerHeight - 1080 * s) / 2 + 'px) scale(' + s + ')'; }
+addEventListener('resize', skala); skala();
+
+/* ---------- data posisi (css px pada foto 1366×768) ---------- */
+const POS = {
+  tema: { x: 758, y: 142, w: 38, h: 38 }, m0: { x: 314, y: 209, w: 129, h: 36 }, m1: { x: 444, y: 209, w: 125, h: 36 }, m2: { x: 571, y: 209, w: 215, h: 36 },
+  m3: { x: 788, y: 209, w: 159, h: 36 }, m4: { x: 949, y: 209, w: 174, h: 36 },
+  m1Salah: { x: 175, y: 363, w: 1016, h: 43 }, m1SalahDasar: { x: 520, y: 374, w: 96, h: 21 }, m1Periksa: { x: 175, y: 292, w: 153, h: 42 }, m1Hasil: { x: 175, y: 346, w: 1016, h: 77 },
+  m2Isian: { x: 175, y: 140, w: 240, h: 40 }, m2Baris3: { x: 153, y: 425, w: 1060, h: 42 }, m2Dasar3: { x: 1101, y: 435, w: 96, h: 21 },
+  dialog: { x: 303, y: 181, w: 760, h: 405 }, kutipan: { x: 342, y: 446, w: 700, h: 28 }, kutipan2: { x: 342, y: 471, w: 680, h: 27 },
+  m3Diagram: { x: 153, y: 106, w: 1060, h: 556 }, m3Lampu: { x: 221, y: 200 }, chip0: { x: 376, y: 140, w: 99, h: 28 }, chip1: { x: 714, y: 311, w: 82, h: 28 },
+  m4Tandai: { x: 867, y: 486, w: 79, h: 40 }, m4Baris: { x: 276, y: 478, w: 684, h: 58 }, m4Toc: { x: 42, y: 258, w: 165, h: 64 },
+  m4Judul: { x: 1028, y: 97, w: 240, h: 24 }, m4Pasal: { x: 1040, y: 247, w: 272, h: 40 }, m4Tindak: { x: 1040, y: 324, w: 272, h: 40 }
+};
+const DIAGRAM = { x: 153, y: 105.75, w: 1060, h: 555.64, vb: '-12 -14 744 390',
+  jejak: ['M253.4 294.9 Q183.8 166.5 68.4 76.9', 'M356.0 270.0 Q379.1 237.0 356.0 204.0', 'M110.9 268.8 Q130.8 172.6 90.9 82.8'] };
+
+/* kartu: posisi visual di panggung = kiri 372.6, atas 95, skala 0.86 */
+const KX = 372.62, KY = 95.24, KS = 0.86;
+function kam(z, fx, fy) {
+  let x = 683 - fx * z, y = 384 - fy * z;
+  x = Math.min(0, Math.max(1366 - 1366 * z, x)); y = Math.min(0, Math.max(768 - 768 * z, y));
+  return { x: x, y: y, scale: z };
+}
+function keP(px, py, k) { return { x: KX + (k.x + px * k.scale) * KS, y: KY + (k.y + py * k.scale) * KS }; }  // titik foto -> titik panggung
+
+/* ---------- pembangun elemen ---------- */
+function el(tag, cls, induk, html) { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; (induk || P).appendChild(e); return e; }
+function buatKartu(gambar) {
+  const k = el('div', 'kartu', $('kartu-wadah'));
+  const layar = el('div', 'layar', k); const kamera = el('div', 'kamera', layar);
+  const img = {}; gambar.forEach((g, i) => { const m = el('img', '', kamera); m.src = 'aset/' + g + '.jpg'; m.alt = ''; if (i) m.style.opacity = 0; img[g] = m; });
+  const lapis = el('div', 'lapis', kamera);
+  return { el: k, kamera: kamera, img: img, lapis: lapis };
+}
+function sorot(kartu, r, jenis, pad) { pad = pad == null ? 6 : pad; const s = el('div', 'sorot ' + (jenis || ''), kartu.lapis); Object.assign(s.style, { left: r.x - pad + 'px', top: r.y - pad + 'px', width: r.w + pad * 2 + 'px', height: r.h + pad * 2 + 'px' }); return s; }
+
+/* teks: [[kata kunci]] menyala; {{kata}} kunci hangat (oranye) */
+function pecah(teks) {
+  return teks.replace(/\[\[(.+?)\]\]|\{\{(.+?)\}\}|(\S+)/g, function (m, k, h, biasa) {
+    if (biasa) return '<span class="kt">' + biasa + '</span> ';
+    return (k || h).split(' ').map((w) => '<span class="kt ' + (k ? 'kunci' : 'hangat') + '">' + w + '</span>').join(' ') + ' ';
+  }).trim();
+}
+function buatTeks(teks, tag) { const t = el('div', 'teks', $('teks-wadah'), (tag ? '<span class="tag">' + tag + '</span>' : '') + pecah(teks)); return t; }
+
+/* ---------- linimasa ---------- */
+const tl = gsap.timeline({ paused: true });
+const sfx = (nama, t) => tl.call(() => Suara.bunyi(nama), null, t);
+
+function teksMasuk(t, at) {
+  const kata = t.querySelectorAll('.kt');
+  tl.fromTo(t, { opacity: 0, y: 16, scale: .97 }, { opacity: 1, y: 0, scale: 1, duration: .4, ease: 'power3.out' }, at);
+  tl.fromTo(kata, { opacity: 0, y: 22, filter: 'blur(10px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .5, ease: 'power3.out', stagger: .045 }, at + .06);
+  const akhir = at + .06 + kata.length * .045 + .35;
+  const k = t.querySelectorAll('.kunci'), h = t.querySelectorAll('.hangat');
+  if (k.length) tl.to(k, { color: '#7CC4FF', textShadow: '0 0 24px rgba(10,132,255,.95)', duration: .3, ease: 'power2.out' }, akhir)
+    .to(k, { textShadow: '0 0 12px rgba(10,132,255,.55)', duration: .5 }, akhir + .3);
+  if (h.length) tl.to(h, { color: '#FFB547', textShadow: '0 0 22px rgba(255,159,10,.85)', duration: .3 }, akhir);
+  return akhir;
+}
+function teksKeluar(t, at) {
+  tl.to(t.querySelectorAll('.kt'), { opacity: 0, y: -12, filter: 'blur(8px)', duration: .28, ease: 'power2.in', stagger: .012 }, at);
+  tl.to(t, { opacity: 0, y: -6, duration: .3, ease: 'power2.in' }, at + .1);
+}
+function kartuMasuk(k, at, dari) {
+  dari = dari || {};
+  tl.fromTo(k.el, Object.assign({ opacity: 0, scale: KS * 1.06, filter: 'blur(8px)', y: 0 }, dari), { opacity: 1, scale: KS, y: 0, filter: 'blur(0px)', duration: .45, ease: 'power3.out' }, at);
+  sfx('whoosh', at);
+}
+function kartuKeluar(k, at) { tl.to(k.el, { opacity: 0, scale: KS * .94, filter: 'blur(6px)', duration: .32, ease: 'power2.in' }, at); }
+function kamera(k, at, z, fx, fy, dur, ease) { tl.to(k.kamera, Object.assign(kam(z, fx, fy), { duration: dur == null ? .7 : dur, ease: ease || 'power2.inOut' }), at); }
+function sorotMasuk(s, at, z, denyut) {
+  z = z || 1; s.style.borderWidth = (3 / z) + 'px';
+  if (s.classList.contains('redupkan')) tl.fromTo(s, { opacity: 0 }, { opacity: 1, duration: .35, ease: 'power2.out' }, at);
+  else tl.fromTo(s, { opacity: 0, clipPath: 'inset(-40px 100% 100% -40px)' }, { opacity: 1, clipPath: 'inset(-40px -40px -40px -40px)', duration: .3, ease: 'power2.out' }, at);
+  if (denyut !== false) tl.to(s, { scale: 1.025, duration: .22, yoyo: true, repeat: 3, ease: 'sine.inOut' }, at + .32);
+}
+function sorotKeluar(s, at) { tl.to(s, { opacity: 0, duration: .2 }, at); }
+function label(at, kode, teks, akhir) {
+  const l = el('div', 'label', P, '<b>' + kode + '</b><span>' + teks + '</span>');
+  tl.fromTo(l, { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: .3, ease: 'power2.out' }, at);
+  tl.to(l, { opacity: 0, x: -10, duration: .2 }, akhir);
+}
+/* kursor di ruang panggung; titik tujuan dihitung dari posisi kamera saat itu */
+function kursor(at, titik, dur) { tl.to('#kursor', { x: titik.x - 6, y: titik.y - 4, opacity: 1, duration: dur || .7, ease: 'power2.inOut' }, at); }
+function klik(at, titik, bunyi) {
+  tl.to('#kursor', { scale: .85, duration: .08, yoyo: true, repeat: 1, transformOrigin: '20% 15%' }, at);
+  tl.set('#riak', { left: titik.x, top: titik.y, opacity: 1, scale: .2 }, at).to('#riak', { opacity: 0, scale: 2.2, duration: .45, ease: 'power2.out' }, at);
+  sfx(bunyi || 'klik', at);
+}
+function kursorHilang(at) { tl.to('#kursor', { opacity: 0, duration: .2 }, at); }
+function tengah(r) { return { x: r.x + r.w / 2, y: r.y + r.h / 2 }; }
+function balon(teks, at, titik, akhir, gelap) {
+  const b = el('div', 'balon' + (gelap ? ' gelap' : ''), P, teks); b.style.left = titik.x + 'px'; b.style.top = titik.y + 'px';
+  tl.fromTo(b, { opacity: 0, y: 14, scale: .92, filter: 'blur(6px)' }, { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: .4, ease: 'back.out(1.6)' }, at);
+  tl.to(b, { opacity: 0, y: -8, duration: .25 }, akhir);
+}
+
+/* ====================== VIDEO PANJANG TEMPA (±3:48) — tanpa narator, tanpa musik, teks tampil penuh ====================== */
+const svgNS = 'http://www.w3.org/2000/svg';
+/* teks dua baris: " | " = pindah baris */
+let __akhir = -1;
+function kalimat(teks, masuk, keluar, tag) {
+  masuk = Math.max(masuk, __akhir + .45); __akhir = keluar;
+  const t = el('div', 'teks', $('teks-wadah'), (tag ? '<span class="tag">' + tag + '</span>' : '') + pecah(teks.replace(/ \| /g, ' ¶ ')).replace(/<span class="kt">¶<\/span>/g, '<span class="br"></span>'));
+  teksMasuk(t, masuk); teksKeluar(t, keluar); return t;
+}
+function nomor(teks, p, at, akhir, lebar) {
+  const n = el('div', 'nomor', P, teks); n.style.left = p.x + 'px'; n.style.top = p.y + 'px';
+  if (lebar) { n.style.width = lebar + 'px'; n.style.marginLeft = -lebar / 2 + 'px'; n.style.borderRadius = '12px'; }
+  tl.fromTo(n, { opacity: 0, scale: .35, y: 8 }, { opacity: 1, scale: 1, y: 0, duration: .32, ease: 'back.out(2)' }, at).to(n, { opacity: 0, y: -8, duration: .22 }, akhir);
+  return n;
+}
+function R(a) { return { x: a[0], y: a[1], w: a[2], h: a[3] }; }
+/* jendela yang muncul dari foto keadaan "terbuka": latarnya memudar masuk, kotaknya membesar dari 1,06 */
+function jendela(K, gambar, r) {
+  const latar = K.img[gambar];
+  const j = el('img', '', K.kamera); j.src = 'aset/' + gambar + '.jpg'; j.alt = '';
+  Object.assign(j.style, { clipPath: 'inset(' + r.y + 'px ' + (1366 - r.x - r.w) + 'px ' + (768 - r.y - r.h) + 'px ' + r.x + 'px round 18px)', opacity: 0, transformOrigin: (r.x + r.w / 2) + 'px ' + (r.y + r.h / 2) + 'px' });
+  K.kamera.appendChild(K.lapis);
+  return {
+    buka: (at) => { tl.to(latar, { opacity: 1, duration: .3 }, at); tl.fromTo(j, { opacity: 0, scale: 1.06 }, { opacity: 1, scale: 1, duration: .35, ease: 'power3.out' }, at + .05); sfx('kertas', at + .05); },
+    tutup: (at) => { tl.to(j, { opacity: 0, duration: .22 }, at); tl.to(latar, { opacity: 0, duration: .25 }, at + .05); }
+  };
+}
+function stabilo(K, r, at, hilang, oranye) { const s = el('div', 'stabilo', K.lapis); if (oranye) s.style.background = 'rgba(255,159,10,.35)'; Object.assign(s.style, { left: r.x + 'px', top: r.y + 'px', width: r.w + 'px', height: r.h + 'px' }); tl.to(s, { scaleX: 1, duration: .45, ease: 'power2.inOut' }, at); tl.to(s, { opacity: 0, duration: .2 }, hilang); }
+function silang(K, nama, at, dur) { tl.to(K.img[nama], { opacity: 1, duration: dur || .45, ease: 'power2.inOut' }, at); }
+function sembunyi(K, nama, at) { tl.set(K.img[nama], { opacity: 0 }, at); }
+/* sorot sekali jalan: masuk, (denyut), keluar */
+function sorotan(K, r, at, akhir, jenis, z, pad, denyut) { const s = sorot(K, r, jenis, pad == null ? 5 : pad); s.style.borderRadius = '12px'; sorotMasuk(s, at, z || 1, denyut); sorotKeluar(s, akhir); return s; }
+function kolom(kol, tabel) { return { x: kol.x, y: kol.y, w: kol.w, h: tabel.y + tabel.h - kol.y }; }
+function gabung(a, b) { const x = Math.min(a.x, b.x), y = Math.min(a.y, b.y); return { x: x, y: y, w: Math.max(a.x + a.w, b.x + b.w) - x, h: Math.max(a.y + a.h, b.y + b.h) - y }; }
+function pita(teks, at, akhir) {   /* label menu/modul di kiri atas kartu */
+  const p = teks.split(' · ');
+  label(at, p[0], p.slice(1).join(' · ') || '', akhir);
+}
+
+/* ---------- posisi (css px pada foto 1366 × 768; dicatat alat/ambil-aset.mjs & ambil-karya.mjs) ---------- */
+const TAB = [[28, 232, 134, 42], [166, 232, 134, 42], [304, 232, 87, 42], [395, 232, 80, 42], [480, 232, 157, 42], [641, 232, 160, 42]].map(R);
+const TABP = [[28, 232, 131, 42], [163, 232, 134, 42], [300, 232, 87, 42], [392, 232, 80, 42], [476, 232, 163, 42], [643, 232, 160, 42]].map(R);
+const TABEL = R([29, 222, 1308, 464]);
+const KOL = { tatap: R([323, 222, 100, 36]), tinggal: R([423, 222, 88, 36]), slide: R([512, 222, 88, 36]), kuis: R([685, 222, 74, 36]), kc: R([759, 222, 140, 36]), video: R([900, 222, 138, 36]), art: R([1037, 222, 94, 36]), per: R([1208, 222, 129, 36]) };
+const BUDI = { tinggal: R([423, 580, 88, 54]), video: R([900, 580, 138, 54]), per: R([1208, 580, 129, 54]), kuis: R([685, 580, 74, 54]) };
+const SITI_SLIDE = R([512, 258, 88, 54]);
+const KARTU4 = (y, h) => [[28, y, 327, h], [355, y, 328, h], [683, y, 327, h], [1010, y, 328, h]].map(R);
+
+/* ===== ADEGAN 1 — masalahnya (0:00–0:20,4) ===== */
+tl.to('#hitam', { opacity: 0, duration: .8, ease: 'power1.out' }, 0);
+const slideData = [[-330, -8], [250, 6], [-40, -3], [140, 9], [-180, 2]];
+const ppt = slideData.map((d, i) => {
+  const s = el('div', 'ppt', $('tumpukan'), '<div class="pj"></div>' + '<div class="pb p"></div><div class="pb q"></div><div class="pb r"></div><div class="pb q"></div>');
+  tl.fromTo(s, { x: d[0], y: -900, rotation: d[1] * 3, opacity: 1 }, { y: i * 12, rotation: d[1], duration: .45, ease: 'back.out(1.1)' }, 1.5 + i * .4);
+  tl.to(s, { y: '+=2', duration: .06, yoyo: true, repeat: 1 }, 1.95 + i * .4);
+  sfx('kertas', 1.85 + i * .4);
+  return s;
+});
+kalimat('Materinya sudah ada di [[PowerPoint.]]', 0.9, 4.6);
+kalimat('Tapi menjadikannya modul web interaktif | biasanya berarti {{mengetik ulang dan menulis kode.}}', 4.9, 10.0);
+tl.to('#tumpukan', { filter: 'saturate(.3) brightness(.8)', duration: 1.2 }, 5.6);
+const kode = el('div', 'kode-ikon', P, '&lt;/&gt;<i></i>');
+tl.fromTo(kode, { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: .35, ease: 'back.out(1.8)' }, 7.2).to(kode, { opacity: 0, x: -1400, duration: .45, ease: 'power3.in' }, 10.1);
+sfx('stempel', 7.4);
+tl.to('#tumpukan', { x: -1500, filter: 'blur(14px) saturate(.3)', duration: .45, ease: 'power3.in' }, 10.1);
+kalimat('Setelah diunggah, laporan durasi bisa menipu: | yang modulnya {{ditinggal makan siang}} tampak paling rajin.', 10.3, 15.4);
+const batang = el('div', 'batang', P, '<div class="bt tinggi"><span>modul terbuka</span><b>🍽</b></div><div class="bt pendek"><span>benar-benar ditatap</span></div>');
+tl.fromTo(batang, { opacity: 0 }, { opacity: 1, duration: .3 }, 10.6);
+tl.fromTo(batang.querySelectorAll('.bt'), { scaleY: 0 }, { scaleY: 1, duration: .6, ease: 'power3.out', stagger: .2, transformOrigin: '50% 100%' }, 10.7);
+sfx('tik0', 10.7); sfx('tik1', 10.9);
+tl.to(batang.querySelector('.tinggi'), { boxShadow: '0 0 0 4px #FF9F0A, 0 0 40px rgba(255,159,10,.6)', duration: .3 }, 12.6);
+tl.to(batang, { opacity: 0, x: -1400, duration: .45, ease: 'power3.in' }, 15.45);
+kalimat('Rekap peserta lintas modul? | {{Digabung sendiri di Excel.}}', 15.7, 20.2);
+const lembarX = [0, 1, 2].map((i) => { const s = el('div', 'sheet', P, ''); s.style.left = (560 + i * 170) + 'px'; s.style.top = (150 + i * 40) + 'px';
+  tl.fromTo(s, { opacity: 0, y: 40, rotation: (i - 1) * 4 }, { opacity: 1, y: 0, duration: .35, ease: 'power3.out' }, 16.0 + i * .2); sfx('kertas', 16.0 + i * .2); return s; });
+tl.to(lembarX, { x: 6, duration: .05, yoyo: true, repeat: 5, ease: 'none' }, 18.4);
+tl.to(lembarX, { x: -1500, filter: 'blur(14px)', duration: .45, ease: 'power3.in', stagger: .04 }, 19.85);
+sfx('whoosh', 19.8);
+
+/* ===== ADEGAN 2 — perkenalan (0:20,4–0:33,8) ===== */
+const B1 = buatKartu(['beranda']);
+kartuMasuk(B1, 20.4);
+tl.fromTo('#logoKecil', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: .4 }, 21.0);
+sfx('denting', 20.6);
+pita('TEMPA · Beranda', 20.7, 33.6);
+kalimat('Kenalkan: [[TEMPA,]] ekosistem modul interaktif.', 20.8, 24.8);
+kamera(B1, 21.2, 1.9, 220, 70, 1.2, 'sine.inOut');
+kamera(B1, 24.6, 1, 683, 384, .9, 'sine.inOut');
+tl.fromTo('#mekar', { opacity: 0, scale: .9 }, { opacity: .8, scale: 1, duration: 1.2 }, 25.4).to('#mekar', { opacity: 0, duration: 1.2 }, 28.6);
+kalimat('Dari file PowerPoint sampai [[rekaman belajar peserta,]] | dalam satu aplikasi, tanpa menulis kode.', 25.1, 30.0);
+const zT = 1.55, kT = kam(zT, 415, 253);
+kamera(B1, 30.2, zT, 415, 253, .7);
+kalimat('[[Enam tab,]] berurutan seperti alur kerjamu.', 30.3, 33.8);
+TAB.forEach((r, i) => { nomor(String(i + 1), keP(r.x + r.w / 2, r.y - 16, kT), 30.9 + i * .2, 33.4); sfx('tik' + i, 30.9 + i * .2); });
+const sTab = sorot(B1, TAB[0], 'redupkan', 3); sorotMasuk(sTab, 31.8, zT, false);
+tl.to(sTab, { left: TAB[5].x - 3, width: TAB[5].w + 6, duration: 1.1, ease: 'power3.inOut' }, 32.0); sfx('sapu', 32.0);
+sorotKeluar(sTab, 33.4);
+kartuKeluar(B1, 33.8);
+
+/* ===== ADEGAN 3 — Import PPTX (0:34,0–0:39,6) ===== */
+const B2 = buatKartu(['beranda', 'import-hasil']);
+kartuMasuk(B2, 34.0);
+pita('1 · Import PPTX', 34.2, 39.5);
+kalimat('Unggah PPTX yang biasa kamu pakai mengajar. | Teks, gambar, dan tabel [[diambil otomatis.]]', 34.2, 39.4);
+const pUng = keP(150, 381, kam(1, 683, 384));
+kursor(34.3, pUng, .8); klik(35.4, pUng); kursorHilang(35.9);
+silang(B2, 'import-hasil', 36.2);
+const zI = 1.12, kI = kam(zI, 600, 520);
+kamera(B2, 36.5, zI, 600, 520, .7);
+[[28, 416, 1310, 236], [28, 662, 1310, 100]].forEach((a, i) => { sorotan(B2, R(a), 37.0 + i * .2, 39.0, '', zI, 4, false); sfx('tik' + i, 37.0 + i * .2); });
+balon('nomor slide asli tetap tercatat', 37.8, (function () { const p = keP(43, 431, kI); return { x: p.x + 120, y: p.y - 70 }; })(), 39.2);
+kartuKeluar(B2, 39.6);
+
+/* ===== ADEGAN 4 — Susun Modul (0:39,8–0:50,4) ===== */
+const B3 = buatKartu(['susun-kanvas', 'susun-edit']);
+kartuMasuk(B3, 39.8);
+pita('2 · Susun Modul', 40.0, 50.2);
+kalimat('Susun slide dengan [[menyeret,]] | seperti menata kartu di meja.', 40.0, 45.0);
+const k0 = kam(1, 683, 384);
+const seretBaris = el('div', 'baris-seret', B3.lapis, '<img src="aset/susun-kanvas.jpg" alt="" style="left:-44px;top:-441px">');
+Object.assign(seretBaris.style, { left: '44px', top: '441px', width: '1278px', height: '54px', opacity: 0 });
+const pTarik = keP(60, 468, k0);
+kursor(40.6, pTarik, .7);
+tl.set(seretBaris, { opacity: 1 }, 41.4); sfx('klik', 41.4);
+tl.to(seretBaris, { y: 128, scale: 1.01, duration: 1.0, ease: 'power2.inOut' }, 41.5);
+tl.to('#kursor', { y: '+=' + (128 * KS), duration: 1.0, ease: 'power2.inOut' }, 41.5); sfx('sapu', 41.5);
+tl.to(seretBaris, { opacity: 0, duration: .3 }, 43.2);
+sorotan(B3, R([44, 569, 1278, 54]), 42.6, 44.6, 'hijau', 1, 3);
+kursorHilang(43.4);
+silang(B3, 'susun-edit', 45.1);
+kalimat('Ketik di kiri, [[hasilnya langsung tampil]] di kanan. | Tidak perlu ekspor dulu.', 45.3, 50.2);
+sorotan(B3, R([58, 266, 611, 36]), 46.0, 48.2, '', 1, 4, false);
+const al = el('div', 'panah-alir', B3.lapis, ''); Object.assign(al.style, { left: '680px', top: '282px' });
+tl.fromTo(al, { opacity: 0, scaleX: 0 }, { opacity: 1, scaleX: 1, duration: .5, ease: 'power2.out', transformOrigin: '0 50%' }, 46.7).to(al, { opacity: 0, duration: .2 }, 49.6);
+sfx('sapu', 46.7);
+sorotan(B3, R([697, 246, 610, 420]), 47.3, 49.8, '', 1, 4);
+kartuKeluar(B3, 50.3);
+
+/* ===== ADEGAN 4b — karya tim (0:50,4–1:17,0) ===== */
+function karya(gambar, at, akhir, nama, zoom, fx, fy) {
+  const K = buatKartu(gambar);
+  tl.fromTo(K.el, { opacity: 0, scale: KS * 1.04, x: 120, filter: 'blur(6px)' }, { opacity: 1, scale: KS, x: 0, filter: 'blur(0px)', duration: .3, ease: 'power3.out' }, at);
+  sfx('sapu', at);
+  if (zoom) tl.set(K.kamera, kam(zoom, fx, fy), at);
+  tl.to(K.el, { opacity: 0, x: -120, filter: 'blur(6px)', duration: .25, ease: 'power2.in' }, akhir - .25);
+  const pl = el('div', 'pil-blok', P, nama);
+  tl.fromTo(pl, { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: .25 }, at + .1).to(pl, { opacity: 0, duration: .15 }, akhir - .25);
+  return { K: K, k: zoom ? kam(zoom, fx, fy) : kam(1, 683, 384) };
+}
+pita('2 · Susun Modul · karya tim', 50.4, 76.8);
+kalimat('[[19 jenis blok]] siap pakai. | Begini wujudnya di modul buatan tim:', 50.6, 55.4);
+let c = karya(['karya-akordeon-1', 'karya-akordeon-2'], 50.4, 53.0, 'Akordeon', 1.2, 840, 470);
+const lenc = el('div', 'lencana19', P, '19<small>jenis blok</small>');
+tl.fromTo(lenc, { opacity: 0, scale: 1.6, rotation: -14 }, { opacity: 1, scale: 1, rotation: -8, duration: .35, ease: 'back.out(1.8)' }, 50.8).to(lenc, { opacity: 0, duration: .25 }, 54.6);
+sfx('stempel', 51.0);
+let p = keP(450, 354, c.k); kursor(51.0, p, .6); klik(51.7, p); silang(c.K, 'karya-akordeon-2', 51.8, .35);
+c = karya(['karya-tab-1', 'karya-tab-2', 'karya-tab-3'], 53.0, 55.6, 'Tab', 1.3, 760, 300);
+p = keP(510, 216, c.k); kursor(53.2, p, .5); klik(53.8, p); silang(c.K, 'karya-tab-2', 53.9, .25);
+p = keP(592, 216, c.k); kursor(54.1, p, .4); klik(54.6, p); silang(c.K, 'karya-tab-3', 54.7, .25);
+c = karya(['karya-alur-1', 'karya-alur-2'], 55.6, 58.2, 'Diagram Alur', 1.25, 840, 450);
+kalimat('Akordeon, tab, diagram alur, popup, | semuanya [[bisa diklik peserta.]]', 55.7, 60.8);
+p = keP(663, 418, c.k); kursor(55.8, p, .6); klik(56.6, p); silang(c.K, 'karya-alur-2', 56.7, .3);
+c = karya(['karya-popup-1', 'karya-popup-2'], 58.2, 60.8, 'Popup', 0, 0, 0);
+p = keP(560, 654, c.k); kursor(58.3, p, .6); klik(59.0, p);
+jendela(c.K, 'karya-popup-2', R([480, 172, 720, 423])).buka(59.1);
+c = karya(['karya-video-1', 'karya-video-2'], 60.8, 63.4, 'Video', 1.15, 840, 500);
+p = keP(840, 504, c.k); kursor(60.9, p, .5); klik(61.5, p); silang(c.K, 'karya-video-2', 61.6, .3);
+kalimat('Video yang [[terekam lama tontonnya,]] | dan cek paham sebelum pindah slide.', 61.1, 66.0);
+c = karya(['karya-kc-1', 'karya-kc-2'], 63.4, 66.0, 'Cek Paham', 1.2, 683, 400);
+p = keP(683, 457, c.k); kursor(63.6, p, .6); klik(64.4, p, 'benar'); silang(c.K, 'karya-kc-2', 64.5, .35);
+c = karya(['karya-articulate-1', 'karya-articulate-2'], 66.0, 68.6, 'Articulate 360', 1.25, 840, 450);
+silang(c.K, 'karya-articulate-2', 67.0, 1.0);
+kalimat('Paket [[Articulate]] dan halaman HTML buatan sendiri | ikut hidup di dalam slide.', 66.3, 71.2);
+c = karya(['karya-html-1', 'karya-html-2', 'karya-html-3'], 68.6, 71.2, 'HTML Bebas', 1.2, 840, 480);
+p = keP(840, 704, c.k); kursor(68.7, p, .5); klik(69.3, p); silang(c.K, 'karya-html-2', 69.4, .3); silang(c.K, 'karya-html-3', 70.4, .4); kursorHilang(70.0);
+c = karya(['karya-refleksi-1', 'karya-refleksi-2', 'karya-refleksi-3', 'karya-refleksi-4'], 71.2, 77.0, 'Refleksi', 0, 0, 0);
+kalimat('Lalu [[Refleksi:]] peserta memilih, | lalu menuliskan renungannya sendiri.', 71.5, 76.8);
+tl.fromTo(c.K.img['karya-refleksi-1'], { y: 0 }, { y: -40, duration: 1.6, ease: 'sine.inOut' }, 71.3);
+silang(c.K, 'karya-refleksi-2', 72.8, .5); sfx('sapu', 72.8);
+p = keP(560, 280, c.k); kursor(73.4, p, .5); klik(73.9, p);
+silang(c.K, 'karya-refleksi-3', 74.0, .2);
+p = keP(900, 331, c.k); kursor(74.1, p, .35); klik(74.5, p);
+silang(c.K, 'karya-refleksi-4', 75.0, .5); kursorHilang(75.0);
+const ketik = el('div', 'ketik-tutup', c.K.lapis, ''); Object.assign(ketik.style, { left: '512px', top: '350px', width: '640px', height: '30px' });
+tl.set(ketik, { opacity: 0 }, 0); tl.set(ketik, { opacity: 1, scaleX: 1 }, 75.0); tl.to(ketik, { scaleX: 0, duration: 1.2, ease: 'steps(14)', transformOrigin: '100% 50%' }, 75.4);
+
+/* ===== ADEGAN 5 — Tema (1:17,2–1:27,2) ===== */
+const B5 = buatKartu(['tema-emas', 'tema-biru', 'tema-rekam']);
+kartuMasuk(B5, 77.2);
+pita('3 · Tema', 77.3, 87.0);
+kalimat('[[Enam tema warna,]] sepuluh gaya grafis. | Satu klik, seluruh modul ikut berubah.', 77.4, 82.2);
+const zM = 1.5, kM = kam(zM, 330, 470);
+kamera(B5, 77.6, zM, 330, 470, .7);
+[[28, 442, 82, 58], [118, 442, 97, 58], [223, 442, 90, 58], [322, 442, 90, 58], [420, 442, 85, 58], [513, 442, 84, 58]].forEach((a, i) => { const r = R(a); nomor(String(i + 1), keP(r.x + r.w / 2, r.y - 14, kM), 78.6 + i * .2, 80.0); sfx('tik' + i, 78.6 + i * .2); });
+kamera(B5, 80.0, 1, 683, 384, .6);
+p = keP(166, 471, kam(1, 683, 384)); kursor(80.2, p, .5); klik(80.8, p); kursorHilang(81.3);
+silang(B5, 'tema-biru', 80.9, .45);
+sorotan(B5, R([697, 343, 640, 417]), 81.0, 82.1, '', 1, 3, false);
+silang(B5, 'tema-rekam', 82.3, .35);
+kalimat('Di sini juga ada satu centang penting: | [[rekam aktivitas peserta.]]', 82.5, 87.2);
+const zR = 1.6, kR = kam(zR, 350, 380);
+kamera(B5, 82.6, zR, 350, 380, .7);
+stabilo(B5, R([67, 343, 170, 18]), 83.5, 86.8);
+sorotan(B5, R([29, 392, 639, 55]), 84.2, 86.8, 'hijau', zR, 3, false);
+sfx('kunci', 84.2);
+balon('hijau = siap merekam', 84.6, (function () { const q = keP(350, 450, kR); return { x: q.x - 120, y: q.y + 10 }; })(), 86.8);
+kartuKeluar(B5, 87.2);
+
+/* ===== ADEGAN 6 — Kuis (1:27,4–1:32,4) ===== */
+const B6 = buatKartu(['kuis']);
+kartuMasuk(B6, 87.4);
+pita('4 · Kuis', 87.5, 92.2);
+kalimat('Kuis [[per bagian,]] kunci jawabannya ditandai di tempat. | Posisi jawaban benar diacak otomatis.', 87.6, 92.4);
+const zK = 1.4, kK = kam(zK, 480, 290);
+kamera(B6, 87.8, zK, 480, 290, .7);
+p = keP(55, 293, kK); kursor(88.4, p, .6); klik(89.1, p);
+sorotan(B6, R([98, 275, 1224, 35]), 89.2, 90.4, 'hijau', zK, 3, false); sfx('benar', 89.25);
+const geserAcak = [2, -1, 1, -2];   /* tiap huruf pindah ke baris lain: jawaban benar tidak menumpuk di satu posisi */
+['A', 'B', 'C', 'D'].forEach((h, i) => { const q = keP(30, 209 + i * 42, kK); const n = nomor(h, q, 90.5 + i * .2, 92.1); sfx('tik' + i, 90.5 + i * .2);
+  tl.to(n, { y: geserAcak[i] * 42 * zK * KS, duration: .45, ease: 'power2.inOut' }, 91.4); });
+sfx('sapu', 91.4);
+kartuKeluar(B6, 92.4);
+
+/* ===== ADEGAN 7 — Preview & Export (1:32,6–1:43,0) ===== */
+const B7 = buatKartu(['preview']);
+kartuMasuk(B7, 92.6);
+pita('5 · Preview & Export', 92.7, 102.8);
+kalimat('Jalankan modulnya utuh, | [[persis seperti yang dilihat peserta.]]', 92.8, 97.6);
+kamera(B7, 92.9, 1.18, 575, 560, 4.4, 'sine.inOut');
+kamera(B7, 97.4, 1.6, 300, 356, .7);
+const kE = kam(1.6, 300, 356);
+kalimat('Hasilnya satu [[berkas HTML mandiri,]] | atau [[paket SCORM]] siap unggah ke LMS.', 97.9, 103.0);
+sorotan(B7, R([135, 340, 103, 33]), 98.4, 99.6, '', 1.6, 4, false); sfx('tik0', 98.4);
+sorotan(B7, R([246, 340, 146, 33]), 99.0, 101.8, '', 1.6, 4, false); sfx('tik1', 99.0);
+p = keP(319, 356, kE); kursor(99.6, p, .6); klik(100.4, p);
+const zip = el('div', 'zip', P, '.zip'); const pz = keP(319, 356, kE);
+tl.fromTo(zip, { left: pz.x - 50, top: pz.y - 30, opacity: 0, scale: .4 }, { opacity: 1, scale: 1, duration: .25 }, 100.5)
+  .to(zip, { left: 1500, top: 140, duration: .7, ease: 'power3.in' }, 100.8).to(zip, { opacity: 0, duration: .2 }, 101.4);
+sfx('whoosh', 100.8); kursorHilang(101.0);
+kartuKeluar(B7, 103.0);
+
+/* ===== ADEGAN 8 — sisi peserta (1:43,2–1:48,8) ===== */
+const B8 = buatKartu(['peserta-slide', 'peserta-peringatan']);
+kartuMasuk(B8, 103.2);
+pita('Sisi peserta', 103.3, 108.6);
+kalimat('Saat dipakai, yang melewati slide terlalu cepat | [[diingatkan sebelum masuk kuis.]]', 103.4, 108.8);
+jendela(B8, 'peserta-peringatan', R([483, 224, 400, 321])).buka(104.8);
+kamera(B8, 105.3, 1.5, 683, 384, .7);
+stabilo(B8, R([515, 342, 336, 40]), 106.0, 108.5);
+kartuKeluar(B8, 108.9);
+
+/* ===== ADEGAN 9 — KLIMAKS: Command Center (1:49,0–3:25,2) ===== */
+const C = buatKartu(['preview', 'cc-kunci', 'cc-contoh-atas', 'cc-modul-ringkasan', 'cc-tabel', 'cc-peringatan', 'cc-video', 'cc-peserta-tabel', 'cc-peserta', 'cc-cocreation', 'cc-cara-baca']);
+kartuMasuk(C, 109.0);
+pita('6 · Command Center', 109.1, 205.0);
+kalimat('Semua jejak belajar itu bermuara ke sini: | [[Command Center.]]', 109.2, 113.8);
+const zC0 = 1.55, kC0 = kam(zC0, 415, 253);
+kamera(C, 109.2, zC0, 415, 253, .7);
+p = keP(TABP[4].x + 80, 253, kC0); kursor(109.6, p, .5);
+p = keP(TABP[5].x + 80, 253, kC0); kursor(110.2, p, .6); klik(110.9, p); kursorHilang(111.4);
+silang(C, 'cc-kunci', 111.1, .4); sfx('denting', 111.2);
+const zC1 = 1.7, kC1 = kam(zC1, 300, 410);
+kamera(C, 111.9, zC1, 300, 410, .8);
+kalimat('Isinya data pribadi, jadi [[dikunci password]] | yang diperiksa di server.', 114.1, 119.0);
+sorotan(C, R([28, 364, 380, 36]), 114.6, 118.6, '', zC1, 4);
+sfx('kunci', 114.7);
+balon('dicek di server, bukan di layar', 115.6, (function () { const q = keP(420, 382, kC1); return { x: q.x + 20, y: q.y - 28 }; })(), 118.7);
+kalimat('Mau belajar membacanya dulu? | Ada [[mode contoh]] berisi data karangan.', 119.3, 124.2);
+p = keP(218, 481, kC1); kursor(119.6, p, .7); klik(120.5, p); kursorHilang(121.0);
+silang(C, 'cc-contoh-atas', 120.7, .4); sembunyi(C, 'cc-kunci', 121.2);
+const zC2 = 1.45, kC2 = kam(zC2, 460, 400);
+kamera(C, 120.8, zC2, 460, 400, .7);
+stabilo(C, R([397, 378, 58, 19]), 121.8, 124.0);
+kalimat('Satu data, [[tiga cara baca:]] | per modul, per peserta, dan catatan peserta.', 124.5, 129.2);
+const zC3 = 2.0, kC3 = kam(zC3, 300, 420);
+kamera(C, 124.6, zC3, 300, 420, .7);
+[[28, 425, 76, 26], [110, 425, 81, 26], [197, 425, 84, 26]].forEach((a, i) => { const r = R(a); nomor(String(i + 1), keP(r.x + r.w / 2, r.y - 16, kC3), 125.6 + i * .2, 128.9); sfx('tik' + i, 125.6 + i * .2); sorotan(C, r, 125.6 + i * .2, 128.9, '', zC3, 3, false); });
+silang(C, 'cc-modul-ringkasan', 129.3, .4); sembunyi(C, 'cc-contoh-atas', 129.8);
+tl.set(C.kamera, kam(1, 683, 384), 129.3);
+kalimat('[[Empat angka]] jadi tempat mendarat, | termasuk siapa yang {{perlu ditindaklanjuti.}}', 129.5, 134.6);
+const zC4 = 1.25, kC4 = kam(zC4, 546, 400);
+kamera(C, 129.6, zC4, 546, 400, .7);
+KARTU4(357, 84).forEach((r, i) => { nomor(String(i + 1), keP(r.x + r.w - 34, r.y + 40, kC4), 130.6 + i * .2, 134.3); sfx('tik' + i, 130.6 + i * .2); });
+sorotan(C, KARTU4(357, 84)[2], 132.2, 134.3, '', zC4, 3);
+stabilo(C, R([697, 380, 260, 26]), 132.3, 134.3, true); sfx('stempel', 132.3);
+silang(C, 'cc-tabel', 134.7, .4); sembunyi(C, 'cc-modul-ringkasan', 135.2);
+tl.set(C.kamera, kam(1, 683, 384), 134.7);
+kalimat('Waktu [[tatap layar]] dipisah dari waktu {{ditinggal.}} | Diam 4 menit atau pindah tab, hitungan berhenti.', 134.9, 140.6);
+const zC5 = 1.5, kC5 = kam(zC5, 460, 450);
+kamera(C, 135.1, zC5, 460, 450, .7);
+sorotan(C, kolom(KOL.tatap, TABEL), 136.0, 140.3, '', zC5, 2, false);
+sorotan(C, kolom(KOL.tinggal, TABEL), 136.4, 140.3, 'kuning', zC5, 2, false); sfx('tik0', 136.0); sfx('tik1', 136.4);
+balon('⚠ ditinggal lebih dari 10 menit', 137.4, (function () { const q = keP(467, 607, kC5); return { x: q.x - 90, y: q.y + 36 }; })(), 140.3, true);
+const jam = el('div', 'jam', P, '⏸ diam 4 menit'); tl.fromTo(jam, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .3 }, 138.2).to(jam, { opacity: 0, duration: .2 }, 140.3); sfx('ketuk', 138.2);
+kalimat('Kolom slide menunjukkan [[sejauh mana materi dibuka,]] | termasuk yang bolak-balik.', 140.9, 146.0);
+const zC6 = 2.2, kC6 = kam(zC6, 560, 290);
+kamera(C, 141.0, zC6, 560, 290, .7);
+sorotan(C, SITI_SLIDE, 141.9, 145.7, '', zC6, 2);
+balon('94 dari 95 slide dibuka · 96 kunjungan', 142.6, (function () { const q = keP(600, 285, kC6); return { x: q.x + 30, y: q.y - 30 }; })(), 145.7);
+kalimat('Klik peringatan: kelihatan [[slide mana]] | yang dilewati terlalu cepat.', 146.3, 151.6);
+const zC7 = 1, kC7 = kam(zC7, 683, 384);
+kamera(C, 146.3, zC7, 683, 384, .7);
+p = keP(1240, 607, kC7); kursor(146.9, p, .7); klik(147.8, p); kursorHilang(148.3);
+const jP = jendela(C, 'cc-peringatan', R([29, 634, 1308, 69])); jP.buka(147.9);
+stabilo(C, R([85, 655, 220, 18]), 148.8, 151.3);
+jP.tutup(151.6);
+kalimat('Video juga: [[berapa persen ditonton,]] | yang di bawah 20% ditandai.', 151.9, 157.0);
+p = keP(963, 607, kC7); kursor(152.1, p, .7); klik(152.9, p); kursorHilang(153.4);
+const jV = jendela(C, 'cc-video', R([29, 634, 1308, 112])); jV.buka(153.0);
+sorotan(C, R([29, 640, 260, 100]), 153.9, 156.7, 'kuning', zC7, 3, false);
+jV.tutup(157.0);
+kalimat('Kuis dihitung dari [[berapa kali gagal,]] | termasuk yang menyerah tanpa mengulang.', 157.3, 162.4);
+const zC8 = 1.45, kC8 = kam(zC8, 820, 450);
+kamera(C, 157.3, zC8, 820, 450, .7);
+sorotan(C, kolom(KOL.kuis, TABEL), 158.2, 162.1, '', zC8, 2, false); sfx('tik0', 158.2);
+balon('jumlah kirim jawaban yang gagal', 159.0, (function () { const q = keP(722, 222, kC8); return { x: q.x - 160, y: q.y - 66 }; })(), 162.1, true);
+kalimat('Cek paham dan paket [[Articulate]] pun | ikut tercatat per peserta.', 162.7, 167.2);
+sorotan(C, kolom(KOL.kc, TABEL), 163.4, 166.9, '', zC8, 2, false); sfx('tik0', 163.4);
+sorotan(C, kolom(KOL.art, TABEL), 163.8, 166.9, '', zC8, 2, false); sfx('tik1', 163.8);
+silang(C, 'cc-peserta-tabel', 167.4, .4); sembunyi(C, 'cc-tabel', 167.9);
+tl.set(C.kamera, kam(1, 683, 384), 167.4);
+kalimat('Tampilan per peserta merangkum [[satu orang lintas modul,]] | lengkap dengan nilai tiap modulnya.', 167.5, 172.8);
+const zC9 = 1.5, kC9 = kam(zC9, 330, 380);
+kamera(C, 167.6, zC9, 330, 380, .7);
+sorotan(C, R([219, 160, 190, 454]), 168.6, 172.5, '', zC9, 2, false); sfx('tik0', 168.6);
+sorotan(C, R([153, 160, 65, 454]), 169.0, 172.5, '', zC9, 2, false); sfx('tik1', 169.0);
+kalimat('Satu NIP dengan nama berbeda? | [[Ditandai,]] bukan disembunyikan.', 173.1, 177.8);
+const zCa = 2.2, kCa = kam(zCa, 200, 371);
+kamera(C, 173.2, zCa, 200, 371, .7);
+sorotan(C, R([29, 336, 124, 70]), 174.0, 177.5, 'kuning', zCa, 3); sfx('stempel', 174.0);
+balon('satu NIP, beberapa ejaan nama ⚠', 174.6, (function () { const q = keP(153, 336, kCa); return { x: q.x + 30, y: q.y - 40 }; })(), 177.5);
+silang(C, 'cc-peserta', 177.9, .4); sembunyi(C, 'cc-peserta-tabel', 178.4);
+tl.set(C.kamera, kam(1, 683, 384), 177.9);
+kalimat('Semua bisa [[diunduh ke Excel:]] | per sesi, per peserta, per slide, per video.', 178.1, 183.2);
+const zCb = 2.0, kCb = kam(zCb, 260, 520);
+kamera(C, 178.2, zCb, 260, 520, .7);
+[[28, 565, 150, 26], [186, 565, 141, 26], [336, 565, 146, 26]].forEach((a, i) => { const r = R(a); nomor(String(i + 1), keP(r.x + r.w / 2, r.y - 16, kCb), 179.2 + i * .2, 182.9); sfx('tik' + i, 179.2 + i * .2); sorotan(C, r, 179.2 + i * .2, 182.9, '', zCb, 3, false); });
+const xl = el('div', 'zip', P, 'CSV → Excel'); const px = keP(103, 578, kCb);
+tl.fromTo(xl, { left: px.x - 60, top: px.y - 20, opacity: 0, scale: .5 }, { opacity: 1, scale: 1, duration: .25 }, 180.4).to(xl, { left: 1500, top: 150, duration: .7, ease: 'power3.in' }, 181.0).to(xl, { opacity: 0, duration: .2 }, 181.6);
+sfx('whoosh', 181.0);
+silang(C, 'cc-cocreation', 183.3, .4); sembunyi(C, 'cc-peserta', 183.8);
+tl.set(C.kamera, kam(1, 683, 384), 183.3);
+kalimat('Catatan peserta terkumpul [[mengikuti alur materi,]] | lengkap dengan siapa yang menulisnya.', 183.5, 188.8);
+const zCc = 1.35, kCc = kam(zCc, 500, 520);
+kamera(C, 183.6, zCc, 500, 520, .8);
+sorotan(C, R([197, 300, 84, 26]), 184.4, 188.5, '', zCc, 3, false); sfx('tik0', 184.4);
+sorotan(C, R([14, 645, 640, 120]), 185.0, 188.5, '', zCc, 3);
+silang(C, 'cc-modul-ringkasan', 189.0, .4); sembunyi(C, 'cc-cocreation', 189.5);
+tl.set(C.kamera, kam(1, 683, 384), 189.0);
+kalimat('Jawaban [[Refleksi]] per nama dan NIP | ikut terkumpul, siap diunduh.', 189.1, 193.8);
+const zCd = 2.2, kCd = kam(zCd, 240, 340);
+kamera(C, 189.2, zCd, 240, 340, .7);
+sorotan(C, R([280, 330, 62, 26]), 190.0, 193.5, '', zCd, 4); sfx('tik0', 190.0);
+balon('jawaban per nama & NIP · unduh sebagai Excel', 190.7, (function () { const q = keP(342, 343, kCd); return { x: q.x + 24, y: q.y - 30 }; })(), 193.5);
+silang(C, 'cc-cara-baca', 193.9, .4);
+tl.set(C.kamera, kam(1, 683, 384), 193.9);
+kalimat('Bingung arti kolomnya? [[Cara baca tabel]] menjelaskan | kenapa begini, dan kapan perlu curiga.', 194.1, 199.6);
+kamera(C, 194.3, 1.1, 760, 300, .8);
+sorotan(C, R([186, 0, 1180, 768]), 194.9, 199.2, '', 1.1, -4, false);
+balon('tiap kolom: kenapa begini · kapan curiga', 196.0, keP(700, 420, kam(1.1, 760, 300)), 199.2);
+silang(C, 'cc-tabel', 199.7, .4); sembunyi(C, 'cc-cara-baca', 200.2); sembunyi(C, 'cc-modul-ringkasan', 200.2);
+tl.set(C.kamera, kam(1.2, 683, 450), 199.7);
+kalimat('Dari sini kelihatan bagian modul mana | yang [[perlu diperbaiki di modul berikutnya.]]', 199.9, 205.0);
+kamera(C, 199.9, 1, 683, 384, 4.8, 'sine.inOut');
+tl.fromTo('#mekar', { opacity: 0, scale: .9 }, { opacity: .7, scale: 1.05, duration: 1.4 }, 201.0).to('#mekar', { opacity: 0, duration: 1 }, 204.2);
+sfx('denting', 201.0);
+kartuKeluar(C, 205.2);
+
+/* ===== ADEGAN 10 — fitur pendukung (3:25,4–3:30,6) ===== */
+const BA = buatKartu(['beranda']);
+kartuMasuk(BA, 205.4);
+const zA = 1.4, kA = kam(zA, 1000, 150);
+tl.set(BA.kamera, kam(zA, 1000, 150), 205.4);
+kalimat('Pekerjaan [[tersimpan sendiri,]] salah langkah bisa dibatalkan, | beberapa project jalan bersamaan.', 205.6, 210.6);
+[[850, 170, 119, 19], [981, 164, 64, 30], [1191, 166, 132, 26]].forEach((a, i) => { sorotan(BA, R(a), 206.4 + i * .2, 210.2, '', zA, 4, false); sfx('tik' + i, 206.4 + i * .2); });
+kartuKeluar(BA, 210.7);
+
+/* ===== ADEGAN 11 — aman dan siap dipakai (3:30,8–3:36,2) ===== */
+kalimat('Modul tanpa centang rekam [[tidak mengirim data apa pun.]] | Paket SCORM-nya sudah diuji unggah ke KLC.', 211.0, 216.2);
+const ubin = [['Berkas HTML mandiri', '<rect x="9" y="5" width="30" height="38" rx="4"/><path d="M17 20l-5 4 5 4M31 20l5 4-5 4M26 17l-4 14"/>'],
+  ['Paket SCORM · LMS', '<path d="M24 5l17 9v20l-17 9-17-9V14z"/><path d="M7 14l17 9 17-9M24 23v20"/>'],
+  ['Command Center', '<rect x="5" y="9" width="38" height="28" rx="4"/><path d="M12 30v-7M20 30V17M28 30v-10M36 30V14"/>']].map((d, i) => {
+  const u = el('div', 'ubin', P, '<svg viewBox="0 0 48 48" fill="none" stroke="#7CC4FF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">' + d[1] + '</svg><span>' + d[0] + '</span>');
+  u.style.left = (530 + i * 300) + 'px';
+  tl.fromTo(u, { opacity: 0, y: 40, scale: .85, filter: 'blur(8px)' }, { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: .45, ease: 'back.out(1.6)' }, 211.2 + i * .18);
+  tl.to(u, { opacity: 0, y: -20, duration: .3 }, 216.0);
+  sfx('tik' + i, 211.2 + i * .18);
+  return u;
+});
+const garisUbin = el('div', 'garis-ubin', P); tl.fromTo(garisUbin, { scaleX: 0, opacity: 1 }, { scaleX: 1, duration: .8, ease: 'power2.inOut' }, 211.5).to(garisUbin, { opacity: 0, duration: .3 }, 216.0);
+tl.to(ubin[1], { boxShadow: '0 0 0 2px #0A84FF, 0 0 40px rgba(10,132,255,.6)', duration: .4 }, 213.2);
+sfx('kunci', 213.2);
+
+/* ===== ADEGAN 12 — penutup (3:36,4–3:48,2) ===== */
+const BZ = buatKartu(['beranda-gelap']);
+kartuMasuk(BZ, 216.4);
+kalimat('Bahannya sudah ada di PowerPoint-mu. | Sisanya [[cukup disusun.]]', 216.5, 221.2);
+tl.fromTo('#mekar', { opacity: 0, scale: .9 }, { opacity: .9, scale: 1.05, duration: 1.4 }, 218.4);
+tl.to('#logoKecil', { opacity: 0, duration: .3 }, 221.2);
+tl.to(BZ.el, { scale: .5, y: -150, duration: .7, ease: 'power3.inOut' }, 221.4);
+tl.to('#mekar', { y: -150, opacity: .6, duration: .7 }, 221.4);
+sfx('whoosh', 221.4);
+tl.fromTo('#logoBesar', { opacity: 0, y: 20, filter: 'blur(8px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .5, ease: 'power3.out' }, 221.9);
+$('pJudul').innerHTML = pecah('TEMPA');
+$('pTag').innerHTML = pecah('Pusat Pendidikan dan Pelatihan Pajak');
+tl.fromTo('#pJudul .kt', { opacity: 0, y: 26, filter: 'blur(12px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .55, ease: 'power3.out', stagger: .07 }, 222.2);
+sfx('akor', 222.2);
+tl.fromTo('#pTag .kt', { opacity: 0, y: 18, filter: 'blur(10px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .5, ease: 'power3.out', stagger: .06 }, 223.2);
+tl.fromTo('#pDis', { opacity: 0 }, { opacity: 1, duration: .5 }, 224.4);
+tl.to('#hitam', { opacity: 1, duration: .8, ease: 'power1.in' }, 226.2);
+tl.set({}, {}, DURASI);
+
+/* ---------- suara (Web Audio, dibangkitkan program; selaras bunyi simulator) ---------- */
+const Suara = (function () {
+  let ax = null, induk = null, bisu = false, pad = null;
+  function siap() {
+    if (ax) return true;
+    try { ax = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return false; }
+    induk = ax.createGain(); induk.gain.value = .9; induk.connect(ax.destination); return true;
+  }
+  function nada(f, t0, dur, jenis, vol, f2) {
+    const o = ax.createOscillator(), g = ax.createGain(); o.type = jenis || 'sine'; o.frequency.setValueAtTime(f, t0); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t0 + dur);
+    g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(vol, t0 + .008); g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+    o.connect(g); g.connect(induk); o.start(t0); o.stop(t0 + dur + .05);
+  }
+  function derau(t0, dur, vol, tipe, f1, f2) {
+    const n = Math.floor(ax.sampleRate * dur), b = ax.createBuffer(1, n, ax.sampleRate), d = b.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+    const s = ax.createBufferSource(); s.buffer = b; const fl = ax.createBiquadFilter(); fl.type = tipe || 'bandpass'; fl.frequency.setValueAtTime(f1, t0); if (f2) fl.frequency.exponentialRampToValueAtTime(f2, t0 + dur); fl.Q.value = .9;
+    const g = ax.createGain(); g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(vol, t0 + dur * .3); g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+    s.connect(fl); fl.connect(g); g.connect(induk); s.start(t0); s.stop(t0 + dur);
+  }
+  const daftar = {
+    whoosh: (t) => derau(t, .4, .1, 'bandpass', 300, 2400),
+    sapu: (t) => derau(t, .55, .07, 'bandpass', 500, 3200),
+    kertas: (t) => derau(t, .2, .12, 'highpass', 1800),
+    klik: (t) => { nada(1700, t, .05, 'square', .025); derau(t, .03, .06, 'highpass', 3000); },
+    pena: (t) => { derau(t, .025, .08, 'highpass', 2500); nada(2400, t + .01, .06, 'sine', .04); },
+    ketuk: (t) => { nada(900, t, .06, 'sine', .07); nada(900, t + .11, .06, 'sine', .06); },
+    benar: (t) => [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => nada(f, t + i * .075, .35, 'sine', .07)),
+    salah: (t) => { nada(440, t, .16, 'triangle', .08); nada(330, t + .15, .22, 'triangle', .08); },
+    denting: (t) => { nada(1567.98, t, .7, 'sine', .05); nada(2349.3, t, .5, 'sine', .02); },
+    dengung: (t) => nada(110, t, .5, 'sawtooth', .03, 90),
+    denyut: (t) => nada(392, t, .9, 'sine', .03, 523.25),
+    naik: (t) => { derau(t, .8, .08, 'bandpass', 200, 4000); nada(196, t, .9, 'sine', .05, 392); },
+    stempel: (t) => { nada(120, t, .25, 'sine', .18, 60); derau(t, .08, .1, 'lowpass', 800); },
+    kunci: (t) => { nada(1800, t, .12, 'triangle', .04); nada(2700, t + .07, .14, 'triangle', .035); derau(t + .02, .05, .04, 'highpass', 4000); },
+    akor: (t) => [261.63, 329.63, 392, 523.25].forEach((f) => nada(f, t, 1.6, 'sine', .045))
+  };
+  for (let i = 0; i < 8; i++) daftar['tik' + i] = (t) => nada(1020, t, .07, 'sine', .05);   // penanda beruntun: bunyi sama, tidak menaik
+  function mulaiPad() {
+    if (pad || !ax) return;
+    const g = ax.createGain(); g.gain.value = 0; const lp = ax.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 900; lp.connect(g); g.connect(induk);
+    const osc = [174.61, 220, 261.63, 329.63].map((f, i) => { const o = ax.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; o.detune.value = i % 2 ? 6 : -6; o.connect(lp); o.start(); return o; });
+    const lfo = ax.createOscillator(), lg = ax.createGain(); lfo.frequency.value = .08; lg.gain.value = 300; lfo.connect(lg); lg.connect(lp.frequency); lfo.start();
+    g.gain.linearRampToValueAtTime(.022, ax.currentTime + 2.5);
+    pad = { g: g, osc: osc.concat([lfo]) };
+  }
+  function hentiPad() { if (!pad) return; const p = pad; pad = null; p.g.gain.cancelScheduledValues(ax.currentTime); p.g.gain.linearRampToValueAtTime(0, ax.currentTime + .5); setTimeout(() => p.osc.forEach((o) => o.stop()), 600); }
+  return {
+    aktifkan: function () { if (siap()) { if (ax.state === 'suspended') ax.resume(); } },   // musik latar dihapus atas permintaan pemilik; hanya efek suara
+    jeda: function () { hentiPad(); },
+    bunyi: function (nama) { if (!ax || bisu || !daftar[nama] || tl.paused()) return; daftar[nama](ax.currentTime + .005); },
+    setBisu: function (b) { bisu = b; if (induk) induk.gain.setTargetAtTime(b ? 0 : .9, ax.currentTime, .05); },
+    bisu: () => bisu
+  };
+})();
+
+/* ---------- kontrol ---------- */
+const geser = $('geser'), waktu = $('waktu'), btnPutar = $('btnPutar');
+const fmt = (t) => Math.floor(t / 60) + ':' + String(Math.floor(t % 60)).padStart(2, '0') + ',' + Math.floor((t % 1) * 10);
+tl.eventCallback('onUpdate', () => { geser.value = tl.time(); waktu.textContent = fmt(tl.time()) + ' / 3:48'; });
+tl.eventCallback('onComplete', () => { btnPutar.textContent = 'Putar'; Suara.jeda(); if (document.body.classList.contains('rekam')) setTimeout(keluarRekam, 800); });
+function putar() { Suara.aktifkan(); if (tl.progress() >= 1) tl.restart(); else tl.play(); btnPutar.textContent = 'Jeda'; }
+function jeda() { tl.pause(); btnPutar.textContent = 'Putar'; Suara.jeda(); }
+btnPutar.onclick = () => (tl.paused() || tl.progress() >= 1 ? putar() : jeda());
+$('btnUlang').onclick = () => { tl.restart(); Suara.aktifkan(); btnPutar.textContent = 'Jeda'; };
+geser.oninput = () => { tl.pause(); tl.seek(+geser.value, true); btnPutar.textContent = 'Putar'; Suara.jeda(); waktu.textContent = fmt(+geser.value) + ' / 3:48'; };
+$('btnSuara').onclick = () => { Suara.setBisu(!Suara.bisu()); $('btnSuara').textContent = 'Suara: ' + (Suara.bisu() ? 'mati' : 'nyala'); };
+function penuh() { const d = document.documentElement; if (!document.fullscreenElement && d.requestFullscreen) d.requestFullscreen().catch(() => {}); }
+$('btnPenuh').onclick = () => (document.fullscreenElement ? document.exitFullscreen() : penuh());
+function keluarRekam() { document.body.classList.remove('rekam'); $('kontrol').classList.remove('sembunyi'); }
+$('btnRekam').onclick = () => {
+  document.body.classList.add('rekam'); $('kontrol').classList.add('sembunyi'); penuh();
+  tl.pause(); tl.seek(0, true); Suara.jeda();
+  setTimeout(() => { Suara.aktifkan(); tl.play(0); btnPutar.textContent = 'Jeda'; }, 1600);   // 1,6 detik layar hitam: waktu untuk mulai merekam
+};
+$('btnMulai').onclick = () => { $('mulai').hidden = true; Suara.aktifkan(); tl.restart(); btnPutar.textContent = 'Jeda'; };
+addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.code === 'Space') { e.preventDefault(); if (!$('mulai').hidden) $('btnMulai').click(); else btnPutar.click(); }
+  else if (e.key === 'r' || e.key === 'R') $('btnUlang').click();
+  else if (e.key === 'f' || e.key === 'F') $('btnPenuh').click();
+  else if (e.key === 'h' || e.key === 'H') $('kontrol').classList.toggle('sembunyi');
+  else if (e.key === 'Escape') keluarRekam();
+});
+/* tampilkan bingkai pertama yang terbaca (cuplikan tanpa diputar): detik 6,8 */
+tl.seek(25.6, true);
+window.__tl = tl;   // untuk alat pratinjau bingkai
+})();
+</script>
+</body>
+</html>
