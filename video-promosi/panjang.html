@@ -374,7 +374,9 @@ function kartuKeluar(k, at) {
   if (c == null) { c = at; sapuan(c); }
   tl.set(k.el, { opacity: 0 }, c + .26);
 }
-function kamera(k, at, z, fx, fy, dur, ease) { tl.to(k.kamera, Object.assign(kam(z, fx, fy), { duration: dur == null ? .7 : dur, ease: ease || 'power2.inOut' }), at); }
+/* semua zoom masuk/keluar seragam: cepat & halus (durasi/ease per pemanggilan sengaja diabaikan) */
+const ZOOM = { durasi: .6, ease: 'power3.inOut' };
+function kamera(k, at, z, fx, fy) { tl.to(k.kamera, Object.assign(kam(z, fx, fy), { duration: ZOOM.durasi, ease: ZOOM.ease }), at); }
 function sorotMasuk(s, at, z) {
   z = z || 1;
   const path = s.querySelector('path'); path.style.strokeWidth = (4.2 / z) + 'px';
