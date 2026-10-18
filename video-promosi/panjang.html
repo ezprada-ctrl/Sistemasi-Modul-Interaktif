@@ -54,8 +54,10 @@ body.rekam,body.rekam *{cursor:none!important}
 @keyframes kedip{50%{opacity:0}}
 .batang{position:absolute;left:940px;top:150px;width:640px;height:560px;display:flex;align-items:flex-end;gap:120px;justify-content:center;opacity:0;z-index:15}
 .batang .bt{position:relative;width:170px;border-radius:16px 16px 6px 6px;background:linear-gradient(#2a3a5e,#1a2440);border:1px solid var(--tepi)}
-.batang .tinggi{height:520px;background:linear-gradient(#5a3a10,#2e1d06);border-color:rgba(255,159,10,.6)}
-.batang .pendek{height:110px;background:linear-gradient(#0A84FF,#0a3f80)}
+.batang .tinggi{height:520px;background:repeating-linear-gradient(135deg,rgba(255,92,77,.28) 0 14px,rgba(255,92,77,.08) 14px 28px);border:2px dashed rgba(255,107,91,.7);overflow:visible}
+.batang .tinggi i{position:absolute;left:0;right:0;bottom:0;height:110px;background:linear-gradient(#FF9A55,#B9531F);border-radius:0 0 4px 4px}
+.batang .tinggi em{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%) rotate(-90deg);font:600 26px/1 var(--mono);font-style:normal;color:#FF8A7A;letter-spacing:.12em;white-space:nowrap}
+.batang .pendek{height:110px;background:linear-gradient(#FF9A55,#B9531F);border:0}
 .batang span{position:absolute;left:50%;bottom:-48px;transform:translateX(-50%);white-space:nowrap;font:500 22px/1 var(--mono);color:var(--redup)}
 .batang b{position:absolute;left:50%;top:-74px;transform:translateX(-50%);font-size:52px}
 .sheet{position:absolute;width:520px;height:380px;border-radius:10px;background-color:#F4F5F7;box-shadow:0 30px 60px rgba(0,0,0,.45);opacity:0;
@@ -478,7 +480,7 @@ tl.fromTo(kode, { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: .3
 sfx('stempel', 7.4);
 tl.to('#tumpukan', { x: -2600, filter: 'blur(14px) saturate(.3)', duration: .45, ease: 'power3.in' }, 10.1).set('#tumpukan', { opacity: 0 }, 10.6);
 kalimat('Setelah diunggah, laporan durasi bisa menipu: | yang modulnya {{ditinggal makan siang}} tampak paling rajin.', 10.3, 15.4);
-const batang = el('div', 'batang', P, '<div class="bt tinggi"><span>modul terbuka</span><b>🍽</b></div><div class="bt pendek"><span>benar-benar ditatap</span></div>');
+const batang = el('div', 'batang', P, '<div class="bt tinggi"><i></i><em>ditinggal</em><span>durasi di laporan</span></div><div class="bt pendek"><span>benar-benar ditatap</span></div>');
 tl.fromTo(batang, { opacity: 0 }, { opacity: 1, duration: .3 }, 10.6);
 tl.fromTo(batang.querySelectorAll('.bt'), { scaleY: 0 }, { scaleY: 1, duration: .6, ease: 'power3.out', stagger: .2, transformOrigin: '50% 100%' }, 10.7);
 sfx('tik0', 10.7); sfx('tik1', 10.9);
