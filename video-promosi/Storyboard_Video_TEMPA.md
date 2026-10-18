@@ -92,7 +92,7 @@ Dipilih pemilik lewat pertanyaan penajaman: arah **Bara TEMPA**, transisi **sapu
 | 6 | Dari file PowerPoint sampai [[laporan aktivitas peserta,]] \| tanpa menulis satu baris kode pun. | 25,1 – 30,0 | Beranda |
 | 7 | [[Enam tab,]] berurutan seperti alur kerjamu. | 30,3 – 33,8 | Beranda |
 | 8 | File presentasi yang biasa dipakai mengajar langsung jadi sumber. \| Teks, gambar, dan tabel [[diambil otomatis.]] | 34,2 – 39,4 | 1 Import PPTX |
-| 9 | Susun slide dengan [[menyeret,]] \| seperti menata kartu di meja. | 40,0 – 45,0 | 2 Susun Modul |
+| 9 | Susun urutan slide tinggal [[drag & drop]] aja! | 40,0 – 45,0 | 2 Susun Modul |
 | 10 | Ketik di kiri, [[hasilnya langsung tampil]] di kanan. \| Tidak perlu ekspor dulu. | 45,3 – 50,2 | 2 Susun Modul |
 | 11 | [[19 jenis blok]] siap pakai. \| Begini wujudnya di modul buatan tim: | 50,6 – 55,4 | 2 Susun Modul · karya tim |
 | 12 | Akordeon, tab, diagram alur, popup: \| materi dipecah supaya [[tidak membebani sekaligus.]] | 55,7 – 60,8 | 2 Susun Modul · karya tim |
