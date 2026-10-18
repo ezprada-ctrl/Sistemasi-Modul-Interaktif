@@ -251,8 +251,8 @@ body.rekam,body.rekam *{cursor:none!important}
 <div id="kontrol">
   <button id="btnPutar" class="utama" type="button">Jeda</button>
   <button id="btnUlang" type="button">Ulang</button>
-  <input id="geser" type="range" min="0" max="237.2" step="0.01" value="0" aria-label="Posisi video">
-  <span id="waktu">0:00,0 / 3:57</span>
+  <input id="geser" type="range" min="0" max="239.7" step="0.01" value="0" aria-label="Posisi video">
+  <span id="waktu">0:00,0 / 3:59</span>
   <button id="btnSuara" type="button">Suara: nyala</button>
   <button id="btnPenuh" type="button">Layar penuh</button>
   <button id="btnRekam" type="button">Rekam bersih</button>
@@ -263,7 +263,7 @@ body.rekam,body.rekam *{cursor:none!important}
 'use strict';
 const P = document.getElementById('panggung');
 const $ = (id) => document.getElementById(id);
-const DURASI = 228.2;   /* + 9 dtk sisipan Paket Modul lewat GESER = 3:57,2 */
+const DURASI = 228.2;   /* + 9 dtk sisipan Paket Modul lewat GESER = 3:59,2 */
 
 /* ---------- skala panggung ---------- */
 function skala() { const s = Math.min(innerWidth / 1920, innerHeight / 1080); P.style.transform = 'translate(' + (innerWidth - 1920 * s) / 2 + 'px,' + (innerHeight - 1080 * s) / 2 + 'px) scale(' + s + ')'; }
@@ -333,9 +333,9 @@ const tl = gsap.timeline({ paused: true });
 /* Sisipan adegan "Paket Modul" (9 dtk) setelah Preview & Export: semua posisi waktu >= 103,0 yang ditulis
    di linimasa otomatis digeser +9 dtk, KECUALI saat GESER.aktif dimatikan (adegan sisipan ditulis dengan
    waktu sebenarnya). Dengan begini angka-angka adegan lain di storyboard tetap bisa dicocokkan (+9). */
-const GESER = { aktif: true, mulai: 103.15, dt: 9 };
+const GESER = { aktif: true, sisip: [[103.15, 9], [162.55, 2.5]] };   /* [mulai, tambahan dtk]: Paket Modul (+9), kolom Kuis dua ketukan (+2,5) */
 ['to', 'fromTo', 'set', 'call'].forEach((m) => { const asli = tl[m].bind(tl); const idx = { to: 2, fromTo: 3, set: 2, call: 2 }[m];
-  tl[m] = function () { const a = [...arguments]; if (GESER.aktif && typeof a[idx] === 'number' && a[idx] >= GESER.mulai) a[idx] += GESER.dt; return asli(...a); }; });
+  tl[m] = function () { const a = [...arguments]; if (GESER.aktif && typeof a[idx] === 'number') { const t0 = a[idx]; GESER.sisip.forEach(([m, d]) => { if (t0 >= m) a[idx] += d; }); } return asli(...a); }; });
 const sfx = (nama, t) => tl.call(() => Suara.bunyi(nama), null, t);
 
 function teksMasuk(t, at) {
@@ -408,7 +408,7 @@ function balon(teks, at, titik, akhir, gelap) {
   tl.to(b, { opacity: 0, y: -8, duration: .25 }, akhir);
 }
 
-/* ====================== VIDEO PANJANG TEMPA (±3:57) — tanpa narator, tanpa musik, teks tampil penuh ====================== */
+/* ====================== VIDEO PANJANG TEMPA (±3:59) — tanpa narator, tanpa musik, teks tampil penuh ====================== */
 const svgNS = 'http://www.w3.org/2000/svg';
 /* teks dua baris: " | " = pindah baris */
 let __akhir = -1;
@@ -762,11 +762,21 @@ p = keP(963, 607, kC7); kursor(152.1, p, .7); klik(152.9, p); kursorHilang(153.4
 const jV = jendela(C, 'cc-video', R([29, 634, 1308, 112])); jV.buka(153.0);
 sorotan(C, R([29, 640, 260, 100]), 153.9, 156.7, 'kuning', zC7, 3, false);
 jV.tutup(157.0);
-kalimat('Kuis dihitung dari [[berapa kali gagal,]] | termasuk yang menyerah tanpa mengulang.', 157.3, 162.4);
 const zC8 = 1.45, kC8 = kam(zC8, 820, 450);
-kamera(C, 157.3, zC8, 820, 450, .7);
-sorotan(C, kolom(KOL.kuis, TABEL), 158.2, 162.1, '', zC8, 2, false); sfx('tik0', 158.2);
-balon('jumlah kirim jawaban yang gagal', 159.0, (function () { const q = keP(722, 222, kC8); return { x: q.x - 160, y: q.y - 66 }; })(), 162.1, true);
+kamera(C, 157.3, zC8, 820, 450);
+/* kolom Kuis, dua ketukan (waktu sebenarnya): sel yang gagal dulu, lalu sel 0 */
+GESER.aktif = false;
+{
+  const simpan = __akhir; const kolomKuis = (y) => R([685, y, 74, 54]);
+  kalimat('Kuis dihitung dari [[berapa kali gagal]] — | yang gagal lalu berhenti pun tetap tercatat.', 166.3, 169.9);
+  [312, 365, 419, 580].forEach((y, i) => { sorotan(C, kolomKuis(y), 167.0 + i * .2, 169.8, '', zC8, 3, false); sfx('tik' + i, 167.0 + i * .2); });
+  balon('jumlah kirim jawaban yang gagal', 167.8, (function () { const q = keP(722, 222, kC8); return { x: q.x - 160, y: q.y - 66 }; })(), 169.8, true);
+  kalimat('Angka [[0]] berarti belum pernah gagal: | lulus sekali coba, atau belum sampai kuisnya.', 170.3, 173.8);
+  [258, 472, 526, 634].forEach((y, i) => { sorotan(C, kolomKuis(y), 170.9 + i * .2, 173.6, 'kuning', zC8, 3, false); sfx('tik' + i, 170.9 + i * .2); });
+  balon('0 = belum pernah gagal', 171.6, (function () { const q = keP(722, 222, kC8); return { x: q.x - 110, y: q.y - 66 }; })(), 173.6, true);
+  __akhir = simpan > 162.4 ? simpan : 162.4;
+}
+GESER.aktif = true;
 kalimat('Cek paham dicatat terpisah dari kuis: | [[mengukur pemahaman,]] bukan kelulusan.', 162.7, 167.2);
 sorotan(C, kolom(KOL.kc, TABEL), 163.4, 166.9, '', zC8, 2, false); sfx('tik0', 163.4);
 sorotan(C, kolom(KOL.art, TABEL), 164.8, 166.9, '', zC8, 2, false); sfx('tik1', 164.8);
@@ -845,7 +855,7 @@ const garisUbin = el('div', 'garis-ubin', P); tl.fromTo(garisUbin, { scaleX: 0, 
 tl.to(ubin[1], { boxShadow: '0 0 0 2px #0A84FF, 0 0 40px rgba(10,132,255,.6)', duration: .4 }, 213.2);
 sfx('kunci', 213.2);
 
-/* ===== ADEGAN 12 — penutup (3:36,4–3:57,2) ===== */
+/* ===== ADEGAN 12 — penutup (3:36,4–3:59,2) ===== */
 const BZ = buatKartu(['beranda-gelap']);
 kartuMasuk(BZ, 216.4);
 kalimat('Bahannya sudah ada di PowerPoint-mu. | Sisanya [[cukup disusun.]]', 216.5, 221.2);
@@ -923,13 +933,13 @@ const Suara = (function () {
 /* ---------- kontrol ---------- */
 const geser = $('geser'), waktu = $('waktu'), btnPutar = $('btnPutar');
 const fmt = (t) => Math.floor(t / 60) + ':' + String(Math.floor(t % 60)).padStart(2, '0') + ',' + Math.floor((t % 1) * 10);
-tl.eventCallback('onUpdate', () => { if (tl.paused() && window.__vidSeek) window.__vidSeek(); geser.value = tl.time(); waktu.textContent = fmt(tl.time()) + ' / 3:57'; });
+tl.eventCallback('onUpdate', () => { if (tl.paused() && window.__vidSeek) window.__vidSeek(); geser.value = tl.time(); waktu.textContent = fmt(tl.time()) + ' / 3:59'; });
 tl.eventCallback('onComplete', () => { btnPutar.textContent = 'Putar'; Suara.jeda(); if (document.body.classList.contains('rekam')) setTimeout(keluarRekam, 800); });
 function putar() { Suara.aktifkan(); if (tl.progress() >= 1) tl.restart(); else tl.play(); btnPutar.textContent = 'Jeda'; }
 function jeda() { tl.pause(); btnPutar.textContent = 'Putar'; Suara.jeda(); }
 btnPutar.onclick = () => (tl.paused() || tl.progress() >= 1 ? putar() : jeda());
 $('btnUlang').onclick = () => { tl.restart(); Suara.aktifkan(); btnPutar.textContent = 'Jeda'; };
-geser.oninput = () => { tl.pause(); tl.seek(+geser.value, true); btnPutar.textContent = 'Putar'; Suara.jeda(); waktu.textContent = fmt(+geser.value) + ' / 3:57'; };
+geser.oninput = () => { tl.pause(); tl.seek(+geser.value, true); btnPutar.textContent = 'Putar'; Suara.jeda(); waktu.textContent = fmt(+geser.value) + ' / 3:59'; };
 $('btnSuara').onclick = () => { Suara.setBisu(!Suara.bisu()); $('btnSuara').textContent = 'Suara: ' + (Suara.bisu() ? 'mati' : 'nyala'); };
 function penuh() { const d = document.documentElement; if (!document.fullscreenElement && d.requestFullscreen) d.requestFullscreen().catch(() => {}); }
 $('btnPenuh').onclick = () => (document.fullscreenElement ? document.exitFullscreen() : penuh());

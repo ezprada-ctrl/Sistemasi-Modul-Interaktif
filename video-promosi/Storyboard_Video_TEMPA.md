@@ -1,6 +1,6 @@
 # Storyboard Video Promosi — TEMPA (versi panjang)
 
-**Durasi:** ±3:57 (237 detik) · **Format:** 16:9, 1920 × 1080 · **Tanpa narator, tanpa musik** — efek suara saja.
+**Durasi:** ±3:59 (240 detik) · **Format:** 16:9, 1920 × 1080 · **Tanpa narator, tanpa musik** — efek suara saja.
 **Penonton:** PTP (Pengembang Teknologi Pembelajaran) · **Sapaan:** "kamu", santai semi-formal.
 **Bentuk jadi:** halaman animasi `video-promosi/panjang.html` (mesin disalin dari video Simulator Pajak Minimum Global), direkam pemilik dengan Win + Alt + R.
 **Status:** DISETUJUI & DIBANGUN (`panjang.html`) — revisi 2 — tiap blok yang dipamerkan kini memakai **karya penyusun sungguhan yang terbaik** (lihat bagian H). Menunggu persetujuan pemilik sebelum foto layar dan pembangunan video.
@@ -114,7 +114,7 @@ Dipilih pemilik lewat pertanyaan penajaman: arah **Bara TEMPA**, transisi **sapu
 | 28 | Kolom slide langsung menjawab: \| [[ada materi yang terlewat atau tidak.]] | 140,9 – 146,0 | 6 Command Center |
 | 29 | Klik peringatan: kelihatan [[slide mana]] \| yang dibuka kurang dari separuh waktu bacanya. | 146,3 – 151,6 | 6 Command Center |
 | 30 | Video juga: [[berapa persen ditonton,]] \| yang di bawah 20% ditandai. | 151,9 – 157,0 | 6 Command Center |
-| 31 | Kuis dihitung dari [[berapa kali gagal,]] \| termasuk yang menyerah tanpa mengulang. | 157,3 – 162,4 | 6 Command Center |
+| 31 | Kuis dihitung dari [[berapa kali gagal]] — \| yang gagal lalu berhenti pun tetap tercatat. → (ketukan 2, +2,5 dtk) Angka [[0]] berarti belum pernah gagal: \| lulus sekali coba, atau belum sampai kuisnya. | 157,3 – 162,4 | 6 Command Center |
 | 32 | Cek paham dicatat terpisah dari kuis: \| [[mengukur pemahaman,]] bukan kelulusan. | 162,7 – 167,2 | 6 Command Center |
 | 33 | Tampilan per peserta merangkum [[satu orang lintas modul,]] \| lengkap dengan nilai tiap modulnya. | 167,5 – 172,8 | 6 Command Center |
 | 34 | Satu NIP dengan nama berbeda? \| [[Ditandai,]] bukan disembunyikan. | 173,1 – 177,8 | 6 Command Center |
