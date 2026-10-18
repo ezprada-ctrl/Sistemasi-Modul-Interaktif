@@ -109,7 +109,7 @@ Dipilih pemilik lewat pertanyaan penajaman: arah **Bara TEMPA**, transisi **sapu
 | 23 | Isinya data pribadi, jadi [[dikunci password]] \| yang diperiksa di server. | 114,1 – 119,0 | 6 Command Center |
 | 24 | Mau belajar membacanya dulu? \| Ada [[mode contoh]] berisi data karangan. | 119,3 – 124,2 | 6 Command Center |
 | 25 | Satu data, [[tiga cara baca:]] \| per modul, per peserta, dan catatan peserta. | 124,5 – 129,2 | 6 Command Center |
-| 26 | [[Empat angka]] jadi tempat mendarat, \| termasuk siapa yang {{perlu ditindaklanjuti.}} | 129,5 – 134,6 | 6 Command Center |
+| 26 | Sekilas langsung terbaca: jumlah peserta, yang tuntas, \| yang {{perlu ditindaklanjuti,}} dan [[rata-rata tatap layar.]] | 129,5 – 134,6 | 6 Command Center |
 | 27 | Waktu [[tatap layar]] dipisah dari waktu {{ditinggal:}} \| berhenti dihitung saat pindah tab atau diam lebih dari 4 menit. | 134,9 – 140,6 | 6 Command Center |
 | 28 | Kolom slide langsung menjawab: \| [[ada materi yang terlewat atau tidak.]] | 140,9 – 146,0 | 6 Command Center |
 | 29 | Klik peringatan: kelihatan [[slide mana]] \| yang dibuka kurang dari separuh waktu bacanya. | 146,3 – 151,6 | 6 Command Center |
