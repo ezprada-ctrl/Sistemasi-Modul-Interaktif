@@ -110,7 +110,7 @@ Dipilih pemilik lewat pertanyaan penajaman: arah **Bara TEMPA**, transisi **sapu
 | 24 | Mau belajar membacanya dulu? \| Ada [[mode contoh]] berisi data karangan. | 119,3 – 124,2 | 6 Command Center |
 | 25 | Satu data, [[tiga cara baca:]] \| per modul, per peserta, dan catatan peserta. | 124,5 – 129,2 | 6 Command Center |
 | 26 | Sekilas langsung terbaca: jumlah peserta, yang tuntas, \| yang {{perlu ditindaklanjuti,}} dan [[rata-rata tatap layar.]] | 129,5 – 134,6 | 6 Command Center |
-| 27 | Waktu [[tatap layar]] dipisah dari waktu {{ditinggal:}} \| berhenti dihitung saat pindah tab atau diam lebih dari 4 menit. | 134,9 – 140,6 | 6 Command Center |
+| 27 | Pindah tab atau diam lebih dari [[4 menit?]] \| Jam tatap layar berhenti, waktunya masuk {{ditinggal.}} (catatan: "⚠ total ditinggal sesi ini > 10 menit") | 134,9 – 140,6 | 6 Command Center |
 | 28 | Kolom slide langsung menjawab: \| [[ada materi yang terlewat atau tidak.]] | 140,9 – 146,0 | 6 Command Center |
 | 29 | Klik peringatan: kelihatan [[slide mana]] \| yang dibuka kurang dari separuh waktu bacanya. | 146,3 – 151,6 | 6 Command Center |
 | 30 | Video juga: [[berapa persen ditonton,]] \| yang di bawah 20% ditandai. | 151,9 – 157,0 | 6 Command Center |
