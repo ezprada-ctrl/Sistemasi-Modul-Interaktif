@@ -1,6 +1,6 @@
 # Storyboard Video Promosi — TEMPA (versi panjang)
 
-**Durasi:** ±3:59 (240 detik) · **Format:** 16:9, 1920 × 1080 · **Tanpa narator, tanpa musik** — efek suara saja.
+**Durasi:** ±4:05 (246 detik) · **Format:** 16:9, 1920 × 1080 · **Tanpa narator, tanpa musik** — efek suara saja.
 **Penonton:** PTP (Pengembang Teknologi Pembelajaran) · **Sapaan:** "kamu", santai semi-formal.
 **Bentuk jadi:** halaman animasi `video-promosi/panjang.html` (mesin disalin dari video Simulator Pajak Minimum Global), direkam pemilik dengan Win + Alt + R.
 **Status:** DISETUJUI & DIBANGUN (`panjang.html`) — revisi 2 — tiap blok yang dipamerkan kini memakai **karya penyusun sungguhan yang terbaik** (lihat bagian H). Menunggu persetujuan pemilik sebelum foto layar dan pembangunan video.
@@ -169,6 +169,20 @@ Kalimat "mode gelap" dari draf pertama dibuang untuk memberi ruang adegan karya 
 | 0:39,8 | Foto **susun-kanvas** (daftar slide kiri, pratinjau kanan) | Kartu masuk | #9 | — |
 | 0:41,0 – 0:44,0 | Sama | Kursor menekan satu baris slide dan menyeretnya dua baris ke bawah; jejak `aliran()` putus-putus; sorot di posisi baru | #9 | `klik`, `sapu` |
 | 0:45,3 – 0:50,2 | Foto **susun-edit** (kolom "Judul slide" terisi, pratinjau menampilkan judul yang sama) | Silang; sorot kolom judul (kiri) → panah aliran ke pratinjau (kanan) → sorot judul di pratinjau | #10 | `tik` ×2 |
+
+### Adegan 4a — Contoh blok bergerak saat kursor singgah (0:50,4 – 0:56,4, sisipan revisi 6)
+
+Semua adegan sesudahnya bergeser **+6 dtk** dari jam yang tertulis di storyboard ini (di kode lewat `GESER`).
+
+| Detik | Yang tampil | Efek | Teks | Suara |
+|---|---|---|---|---|
+| 0:50,4 | Menu "+ Tambah blok" terbuka di editor slide (foto asli aplikasi, `hover-menu`) | Zoom 1,5 ke menu; kursor masuk | "Arahkan kursor ke satu jenis blok: \| [[contohnya langsung bergerak]] sebelum dipasang." | — |
+| 0:50,9 | Kursor singgah di **Akordeon** → contoh di samping menu, butirnya terbuka (4 bingkai asli) | Pita "Akordeon · contoh bergerak" | (lanjut) | `tik` |
+| 0:52,4 | **Tab** → contoh berpindah "Tab Satu" ke "Tab Dua" | Pita "Tab · contoh bergerak" | | `tik` |
+| 0:53,9 | **Diagram Alur** → langkah contoh berpindah | Pita "Diagram Alur · contoh bergerak" | | `tik` |
+| 0:55,0 | **Popup** → jendela contoh terbuka | Pita "Popup · contoh bergerak" | | `tik` |
+
+Sumber kalimat: tur demo aplikasi (`builderDemo/steps.ts`, langkah "Intip contoh tiap tipe blok"). Bingkai dipotret dengan kursor sungguhan (`alat/ambil-hover.mjs`), penyimpanan draft diblokir.
 
 ### Adegan 4b — Karya tim: tiap blok dimainkan dari modul terbaik (0:50,4 – 1:17,0) · label `2 · Susun Modul · karya tim`
 
