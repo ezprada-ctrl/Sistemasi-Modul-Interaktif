@@ -253,8 +253,8 @@ body.rekam,body.rekam *{cursor:none!important}
 <div id="kontrol">
   <button id="btnPutar" class="utama" type="button">Jeda</button>
   <button id="btnUlang" type="button">Ulang</button>
-  <input id="geser" type="range" min="0" max="247.3" step="0.01" value="0" aria-label="Posisi video">
-  <span id="waktu">0:00,0 / 4:07</span>
+  <input id="geser" type="range" min="0" max="249.8" step="0.01" value="0" aria-label="Posisi video">
+  <span id="waktu">0:00,0 / 4:10</span>
   <button id="btnSuara" type="button">Suara: nyala</button>
   <button id="btnPenuh" type="button">Layar penuh</button>
   <button id="btnRekam" type="button">Rekam bersih</button>
@@ -265,7 +265,7 @@ body.rekam,body.rekam *{cursor:none!important}
 'use strict';
 const P = document.getElementById('panggung');
 const $ = (id) => document.getElementById(id);
-const DURASI = 228.2;   /* + 9 dtk sisipan Paket Modul lewat GESER = 4:07,2 */
+const DURASI = 228.2;   /* + 9 dtk sisipan Paket Modul lewat GESER = 4:10,2 */
 
 /* ---------- skala panggung ---------- */
 function skala() { const s = Math.min(innerWidth / 1920, innerHeight / 1080); P.style.transform = 'translate(' + (innerWidth - 1920 * s) / 2 + 'px,' + (innerHeight - 1080 * s) / 2 + 'px) scale(' + s + ')'; }
@@ -338,7 +338,7 @@ const tl = gsap.timeline({ paused: true });
 /* [mulai, tambahan dtk]: pratinjau hover blok (+6), Paket Modul (+9), kolom Kuis dua ketukan (+2,5).
    mode 'semua' = linimasa biasa; 'awal' = blok sisipan lama yang ditulis dgn waktu sebenarnya sebelum sisipan hover ada
    (cukup ditambah +6); 'tanpa' = blok yang ditulis dengan waktu akhir apa adanya. */
-const GESER = { mode: 'semua', sisip: [[50.31, 6], [63.05, 1.6], [103.15, 9], [162.55, 2.5]], susulan: [[50.31, 6], [63.05, 1.6]] };   /* +1,6 dtk: blok Video berputar 3 dtk */
+const GESER = { mode: 'semua', sisip: [[50.31, 6], [63.05, 1.6], [72.7, 2.5], [103.15, 9], [162.55, 2.5]], susulan: [[50.31, 6], [63.05, 1.6], [72.7, 2.5]] };   /* +1,6: Video 3 dtk; +2,5: Refleksi digulir */
 ['to', 'fromTo', 'set', 'call'].forEach((m) => { const asli = tl[m].bind(tl); const idx = { to: 2, fromTo: 3, set: 2, call: 2 }[m];
   tl[m] = function () { const a = [...arguments]; if (GESER.mode !== 'tanpa' && typeof a[idx] === 'number') { const t0 = a[idx]; (GESER.mode === 'awal' ? GESER.susulan : GESER.sisip).forEach(([m, d]) => { if (t0 >= m) a[idx] += d; }); } return asli(...a); }; });
 const sfx = (nama, t) => tl.call(() => Suara.bunyi(nama), null, t);
@@ -413,7 +413,7 @@ function balon(teks, at, titik, akhir, gelap) {
   tl.to(b, { opacity: 0, y: -8, duration: .25 }, akhir);
 }
 
-/* ====================== VIDEO PANJANG TEMPA (±4:07) — tanpa narator, tanpa musik, teks tampil penuh ====================== */
+/* ====================== VIDEO PANJANG TEMPA (±4:10) — tanpa narator, tanpa musik, teks tampil penuh ====================== */
 const svgNS = 'http://www.w3.org/2000/svg';
 /* teks dua baris: " | " = pindah baris */
 let __akhir = -1;
@@ -632,16 +632,23 @@ silang(c.K, 'karya-articulate-2', 67.0, 1.0);
 kalimat('Paket [[Articulate]] yang pernah dibuat tim, juga HTML sendiri, | berjalan apa adanya di dalam slide.', 66.3, 71.2);
 c = karya(['karya-html-1', 'karya-html-2', 'karya-html-3'], 68.6, 71.2, 'HTML Bebas', 1.2, 840, 480);
 p = keP(840, 704, c.k); kursor(68.7, p, .5); klik(69.3, p); silang(c.K, 'karya-html-2', 69.4, .3); silang(c.K, 'karya-html-3', 70.4, .4); kursorHilang(70.0);
-c = karya(['karya-refleksi-1', 'karya-refleksi-2', 'karya-refleksi-3a', 'karya-refleksi-3', 'karya-refleksi-4'], 71.2, 77.0, 'Refleksi', 0, 0, 0);
+c = karya(['karya-refleksi-1'].concat(Array.from({ length: 19 }, (_, i) => 'gulir-a-' + String(i).padStart(2, '0')), ['karya-refleksi-3a', 'karya-refleksi-3'], Array.from({ length: 8 }, (_, i) => 'gulir-b-' + String(i).padStart(2, '0')), ['karya-refleksi-4']), 71.2, 77.0, 'Refleksi', 0, 0, 0);
 kalimat('Lalu [[Refleksi:]] peserta memilih, | lalu menuliskan renungannya sendiri.', 71.5, 76.8);
-tl.fromTo(c.K.img['karya-refleksi-1'], { y: 0 }, { y: -40, duration: 1.6, ease: 'sine.inOut' }, 71.3);
-silang(c.K, 'karya-refleksi-2', 72.8, .5); sfx('sapu', 72.8);
+/* gulir sungguhan: sampul → poin 3, latar parallax ikut bergerak (19 bingkai asli, waktu akhir apa adanya) */
+GESER.mode = 'tanpa';
+for (let i = 0; i < 19; i++) tl.set(c.K.img['gulir-a-' + String(i).padStart(2, '0')], { opacity: 1 }, 79.3 + i * .165);
+sfx('sapu', 79.3); sfx('sapu', 80.9);
+GESER.mode = 'semua';
 p = keP(560, 280, c.k); kursor(73.4, p, .5); klik(73.9, p);
 silang(c.K, 'karya-refleksi-3a', 74.0, .15);
 p = keP(900, 331, c.k); kursor(74.1, p, .35); klik(74.5, p); silang(c.K, 'karya-refleksi-3', 74.6, .15);
-silang(c.K, 'karya-refleksi-4', 75.0, .5); kursorHilang(75.0);
+kursorHilang(74.9);
+/* gulir lanjut poin 3 → poin 4 (8 bingkai asli) */
+for (let i = 0; i < 8; i++) tl.set(c.K.img['gulir-b-' + String(i).padStart(2, '0')], { opacity: 1 }, 74.75 + i * .11);
+sfx('sapu', 74.75);
+silang(c.K, 'karya-refleksi-4', 75.65, .2);
 const ketik = el('div', 'ketik-tutup', c.K.lapis, ''); Object.assign(ketik.style, { left: '512px', top: '350px', width: '640px', height: '30px' });
-tl.set(ketik, { opacity: 0 }, 0); tl.set(ketik, { opacity: 1, scaleX: 1 }, 75.0); tl.to(ketik, { scaleX: 0, duration: 1.2, ease: 'steps(14)', transformOrigin: '100% 50%' }, 75.4);
+tl.set(ketik, { opacity: 0 }, 0); tl.set(ketik, { opacity: 1, scaleX: 1 }, 75.65); tl.to(ketik, { scaleX: 0, duration: .85, ease: 'steps(12)', transformOrigin: '100% 50%' }, 75.75);
 
 /* ===== ADEGAN 5 — Tema (1:17,2–1:27,2) ===== */
 const B5 = buatKartu(['tema-emas', 'tema-biru', 'tema-rekam']);
@@ -888,7 +895,7 @@ const garisUbin = el('div', 'garis-ubin', P); tl.fromTo(garisUbin, { scaleX: 0, 
 tl.to(ubin[1], { boxShadow: '0 0 0 2px #0A84FF, 0 0 40px rgba(10,132,255,.6)', duration: .4 }, 213.2);
 sfx('kunci', 213.2);
 
-/* ===== ADEGAN 12 — penutup (3:36,4–4:07,2) ===== */
+/* ===== ADEGAN 12 — penutup (3:36,4–4:10,2) ===== */
 const BZ = buatKartu(['beranda-gelap']);
 kartuMasuk(BZ, 216.4);
 kalimat('Bahannya sudah ada di PowerPoint-mu. | Sisanya [[cukup disusun.]]', 216.5, 221.2);
@@ -966,13 +973,13 @@ const Suara = (function () {
 /* ---------- kontrol ---------- */
 const geser = $('geser'), waktu = $('waktu'), btnPutar = $('btnPutar');
 const fmt = (t) => Math.floor(t / 60) + ':' + String(Math.floor(t % 60)).padStart(2, '0') + ',' + Math.floor((t % 1) * 10);
-tl.eventCallback('onUpdate', () => { if (tl.paused() && window.__vidSeek) window.__vidSeek(); geser.value = tl.time(); waktu.textContent = fmt(tl.time()) + ' / 4:07'; });
+tl.eventCallback('onUpdate', () => { if (tl.paused() && window.__vidSeek) window.__vidSeek(); geser.value = tl.time(); waktu.textContent = fmt(tl.time()) + ' / 4:10'; });
 tl.eventCallback('onComplete', () => { btnPutar.textContent = 'Putar'; Suara.jeda(); if (document.body.classList.contains('rekam')) setTimeout(keluarRekam, 800); });
 function putar() { Suara.aktifkan(); if (tl.progress() >= 1) tl.restart(); else tl.play(); btnPutar.textContent = 'Jeda'; }
 function jeda() { tl.pause(); btnPutar.textContent = 'Putar'; Suara.jeda(); }
 btnPutar.onclick = () => (tl.paused() || tl.progress() >= 1 ? putar() : jeda());
 $('btnUlang').onclick = () => { tl.restart(); Suara.aktifkan(); btnPutar.textContent = 'Jeda'; };
-geser.oninput = () => { tl.pause(); tl.seek(+geser.value, true); btnPutar.textContent = 'Putar'; Suara.jeda(); waktu.textContent = fmt(+geser.value) + ' / 4:07'; };
+geser.oninput = () => { tl.pause(); tl.seek(+geser.value, true); btnPutar.textContent = 'Putar'; Suara.jeda(); waktu.textContent = fmt(+geser.value) + ' / 4:10'; };
 $('btnSuara').onclick = () => { Suara.setBisu(!Suara.bisu()); $('btnSuara').textContent = 'Suara: ' + (Suara.bisu() ? 'mati' : 'nyala'); };
 function penuh() { const d = document.documentElement; if (!document.fullscreenElement && d.requestFullscreen) d.requestFullscreen().catch(() => {}); }
 $('btnPenuh').onclick = () => (document.fullscreenElement ? document.exitFullscreen() : penuh());
