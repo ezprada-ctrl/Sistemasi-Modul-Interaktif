@@ -1,6 +1,6 @@
 # Storyboard Video Promosi — TEMPA (versi panjang)
 
-**Durasi:** ±4:10 (250 detik) · **Format:** 16:9, 1920 × 1080 · **Tanpa narator, tanpa musik** — efek suara saja.
+**Durasi:** ±4:16 (256 detik) · **Format:** 16:9, 1920 × 1080 · **Tanpa narator, tanpa musik** — efek suara saja.
 **Penonton:** PTP (Pengembang Teknologi Pembelajaran) · **Sapaan:** "kamu", santai semi-formal.
 **Bentuk jadi:** halaman animasi `video-promosi/panjang.html` (mesin disalin dari video Simulator Pajak Minimum Global), direkam pemilik dengan Win + Alt + R.
 **Status:** DISETUJUI & DIBANGUN (`panjang.html`) — revisi 2 — tiap blok yang dipamerkan kini memakai **karya penyusun sungguhan yang terbaik** (lihat bagian H). Menunggu persetujuan pemilik sebelum foto layar dan pembangunan video.
@@ -209,6 +209,12 @@ Setiap blok tampil sebagai kartu foto **hasil jadi modul sungguhan** (bukan cont
 | 1:18,6 | Sama | Nomor 1–6 di atas keenam kartu tema (selang 0,2 dtk) | #16 | `tik` ×6 (sama) |
 | 1:20,2 | Foto **tema-biru** (pratinjau berganti warna) | Kursor klik tema lain → silang 0,45 dtk | #16 | `klik` |
 | 1:22,5 – 1:27,2 | Foto **tema-rekam** (centang "Rekam aktivitas peserta" + indikator siap hijau) | Kamera zoom ke centang; stabilo di labelnya; balon "hijau = siap merekam" | #17 | `kunci` saat centang tersorot |
+
+### Adegan 5a — 10 gaya grafis (sisipan revisi 8, ±6 dtk setelah ganti warna tema)
+
+Menu "Gaya Grafis" (tab Tema) dibuka; kursor singgah berurutan di 10 gaya (Blob Abstrak, Lingkaran Gradasi, Grid Titik, Bingkai Sudut, Blok Diagonal, Cincin Garis, Segitiga Berlapis, Konfeti Titik, Lengkung Bertumpuk, Balok Lapis), tiap gaya ±0,47 dtk dengan pratinjau Sampul / Slide Konten / Slide Penutup dan nama gaya di pita. Teks: "Tiap [[gaya grafis]] cukup disorot kursor: \| sampul, slide, dan penutupnya langsung terlihat." (sumber: tur demo `steps.ts`, langkah "Gaya grafis"). Foto: `alat/ambil-gaya.mjs`.
+
+**Refleksi (adegan 4b) kini benar-benar digulir:** 19 bingkai asli sampul → poin 3 (latar parallax bergerak), centang dua pilihan, 8 bingkai poin 3 → poin 4, lalu jawaban diketik (`alat/ambil-gulir.mjs`; giliran Refleksi +2,5 dtk).
 
 ### Adegan 6 — Kuis (1:27,4 – 1:32,4) · label `4 · Kuis`
 
