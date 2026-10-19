@@ -1,6 +1,6 @@
 # Storyboard Video Promosi — TEMPA (versi panjang)
 
-**Durasi:** ±4:05 (246 detik) · **Format:** 16:9, 1920 × 1080 · **Tanpa narator, tanpa musik** — efek suara saja.
+**Durasi:** ±4:07 (247 detik) · **Format:** 16:9, 1920 × 1080 · **Tanpa narator, tanpa musik** — efek suara saja.
 **Penonton:** PTP (Pengembang Teknologi Pembelajaran) · **Sapaan:** "kamu", santai semi-formal.
 **Bentuk jadi:** halaman animasi `video-promosi/panjang.html` (mesin disalin dari video Simulator Pajak Minimum Global), direkam pemilik dengan Win + Alt + R.
 **Status:** DISETUJUI & DIBANGUN (`panjang.html`) — revisi 2 — tiap blok yang dipamerkan kini memakai **karya penyusun sungguhan yang terbaik** (lihat bagian H). Menunggu persetujuan pemilik sebelum foto layar dan pembangunan video.
@@ -238,7 +238,7 @@ Semua adegan sesudahnya bergeser **+9 dtk** dari jam yang tertulis di storyboard
 
 Daftar draft (memuat nama penyusun) tidak ikut terpotret; alamat draft di daftar urutan disamarkan menjadi "draft penyusun". Sumber kalimat: tur demo aplikasi (`builderDemo/steps.ts`, langkah "Banyak modul jadi satu").
 
-**Blok Video (adegan 4b):** video asli karya Endy kini benar-benar diputar ±1,6 dtk (dari detik ke-8 video, tanpa suara) di atas fotonya, diambil langsung dari penyimpanan modul — butuh internet saat merekam.
+**Blok Video (adegan 4b):** video asli karya Endy kini benar-benar diputar ±3 dtk (giliran blok Video diperpanjang 1,6 dtk) (dari detik ke-8 video, tanpa suara) di atas fotonya, diambil langsung dari penyimpanan modul — butuh internet saat merekam.
 
 ### Adegan 8 — Sisi peserta (1:43,2 – 1:48,8) · label `Sisi peserta`
 
