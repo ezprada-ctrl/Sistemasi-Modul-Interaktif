@@ -2746,6 +2746,84 @@ function artMarkDone(blockId, status){
   try{ actEvent('articulate_selesai', {blok: blockId, status: status || 'completed'}); }catch(e){}
 }
 
+/* ---- menit aktif & langkah DI DALAM Articulate ----
+   Kolom Articulate dulu cuma tahu "selesai/belum". Dua hal yang ditambah:
+
+   1. Klik/gerak/ketik/sentuh/gulir di DALAM iframe Articulate gak pernah nyampe
+      ke listener actBindActivity() (sama persis kayak bug YouTube, lihat
+      actNoteMediaActivity) - jadi peserta yang lagi sibuk ngerjain Storyline
+      kena vonis idle di menit ke-4 dan masuk kolom "Ditinggal". Paketnya ikut
+      dibungkus di paket SCORM ini (folder articulate/<idBlok>/), jadi
+      dokumennya SE-ORIGIN dan bisa didengar langsung - lihat artDengarIframe().
+   2. Menit aktif per paket: dihitung cuma dari segmen yang ada sinyal dari
+      dalam iframe, dipotong di ambang idle polos (ACT_IDLE_MS, tanpa tambahan
+      waktu baca - gak ada "jumlah kata" buat konten Articulate). Langkah =
+      tiap kali lokasi resume (cmi.core.lesson_location / cmi.location)
+      berubah, ARAH APA PUN - maju, mundur, lompat lewat menu sama-sama tanda
+      aktif. Titik berbeda = himpunan nilai lokasi itu.
+
+   Batas yang disadari: nonton video di dalam Storyline tanpa nyentuh apa pun
+   lebih dari ambang tetap berhenti dihitung - isi player-nya gak bisa
+   diandalkan buat disadap. Dan paket yang resume-nya dimatikan jarang nulis
+   lokasi, jadi langkahnya bisa kecil walau aktif - menit aktif tetap jalan. */
+const artTrack = {};   /* blockId -> {ms, t0, last, langkah, titik:Set} selama slide ini terbuka */
+function artTrackOf(blockId){
+  return artTrack[blockId] || (artTrack[blockId] = { ms: 0, t0: 0, last: 0, langkah: 0, titik: new Set() });
+}
+function artNoteActivity(blockId){
+  if(!TRACK_READY) return;
+  actOnActivity();   /* sekaligus jam idle slide - ini tambalan poin 1 */
+  /* Sebelum sesi lahir (form identitas belum diisi) gak ada slide yang ditutup
+     buat ngirim jejaknya - jangan ditumpuk, nanti kebawa ke sesi berikutnya. */
+  if(!blockId || !actSessionId) return;
+  const t = artTrackOf(blockId), now = Date.now();
+  if(!t.t0) t.t0 = now;
+  t.last = now;
+}
+/* Tutup segmen aktif: dihitung sampai sinyal terakhir + ambang, idle di atas itu dibuang. */
+function artSegClose(t, now){
+  if(!t.t0) return;
+  t.ms += Math.max(0, Math.min(now, t.last + ACT_IDLE_MS) - t.t0);
+  t.t0 = 0;
+}
+function artCheckIdle(now){
+  for(const b in artTrack){ const t = artTrack[b]; if(t.t0 && now - t.last > ACT_IDLE_MS) artSegClose(t, now); }
+}
+/* Dipanggil tiap slide ditutup (pindah slide, tab disembunyikan, modul ditutup). */
+function artFlushTrack(){
+  const now = Date.now();
+  for(const b in artTrack){
+    const t = artTrack[b];
+    artSegClose(t, now);
+    if(t.ms >= 1000 || t.langkah){
+      /* titik dibatasi 100 x 40 karakter - payload event di database dibatasi 8 KB */
+      try{ actEvent('articulate_aktif', { blok: b, ms: Math.round(t.ms), langkah: t.langkah,
+        titik: Array.from(t.titik).slice(0, 100).map(function(x){ return String(x).slice(0, 40); }) }); }catch(e){}
+    }
+    delete artTrack[b];
+  }
+}
+/* Pasang pendengar di dokumen iframe Articulate (dan iframe se-origin di dalamnya,
+   mis. web object Storyline). Beda origin = lempar SecurityError -> diam, jatuh
+   ke perilaku lama (cuma status selesai). */
+function artDengarDok(doc, blockId){
+  if(!doc || doc.__artDengar) return;
+  doc.__artDengar = true;
+  const tanda = function(){ artCallerBlock = blockId; artNoteActivity(blockId); };
+  ['mousemove','mousedown','keydown','touchstart','wheel','scroll'].forEach(function(n){
+    doc.addEventListener(n, tanda, { passive: true, capture: true });
+  });
+  doc.addEventListener('load', function(e){
+    if(e.target && e.target.tagName === 'IFRAME'){ try{ artDengarDok(e.target.contentDocument, blockId); }catch(er){} }
+  }, true);
+  try{ doc.querySelectorAll('iframe').forEach(function(f){ try{ artDengarDok(f.contentDocument, blockId); }catch(er){} }); }catch(er){}
+}
+function artDengarIframe(fr, blockId){
+  const pasang = function(){ try{ artDengarDok(fr.contentDocument, blockId); }catch(e){} };
+  fr.addEventListener('load', pasang);
+  try{ if(fr.contentDocument && fr.contentDocument.readyState === 'complete' && fr.contentWindow.location.href !== 'about:blank') pasang(); }catch(e){}
+}
+
 function artResolveBlock(){
   if(artCallerBlock) return artCallerBlock;
   return artActive.length ? artActive[0].block : null;
@@ -2771,6 +2849,13 @@ function artMakeShim(version){
     const blockId = artResolveBlock();
     if(!blockId) return 'true';
     const cmi = artLoadCmi(blockId);
+    if(/lesson_location|cmi\.location$/.test(name) && String(value) !== '' && TRACK_READY && actSessionId){
+      /* Lokasi resume berubah = peserta pindah posisi di dalam Articulate (arah apa pun). */
+      const lama = cmi[name], t = artTrackOf(blockId);
+      if(lama != null && lama !== String(value)) t.langkah++;
+      t.titik.add(String(value));
+      artNoteActivity(blockId);
+    }
     cmi[name] = String(value);
     cmi['__started'] = '1';
     artSaveCmi(blockId, cmi);
@@ -2821,6 +2906,7 @@ function artBindSlide(item){
     /* Begitu iframe-nya dimuat / disentuh peserta, dia yang dianggap pemanggil
        berikutnya. Baru relevan kalau satu slide punya lebih dari satu paket. */
     fr.addEventListener('load', function(){ artCallerBlock = a.block; });
+    artDengarIframe(fr, a.block);
     frame.addEventListener('mouseenter', function(){ artCallerBlock = a.block; });
   });
   artApplyStatus();
@@ -3515,6 +3601,9 @@ function actStart(){
     total_video: TOTAL_VIDEO,
     total_interaktif: TOTAL_INTERAKTIF,
     total_articulate: TOTAL_ARTICULATE,
+    /* penanda: modul ini merekam menit aktif & langkah Articulate (event articulate_aktif).
+       Server pakai ini buat bedain "0 menit" dari "modul lama, gak direkam". */
+    art_aktif: 1,
     /* Judul section berkuis ikut dikirim (kecil, cuma beberapa entri) karena
        rekap perlu nyebut "Section B (Judulnya)" DAN perlu tau modul ini punya
        kuis apa nggak. Judul SLIDE sengaja TIDAK ikut: jumlahnya gak terbatas
@@ -3603,6 +3692,7 @@ function actOnActivity(){
    bekukan segmen aktif slide sekarang (dihitung cuma sampai aktivitas terakhir
    + ambang — idle di atas itu dibuang) lalu tandai paused. */
 function actCheckIdle(){
+  if(TRACK_READY) artCheckIdle(Date.now());
   if(!TRACK_READY || !actSlideMark || actIdlePaused) return;
   const threshold = actIdleThresholdMs(actSlideMark);
   const now = Date.now();
@@ -3696,6 +3786,7 @@ function actCloseSlide(){
   if(!actSlideMark) return;
   const m = actSlideMark;
   actSlideMark = null;
+  artFlushTrack();
   const ms = actElapsedMs(m);
   // Ditandai SEBELUM filter render-kilat di bawah - justru klik cepat
   // berulang buat ngelewatin slide (skenario paling penting buat ditangkap)

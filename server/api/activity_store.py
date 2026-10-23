@@ -612,6 +612,14 @@ def summarize_sessions(module_slug):
             # kali (peserta buka ulang, atau SCORM di dalamnya ngirim status
             # dua kali) dan itu tetap satu paket yang sama.
             '_articulate_selesai': set(),
+            # Menit aktif & langkah DI DALAM paket Articulate (event
+            # articulate_aktif, lihat artFlushTrack di shell-template.html).
+            # _art_rekam = modul ini di-export SESUDAH perekamnya ada (flag
+            # art_aktif di session_start). Tanpa flag itu angkanya jujur None
+            # ("-"), bukan 0: modul lama memang gak pernah merekamnya.
+            '_art_rekam': False, '_art_ms': 0, '_art_langkah': 0,
+            # (blok, titik) - titik berbeda dihitung per paket, bukan dicampur.
+            '_art_titik': set(),
             # Rincian tiap kejadian reading_warning (section + nomor slide
             # persis yang ketangkap + pilihan peserta) - beda dari
             # peringatan_baca_cepat/peringatan_diabaikan yang cuma angka
@@ -641,6 +649,7 @@ def summarize_sessions(module_slug):
             s['total_slide'] = p.get('total_slide')
             s['total_video'] = p.get('total_video')
             s['total_articulate'] = p.get('total_articulate')
+            s['_art_rekam'] = bool(p.get('art_aktif'))
         elif t == 'video_progress':
             block = p.get('block')
             persen = p.get('persen')
@@ -710,6 +719,12 @@ def summarize_sessions(module_slug):
             # gak kelihatan di Command Center.
             if p.get('blok'):
                 s['_articulate_selesai'].add(p['blok'])
+        elif t == 'articulate_aktif':
+            s['_art_rekam'] = True
+            s['_art_ms'] += p.get('ms') or 0
+            s['_art_langkah'] += p.get('langkah') or 0
+            for x in p.get('titik') or []:
+                s['_art_titik'].add((p.get('blok'), x))
 
     out = list(sessions.values())
     for s in out:
@@ -740,6 +755,11 @@ def summarize_sessions(module_slug):
             key=lambda d: d['persen'])
         s['catatan'] = len(s.pop('_catatan_ids'))
         s['articulate_selesai'] = len(s.pop('_articulate_selesai'))
+        art_rekam, art_ms, art_langkah, art_titik = s.pop('_art_rekam'), s.pop('_art_ms'), s.pop('_art_langkah'), s.pop('_art_titik')
+        ada_art = art_rekam and bool(s['total_articulate'])
+        s['articulate_aktif_menit'] = round(art_ms / 60000, 1) if ada_art else None
+        s['articulate_langkah'] = art_langkah if ada_art else None
+        s['articulate_titik'] = len(art_titik) if ada_art else None
         s['peringatan_detail'] = s.pop('_peringatan_detail')
         # Kalau sesi ditutup paksa (tab dibunuh HP), session_end gak pernah
         # terkirim -> total_ms 0. Pakai jumlah durasi slide sebagai gantinya
@@ -819,6 +839,10 @@ def summarize_learners():
         total_video_modul = None
         total_articulate_modul = None
         articulate_sesi = set()
+        art_rekam_sesi = False
+        art_ms_sesi = 0
+        art_langkah_sesi = 0
+        art_titik_sesi = set()
         catatan_sesi = []
         video_max_sesi = {}
         video_slide_sesi = {}
@@ -841,6 +865,7 @@ def summarize_learners():
                 total_slide_modul = p.get('total_slide')
                 total_video_modul = p.get('total_video')
                 total_articulate_modul = p.get('total_articulate')
+                art_rekam_sesi = art_rekam_sesi or bool(p.get('art_aktif'))
             elif t == 'video_progress':
                 block = p.get('block')
                 persen = p.get('persen')
@@ -905,6 +930,12 @@ def summarize_learners():
             elif t == 'articulate_selesai':
                 if p.get('blok'):
                     articulate_sesi.add(p['blok'])
+            elif t == 'articulate_aktif':
+                art_rekam_sesi = True
+                art_ms_sesi += p.get('ms') or 0
+                art_langkah_sesi += p.get('langkah') or 0
+                for x in p.get('titik') or []:
+                    art_titik_sesi.add((p.get('blok'), x))
         if not total_ms:
             total_ms = terekam_ms
 
@@ -955,6 +986,12 @@ def summarize_learners():
             # (slug, block) - block id yang kebetulan sama di modul BEDA gak
             # boleh ketuker jadi satu paket, sama alasannya kayak _video_max.
             '_articulate_selesai': set(),
+            # Menit aktif & langkah Articulate lintas modul - lihat catatan
+            # di summarize_sessions. _art_rekam: minimal satu sesinya dari
+            # modul yang sudah merekam ini; kalau enggak, tampil None.
+            '_art_rekam': False, '_art_ms': 0, '_art_langkah': 0,
+            # (slug, blok, titik)
+            '_art_titik': set(),
             # (slug, section) -> nilai kuis: skor terbaik, jumlah percobaan,
             # ambang lulus. Kunci pakai slug juga karena id section ('a','b')
             # jelas-jelas berulang di modul yang beda.
@@ -981,6 +1018,12 @@ def summarize_learners():
             m['total_articulate'] = total_articulate_modul
         for blok in articulate_sesi:
             L['_articulate_selesai'].add((slug, blok))
+        if art_rekam_sesi and total_articulate_modul:
+            L['_art_rekam'] = True
+            L['_art_ms'] += art_ms_sesi
+            L['_art_langkah'] += art_langkah_sesi
+            for blok, x in art_titik_sesi:
+                L['_art_titik'].add((slug, blok, x))
         for n in catatan_sesi:
             kunci = (slug, n['id'])
             lama = L['_catatan'].get(kunci)
@@ -1108,6 +1151,10 @@ def summarize_learners():
         art_totals = [m['total_articulate'] for m in L['modul'].values() if m['total_articulate'] is not None]
         L['total_articulate_program'] = sum(art_totals) if art_totals else None
         L['articulate_selesai'] = len(L.pop('_articulate_selesai'))
+        art_rekam, art_ms, art_langkah, art_titik = L.pop('_art_rekam'), L.pop('_art_ms'), L.pop('_art_langkah'), L.pop('_art_titik')
+        L['articulate_aktif_menit'] = round(art_ms / 60000, 1) if art_rekam else None
+        L['articulate_langkah'] = art_langkah if art_rekam else None
+        L['articulate_titik'] = len(art_titik) if art_rekam else None
         L['catatan'] = len([n for n in L.pop('_catatan').values() if not n.get('deleted')])
         video_max = L.pop('_video_max')
         video_slide = L.pop('_video_slide')

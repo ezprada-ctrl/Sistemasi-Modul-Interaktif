@@ -210,6 +210,20 @@ function CocreationModulView({ m, tampilkanJudulModul }: { m: CocreationModule; 
 // depan ("ikram-...", "wendi_tp-..."). Dipakai buat mengelompokkan daftar
 // modul biar 45 baris jadi beberapa kelompok yang bisa dilipat - satu orang
 // hampir selalu cuma peduli kelompoknya sendiri.
+/* Baris kecil di bawah "x/y selesai" kolom Articulate: menit aktif + langkah.
+   Menit cuma dihitung selama ada klik/gerak di DALAM paketnya (ditinggal = berhenti),
+   langkah = pindah posisi ke arah mana pun. null = modul lama, belum merekam. */
+function ArticulateAktif({ menit, langkah, titik }: { menit: number | null; langkah: number | null; titik: number | null }) {
+  if (menit == null) return null;
+  const m = menit > 0 && menit < 1 ? '<1' : String(Math.round(menit));
+  return (
+    <div style={{ fontSize: 10.5, color: 'var(--text-faint)', marginTop: 1, whiteSpace: 'nowrap' }}
+         title="Menit aktif = waktu ada klik/gerak di dalam paket Articulate (berhenti kalau ditinggal). Langkah = pindah posisi di dalamnya, maju maupun mundur; dalam kurung = titik berbeda yang didatangi">
+      {m} m aktif · {langkah ?? 0} langkah ({titik ?? 0} berbeda)
+    </div>
+  );
+}
+
 function pemilikSlug(slug: string): string {
   const m = slug.match(/^([A-Za-z0-9]+)[-_]/);
   return m ? m[1].toLowerCase() : slug.toLowerCase();
@@ -580,6 +594,9 @@ export default function CommandCenter() {
         video_rata_persen_ditonton: l.video_rata_persen ?? '',
         articulate_selesai: l.articulate_selesai,
         articulate_total: l.total_articulate_program ?? '',
+        articulate_menit_aktif: l.articulate_aktif_menit ?? '',
+        articulate_langkah: l.articulate_langkah ?? '',
+        articulate_titik_berbeda: l.articulate_titik ?? '',
         pertama: l.pertama,
         terakhir: l.terakhir,
       };
@@ -1194,7 +1211,8 @@ export default function CommandCenter() {
                           {!l.total_articulate_program ? (
                             <span style={{ color: 'var(--text-faint)' }}>—</span>
                           ) : (
-                            <>{l.articulate_selesai}/{l.total_articulate_program} selesai</>
+                            <>{l.articulate_selesai}/{l.total_articulate_program} selesai
+                              <ArticulateAktif menit={l.articulate_aktif_menit} langkah={l.articulate_langkah} titik={l.articulate_titik} /></>
                           )}
                         </td>
                         <td style={{ padding: '8px 11px', fontVariantNumeric: 'tabular-nums' }}
@@ -1518,7 +1536,8 @@ export default function CommandCenter() {
                         {!s.total_articulate ? (
                           <span style={{ color: 'var(--text-faint)' }}>—</span>
                         ) : (
-                          <>{s.articulate_selesai}/{s.total_articulate} selesai</>
+                          <>{s.articulate_selesai}/{s.total_articulate} selesai
+                            <ArticulateAktif menit={s.articulate_aktif_menit} langkah={s.articulate_langkah} titik={s.articulate_titik} /></>
                         )}
                       </td>
                       <td style={{ padding: '8px 11px', fontVariantNumeric: 'tabular-nums' }}
