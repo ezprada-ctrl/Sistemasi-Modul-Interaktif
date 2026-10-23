@@ -84,6 +84,15 @@ body.rekam,body.rekam *{cursor:none!important}
 .rekap .cek{position:absolute;right:-16px;top:-14px;width:32px;height:32px;border-radius:50%;background:var(--hijau);color:#0E2A15;display:grid;place-items:center;font:800 18px/1 var(--huruf);box-shadow:0 0 18px rgba(123,216,143,.55);transform:scale(0)}
 .rekap .cip{position:absolute;right:190px;top:-18px;padding:6px 12px;border-radius:4px;background:#F7E6C4;color:#2A170D;font:600 15px/1 var(--mono);white-space:nowrap;box-shadow:4px 5px 0 rgba(0,0,0,.35);opacity:0;z-index:2}
 .rekap .pindai{position:absolute;left:-30px;right:-30px;top:0;height:3px;border-radius:2px;background:linear-gradient(90deg,transparent,#FF9A55 18%,#FFD24A 50%,#FF9A55 82%,transparent);box-shadow:0 0 22px 4px rgba(255,154,85,.55);opacity:0;z-index:3}
+.rekap-modul{position:absolute;width:400px;padding:16px 18px 10px;border-radius:10px;background:#22170F;border:1.5px solid #4A3226;box-shadow:8px 8px 0 rgba(122,45,14,.55);opacity:0;z-index:15}
+.rekap-modul .jd{font:600 15px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--redup);margin-bottom:12px}
+.rekap-modul .br{display:grid;grid-template-columns:30px 1fr 110px 46px;gap:12px;align-items:center;height:46px;padding:0 6px;border-radius:6px}
+.rekap-modul .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:800 14px/1 var(--huruf);color:#1A0F08}
+.rekap-modul .nm{font:700 18px/1 var(--huruf);white-space:nowrap}
+.rekap-modul .jalur{height:8px;border-radius:4px;background:rgba(255,255,255,.07);overflow:hidden}
+.rekap-modul .isi{display:block;height:100%;background:linear-gradient(90deg,#B9531F,#FF9A55);transform-origin:0 50%;transform:scaleX(0)}
+.rekap-modul em{font:600 14px/1 var(--mono);font-style:normal;color:#E9D8C6;text-align:right}
+.cip-masalah{position:absolute;padding:8px 14px;border-radius:4px;background:#FF6B5B;color:#2A0D08;font:700 26px/1 var(--tangan);box-shadow:5px 6px 0 rgba(0,0,0,.35);opacity:0;z-index:16;white-space:nowrap}
 .panah-alir{position:absolute;width:28px;height:4px;border-radius:2px;background:var(--aksen-terang);box-shadow:0 0 14px var(--aksen);opacity:0}
 .panah-alir::after{content:"";position:absolute;right:-6px;top:-6px;border:8px solid transparent;border-left:10px solid var(--aksen-terang)}
 .pil-blok{position:absolute;right:373px;top:30px;padding:10px 20px;border-radius:999px;background:var(--kaca);border:1px solid var(--tepi);backdrop-filter:blur(14px);font:600 22px/1 var(--huruf);color:var(--aksen-terang);opacity:0;z-index:22}
@@ -275,8 +284,8 @@ body.rekam,body.rekam *{cursor:none!important}
 <div id="kontrol">
   <button id="btnPutar" class="utama" type="button">Jeda</button>
   <button id="btnUlang" type="button">Ulang</button>
-  <input id="geser" type="range" min="0" max="255.8" step="0.01" value="0" aria-label="Posisi video">
-  <span id="waktu">0:00,0 / 4:16</span>
+  <input id="geser" type="range" min="0" max="261" step="0.01" value="0" aria-label="Posisi video">
+  <span id="waktu">0:00,0 / 4:21</span>
   <button id="btnSuara" type="button">Suara: nyala</button>
   <button id="btnPenuh" type="button">Layar penuh</button>
   <button id="btnRekam" type="button">Rekam bersih</button>
@@ -287,7 +296,7 @@ body.rekam,body.rekam *{cursor:none!important}
 'use strict';
 const P = document.getElementById('panggung');
 const $ = (id) => document.getElementById(id);
-const DURASI = 228.2;   /* + 9 dtk sisipan Paket Modul lewat GESER = 4:16,2 */
+const DURASI = 228.2;   /* + sisipan lewat GESER = 4:21,0 */
 
 /* ---------- skala panggung ---------- */
 function skala() { const s = Math.min(innerWidth / 1920, innerHeight / 1080); P.style.transform = 'translate(' + (innerWidth - 1920 * s) / 2 + 'px,' + (innerHeight - 1080 * s) / 2 + 'px) scale(' + s + ')'; }
@@ -360,7 +369,7 @@ const tl = gsap.timeline({ paused: true });
 /* [mulai, tambahan dtk]: pratinjau hover blok (+6), Paket Modul (+9), kolom Kuis dua ketukan (+2,5).
    mode 'semua' = linimasa biasa; 'awal' = blok sisipan lama yang ditulis dgn waktu sebenarnya sebelum sisipan hover ada
    (cukup ditambah +6); 'tanpa' = blok yang ditulis dengan waktu akhir apa adanya. */
-const GESER = { mode: 'semua', sisip: [[50.31, 6], [63.05, 1.6], [72.7, 2.5], [82.31, 6], [103.15, 9], [162.55, 2.5]], susulan: [[50.31, 6], [63.05, 1.6], [72.7, 2.5], [82.31, 6]] };   /* +6: 10 gaya grafis */   /* +1,6: Video 3 dtk; +2,5: Refleksi digulir */
+const GESER = { mode: 'semua', sisip: [[50.31, 6], [63.05, 1.6], [72.7, 2.5], [82.31, 6], [103.15, 9], [108.95, 5.2], [162.55, 2.5]], susulan: [[50.31, 6], [63.05, 1.6], [72.7, 2.5], [82.31, 6]] };   /* +6: 10 gaya grafis */   /* +1,6: Video 3 dtk; +2,5: Refleksi digulir */
 ['to', 'fromTo', 'set', 'call'].forEach((m) => { const asli = tl[m].bind(tl); const idx = { to: 2, fromTo: 3, set: 2, call: 2 }[m];
   tl[m] = function () { const a = [...arguments]; if (GESER.mode !== 'tanpa' && typeof a[idx] === 'number') { const t0 = a[idx]; (GESER.mode === 'awal' ? GESER.susulan : GESER.sisip).forEach(([m, d]) => { if (t0 >= m) a[idx] += d; }); } return asli(...a); }; });
 const sfx = (nama, t) => tl.call(() => Suara.bunyi(nama), null, t);
@@ -435,7 +444,7 @@ function balon(teks, at, titik, akhir, gelap) {
   tl.to(b, { opacity: 0, y: -8, duration: .25 }, akhir);
 }
 
-/* ====================== VIDEO PANJANG TEMPA (±4:16) — tanpa narator, tanpa musik, teks tampil penuh ====================== */
+/* ====================== VIDEO PANJANG TEMPA (±4:21) — tanpa narator, tanpa musik, teks tampil penuh ====================== */
 const svgNS = 'http://www.w3.org/2000/svg';
 /* teks dua baris: " | " = pindah baris */
 let __akhir = -1;
@@ -511,85 +520,36 @@ tl.fromTo(batang.querySelectorAll('.bt'), { scaleY: 0 }, { scaleY: 1, duration: 
 sfx('tik0', 10.7); sfx('tik1', 10.9);
 tl.to(batang.querySelector('.tinggi'), { boxShadow: '0 0 0 4px #FF9F0A, 0 0 40px rgba(255,159,10,.6)', duration: .3 }, 12.6);
 tl.to(batang, { opacity: 0, x: -2600, duration: .45, ease: 'power3.in' }, 15.45);
-kalimat('Rekap aktivitas peserta lintas modul | {{terpantau sepenuhnya.}}', 15.7, 20.2);
-/* baris kartu peserta (data karangan): muncul satu-satu, bilah & angka naik, pemindai memberi centang,
-   data berubah lalu baris bertukar urutan, label kecil muncul-melayang; keluar dengan pop-out halus */
+kalimat('Rekap peserta lintas modul? | {{Digabung sendiri di Excel.}}', 15.7, 20.2);
+/* masalahnya: data tiap modul berdiri sendiri — urutan & nama tak sejajar, harus disalin-tempel manual */
 (function () {
-  const PESERTA = [   // [nama, NIP samaran, warna, M1 M2 M3 awal, M1 M2 M3 akhir, tatap awal dtk, tatap akhir dtk]
-    ['Andi Saputra', '1987••••', '#FF9A55', [100, 72, 40], [100, 88, 64], 742, 811],
-    ['Rina Pratiwi', '1991••••', '#7BD88F', [100, 100, 66], [100, 100, 92], 902, 968],
-    ['Dimas Hakim', '1989••••', '#FFD24A', [84, 38, 12], [92, 56, 30], 497, 553],
-    ['Sari Lestari', '1993••••', '#FF6B5B', [92, 64, 30], [100, 100, 96], 655, 754],
-    ['Bayu Nugroho', '1990••••', '#E7B98F', [62, 20, 0], [78, 34, 10], 318, 360],
-    ['Maya Kusuma', '1995••••', '#9FD4C8', [100, 84, 52], [100, 92, 70], 811, 860]
+  const PANEL = [   // [judul, kiri, atas, miring, baris: [nama, warna, progres]]
+    ['Modul 1', 740, 200, -4, [['Andi S.', '#FF9A55', 100], ['Rina P.', '#7BD88F', 100], ['Dimas H.', '#FFD24A', 84], ['Bayu N.', '#E7B98F', 62]]],
+    ['Modul 2', 1270, 250, 3.5, [['Rina Pratiwi', '#7BD88F', 100], ['Bayu', '#E7B98F', 20], ['Sari L.', '#FF6B5B', 64], ['A. Saputra', '#FF9A55', 72]]],
+    ['Modul 3', 990, 540, -1.5, [['Maya K.', '#9FD4C8', 52], ['D. Hakim', '#FFD24A', 12], ['Andi', '#FF9A55', 40], ['Sari', '#FF6B5B', 30]]]
   ];
-  const Y0 = 96, JARAK = 86, jam = (s) => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(Math.round(s % 60)).padStart(2, '0');
-  const r = el('div', 'rekap', P, '<div class="kepala"><span><b>Rekap lintas modul</b> · ' + PESERTA.length + ' peserta</span><span class="langsung"><i></i>terpantau</span></div>' +
-    '<div class="judul-kol grid"><span>Peserta</span><span>Modul 1</span><span>Modul 2</span><span>Modul 3</span><span>Tatap layar</span></div><div class="pindai"></div>');
-  const baris = PESERTA.map((p, i) => {
-    const b = el('div', 'baris grid', r, '<div class="org"><span class="av" style="background:' + p[2] + '">' + p[0][0] + '</span><div><div class="nm">' + p[0] + '</div><div class="nip">NIP ' + p[1] + '</div></div></div>' +
-      [0, 1, 2].map(() => '<div class="mod"><em>0%</em><div class="jalur"><div class="isi"></div></div></div>').join('') + '<div class="tatap">00:00</div><span class="cek">✓</span>');
-    b.style.top = (Y0 + i * JARAK) + 'px';
-    return b;
+  const panel = PANEL.map(([jd, x, y, rot, isi], i) => {
+    const p = el('div', 'rekap-modul', P, '<div class="jd">' + jd + ' · ' + isi.length + ' peserta</div>' + isi.map(([n, w, v]) =>
+      '<div class="br"><span class="av" style="background:' + w + '">' + n[0] + '</span><span class="nm">' + n + '</span><span class="jalur"><i class="isi"></i></span><em>' + v + '%</em></div>').join(''));
+    Object.assign(p.style, { left: x + 'px', top: y + 'px' });
+    const at = 16.0 + i * .25;
+    tl.fromTo(p, { opacity: 0, scale: .86, y: 30, rotation: rot * 2, filter: 'blur(10px)' }, { opacity: 1, scale: 1, y: 0, rotation: rot, filter: 'blur(0px)', duration: .6, ease: 'back.out(1.4)' }, at);
+    sfx('kertas', at);
+    p.querySelectorAll('.isi').forEach((f, j) => tl.fromTo(f, { scaleX: 0 }, { scaleX: isi[j][2] / 100, duration: .7, ease: 'power3.out' }, at + .3 + j * .07));
+    tl.fromTo(p.querySelectorAll('.br'), { opacity: 0, x: -10 }, { opacity: 1, x: 0, duration: .35, stagger: .07, ease: 'power2.out' }, at + .2);
+    return p;
   });
-  /* angka ditulis tiap bingkai dari objeknya (onUpdate tidak jalan saat linimasa digeser lewat penggeser) */
-  const ANGKA = [];
-  ANGKA.push = function (f, e) { Array.prototype.push.call(this, [f, e]); };
-  const tulisAngka = () => { if (r.style.opacity === '0' || !r.style.opacity) return; ANGKA.forEach(([f, e]) => { const v = f(); if (e.textContent !== v) e.textContent = v; }); };
-  gsap.ticker.add(tulisAngka); window.__angkaRekap = tulisAngka;   // juga dipanggil penggeser (tab tersembunyi tidak menjalankan ticker)
-  /* angka & bilah: satu objek per sel supaya bisa digulir maju-mundur */
-  function isiKe(i, nilai, at, dur) {
-    baris[i].querySelectorAll('.mod').forEach((m, j) => {
-      const o = m._o || (m._o = { v: 0 }), em = m.querySelector('em');
-      if (!m._o.ikat) { m._o.ikat = 1; ANGKA.push(() => Math.round(o.v) + '%', em); }
-      tl.to(o, { v: nilai[j], duration: dur, ease: 'power3.out' }, at + j * .08);
-      tl.to(m.querySelector('.isi'), { scaleX: nilai[j] / 100, duration: dur, ease: 'power3.out' }, at + j * .08);
-    });
-  }
-  tl.set(r, { opacity: 1 }, 15.75);
-  tl.fromTo(r.querySelectorAll('.kepala, .judul-kol'), { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration: .45, ease: 'power3.out', stagger: .08 }, 15.8);
-  tl.fromTo(r.querySelector('.langsung i'), { boxShadow: '0 0 0 0 rgba(123,216,143,.6)' }, { boxShadow: '0 0 0 12px rgba(123,216,143,0)', duration: .9, repeat: 4, ease: 'power1.out' }, 16.0);
-  tl.fromTo(r, { y: 6 }, { y: -6, duration: 4.4, ease: 'sine.inOut' }, 15.75);   // melayang pelan
-  baris.forEach((b, i) => {
-    const p = PESERTA[i], at = 16.0 + i * .11;
-    tl.fromTo(b, { opacity: 0, scale: .84, y: 28, filter: 'blur(10px)' }, { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)', duration: .6, ease: 'back.out(1.5)' }, at);
-    if (i % 2 === 0) sfx('tik' + i, at);
-    isiKe(i, p[3], at + .3, .8);
-    const t = { s: p[5] }, el_ = b.querySelector('.tatap');
-    ANGKA.push(() => jam(t.s), el_);
-    tl.to(t, { s: p[6], duration: 19.6 - (at + .3), ease: 'none' }, at + .3);
+  /* orang yang sama tercatat dengan nama & urutan berbeda di tiap modul: disorot satu per satu */
+  [[0, 0], [1, 3], [2, 2]].forEach(([pi, bi], k) => {
+    const br = panel[pi].querySelectorAll('.br')[bi];
+    tl.to(br, { backgroundColor: 'rgba(255,107,91,.22)', boxShadow: 'inset 0 0 0 2px #FF6B5B', duration: .2 }, 17.4 + k * .3);
+    sfx('tik' + k, 17.4 + k * .3);
   });
-  /* pemindai menyapu baris; tiap baris yang dilewati dapat centang */
-  const pindai = r.querySelector('.pindai');
-  tl.fromTo(pindai, { opacity: 0, y: Y0 - 8 }, { opacity: 1, duration: .15 }, 16.95);
-  tl.to(pindai, { y: Y0 + PESERTA.length * JARAK - 8, duration: 1.1, ease: 'power1.inOut' }, 17.0);
-  tl.to(pindai, { opacity: 0, duration: .2 }, 18.05);
-  baris.forEach((b, i) => {
-    const at = 17.0 + (i + .5) / PESERTA.length * 1.1;
-    tl.to(b, { borderColor: '#FF9A55', duration: .12 }, at).to(b, { borderColor: '#4A3226', duration: .5 }, at + .2);
-    tl.fromTo(b.querySelector('.cek'), { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: .4, ease: 'back.out(3)' }, at);
-  });
-  sfx('tik1', 17.2); sfx('tik3', 17.6); sfx('tik5', 18.0);
-  /* data berubah, lalu baris bertukar urutan mengikuti total progres */
-  baris.forEach((b, i) => isiKe(i, PESERTA[i][4], 17.75 + i * .05, .7));
-  const total = (i) => PESERTA[i][4].reduce((a, v) => a + v, 0);
-  const urut = PESERTA.map((_, i) => i).sort((a, b) => total(b) - total(a));
-  urut.forEach((asal, ke) => {
-    if (asal === ke) return;
-    tl.to(baris[asal], { y: (ke - asal) * JARAK, duration: .75, ease: 'power3.inOut' }, 18.55);
-    if (ke < asal) tl.to(baris[asal], { boxShadow: '8px 8px 0 rgba(122,45,14,.55), 0 0 28px rgba(255,154,85,.45)', duration: .3, yoyo: true, repeat: 1 }, 18.6);
-  });
-  sfx('sapu', 18.5);
-  /* label kecil muncul lalu melayang hilang, menempel pada barisnya */
-  [[1, 'kuis ✓', 17.3], [3, '+3 slide', 17.75], [0, 'video 84%', 18.15], [5, 'cek paham ✓', 18.75], [2, 'refleksi ✓', 19.05]].forEach(([i, teks, at]) => {
-    const c = el('div', 'cip', baris[i], teks);
-    tl.fromTo(c, { opacity: 0, scale: .6, y: 10 }, { opacity: 1, scale: 1, y: 0, duration: .35, ease: 'back.out(2.2)' }, at);
-    tl.to(c, { opacity: 0, y: -30, duration: .55, ease: 'power2.in' }, at + .85);
-  });
-  /* keluar: pop-out halus satu-satu */
-  tl.to(urut.map((i) => baris[i]), { opacity: 0, scale: .9, filter: 'blur(8px)', y: '-=18', duration: .4, ease: 'power2.in', stagger: .06 }, 19.6);
-  tl.to(r.querySelectorAll('.kepala, .judul-kol'), { opacity: 0, y: -10, duration: .3, ease: 'power2.in' }, 19.85);
-  tl.set(r, { opacity: 0 }, 20.4);
+  const tanya = el('div', 'cip-masalah', P, 'orang yang sama?'); Object.assign(tanya.style, { left: '1150px', top: '470px' });
+  tl.fromTo(tanya, { opacity: 0, scale: .6, rotation: -8 }, { opacity: 1, scale: 1, rotation: -3, duration: .35, ease: 'back.out(2.2)' }, 18.3);
+  tl.to(panel, { x: 6, duration: .05, yoyo: true, repeat: 5, ease: 'none' }, 18.8);
+  tl.to(panel.concat(tanya), { x: -2600, filter: 'blur(14px)', duration: .45, ease: 'power3.in', stagger: .04 }, 19.85).set(panel.concat(tanya), { opacity: 0 }, 20.5);
+  sfx('whoosh', 19.8);
 })();
 
 /* ===== ADEGAN 2 — perkenalan (0:20,4–0:33,8) ===== */
@@ -860,11 +820,100 @@ rujukan('238 kata/menit · Brysbaert (2019), meta-analisis 190 studi', 103.7, 10
 jendela(B8, 'peserta-peringatan', R([483, 224, 400, 321])).buka(104.8);
 kamera(B8, 105.3, 1.5, 683, 384, .7);
 stabilo(B8, R([515, 342, 336, 40]), 106.0, 108.5);
-kartuKeluar(B8, 108.9);
+GESER.mode = 'tanpa'; kartuKeluar(B8, 134.0); GESER.mode = 'semua';   /* waktu sebenarnya (= 108,9 + 25,1): sapuannya melintasi batas sisipan 8b, jadi jangan ikut tergeser */
+
+/* ===== ADEGAN 8b — jembatan: rekap lintas modul terpantau (sisipan +5,2 dtk sebelum Command Center, waktu sebenarnya) =====
+   Kartu Sisi peserta keluar lewat sapuan 134,0; panel ini mengisi ruang kanan sampai sapuan masuknya Command Center 139,3. */
+GESER.mode = 'tanpa';
+{
+  const akhirSimpan = __akhir; const D = 118.9;
+  kalimat('Rekap aktivitas peserta lintas modul | {{terpantau sepenuhnya.}}', (D + 15.7), (D + 20.0));
+  /* baris kartu peserta (data karangan): muncul satu-satu, bilah & angka naik, pemindai memberi centang,
+     data berubah lalu baris bertukar urutan, label kecil muncul-melayang; keluar dengan pop-out halus */
+  (function () {
+    const PESERTA = [   // [nama, NIP samaran, warna, M1 M2 M3 awal, M1 M2 M3 akhir, tatap awal dtk, tatap akhir dtk]
+      ['Andi Saputra', '1987••••', '#FF9A55', [100, 72, 40], [100, 88, 64], 742, 811],
+      ['Rina Pratiwi', '1991••••', '#7BD88F', [100, 100, 66], [100, 100, 92], 902, 968],
+      ['Dimas Hakim', '1989••••', '#FFD24A', [84, 38, 12], [92, 56, 30], 497, 553],
+      ['Sari Lestari', '1993••••', '#FF6B5B', [92, 64, 30], [100, 100, 96], 655, 754],
+      ['Bayu Nugroho', '1990••••', '#E7B98F', [62, 20, 0], [78, 34, 10], 318, 360],
+      ['Maya Kusuma', '1995••••', '#9FD4C8', [100, 84, 52], [100, 92, 70], 811, 860]
+    ];
+    const Y0 = 96, JARAK = 86, jam = (s) => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(Math.round(s % 60)).padStart(2, '0');
+    const r = el('div', 'rekap', P, '<div class="kepala"><span><b>Rekap lintas modul</b> · ' + PESERTA.length + ' peserta</span><span class="langsung"><i></i>terpantau</span></div>' +
+      '<div class="judul-kol grid"><span>Peserta</span><span>Modul 1</span><span>Modul 2</span><span>Modul 3</span><span>Tatap layar</span></div><div class="pindai"></div>');
+    const baris = PESERTA.map((p, i) => {
+      const b = el('div', 'baris grid', r, '<div class="org"><span class="av" style="background:' + p[2] + '">' + p[0][0] + '</span><div><div class="nm">' + p[0] + '</div><div class="nip">NIP ' + p[1] + '</div></div></div>' +
+        [0, 1, 2].map(() => '<div class="mod"><em>0%</em><div class="jalur"><div class="isi"></div></div></div>').join('') + '<div class="tatap">00:00</div><span class="cek">✓</span>');
+      b.style.top = (Y0 + i * JARAK) + 'px';
+      return b;
+    });
+    /* angka ditulis tiap bingkai dari objeknya (onUpdate tidak jalan saat linimasa digeser lewat penggeser) */
+    const ANGKA = [];
+    ANGKA.push = function (f, e) { Array.prototype.push.call(this, [f, e]); };
+    const tulisAngka = () => { if (r.style.opacity === '0' || !r.style.opacity) return; ANGKA.forEach(([f, e]) => { const v = f(); if (e.textContent !== v) e.textContent = v; }); };
+    gsap.ticker.add(tulisAngka); window.__angkaRekap = tulisAngka;   // juga dipanggil penggeser (tab tersembunyi tidak menjalankan ticker)
+    /* angka & bilah: satu objek per sel supaya bisa digulir maju-mundur */
+    function isiKe(i, nilai, at, dur) {
+      baris[i].querySelectorAll('.mod').forEach((m, j) => {
+        const o = m._o || (m._o = { v: 0 }), em = m.querySelector('em');
+        if (!m._o.ikat) { m._o.ikat = 1; ANGKA.push(() => Math.round(o.v) + '%', em); }
+        tl.to(o, { v: nilai[j], duration: dur, ease: 'power3.out' }, at + j * .08);
+        tl.to(m.querySelector('.isi'), { scaleX: nilai[j] / 100, duration: dur, ease: 'power3.out' }, at + j * .08);
+      });
+    }
+    tl.set(r, { opacity: 1 }, (D + 15.75));
+    tl.fromTo(r.querySelectorAll('.kepala, .judul-kol'), { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration: .45, ease: 'power3.out', stagger: .08 }, (D + 15.8));
+    tl.fromTo(r.querySelector('.langsung i'), { boxShadow: '0 0 0 0 rgba(123,216,143,.6)' }, { boxShadow: '0 0 0 12px rgba(123,216,143,0)', duration: .9, repeat: 4, ease: 'power1.out' }, (D + 16.0));
+    tl.fromTo(r, { y: 6 }, { y: -6, duration: 4.4, ease: 'sine.inOut' }, (D + 15.75));   // melayang pelan
+    baris.forEach((b, i) => {
+      const p = PESERTA[i], at = (D + 16.0) + i * .11;
+      tl.fromTo(b, { opacity: 0, scale: .84, y: 28, filter: 'blur(10px)' }, { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)', duration: .6, ease: 'back.out(1.5)' }, at);
+      if (i % 2 === 0) sfx('tik' + i, at);
+      isiKe(i, p[3], at + .3, .8);
+      const t = { s: p[5] }, el_ = b.querySelector('.tatap');
+      ANGKA.push(() => jam(t.s), el_);
+      tl.to(t, { s: p[6], duration: (D + 19.6) - (at + .3), ease: 'none' }, at + .3);
+    });
+    /* pemindai menyapu baris; tiap baris yang dilewati dapat centang */
+    const pindai = r.querySelector('.pindai');
+    tl.fromTo(pindai, { opacity: 0, y: Y0 - 8 }, { opacity: 1, duration: .15 }, (D + 16.95));
+    tl.to(pindai, { y: Y0 + PESERTA.length * JARAK - 8, duration: 1.1, ease: 'power1.inOut' }, (D + 17.0));
+    tl.to(pindai, { opacity: 0, duration: .2 }, (D + 18.05));
+    baris.forEach((b, i) => {
+      const at = (D + 17.0) + (i + .5) / PESERTA.length * 1.1;
+      tl.to(b, { borderColor: '#FF9A55', duration: .12 }, at).to(b, { borderColor: '#4A3226', duration: .5 }, at + .2);
+      tl.fromTo(b.querySelector('.cek'), { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: .4, ease: 'back.out(3)' }, at);
+    });
+    sfx('tik1', (D + 17.2)); sfx('tik3', (D + 17.6)); sfx('tik5', (D + 18.0));
+    /* data berubah, lalu baris bertukar urutan mengikuti total progres */
+    baris.forEach((b, i) => isiKe(i, PESERTA[i][4], (D + 17.75) + i * .05, .7));
+    const total = (i) => PESERTA[i][4].reduce((a, v) => a + v, 0);
+    const urut = PESERTA.map((_, i) => i).sort((a, b) => total(b) - total(a));
+    urut.forEach((asal, ke) => {
+      if (asal === ke) return;
+      tl.to(baris[asal], { y: (ke - asal) * JARAK, duration: .75, ease: 'power3.inOut' }, (D + 18.55));
+      if (ke < asal) tl.to(baris[asal], { boxShadow: '8px 8px 0 rgba(122,45,14,.55), 0 0 28px rgba(255,154,85,.45)', duration: .3, yoyo: true, repeat: 1 }, (D + 18.6));
+    });
+    sfx('sapu', (D + 18.5));
+    /* label kecil muncul lalu melayang hilang, menempel pada barisnya */
+    [[1, 'kuis ✓', (D + 17.3)], [3, '+3 slide', (D + 17.75)], [0, 'video 84%', (D + 18.15)], [5, 'cek paham ✓', (D + 18.75)], [2, 'refleksi ✓', (D + 19.05)]].forEach(([i, teks, at]) => {
+      const c = el('div', 'cip', baris[i], teks);
+      tl.fromTo(c, { opacity: 0, scale: .6, y: 10 }, { opacity: 1, scale: 1, y: 0, duration: .35, ease: 'back.out(2.2)' }, at);
+      tl.to(c, { opacity: 0, y: -30, duration: .55, ease: 'power2.in' }, at + .85);
+    });
+    /* keluar: pop-out halus satu-satu */
+    tl.to(urut.map((i) => baris[i]), { opacity: 0, scale: .9, filter: 'blur(8px)', y: '-=18', duration: .4, ease: 'power2.in', stagger: .06 }, (D + 19.6));
+    tl.to(r.querySelectorAll('.kepala, .judul-kol'), { opacity: 0, y: -10, duration: .3, ease: 'power2.in' }, (D + 19.85));
+    tl.set(r, { opacity: 0 }, (D + 20.4));
+  })();
+  __akhir = akhirSimpan;
+}
+GESER.mode = 'semua';
 
 /* ===== ADEGAN 9 — KLIMAKS: Command Center (1:49,0–3:25,2) ===== */
 const C = buatKartu(['preview', 'cc-kunci', 'cc-contoh-atas', 'cc-modul-ringkasan', 'cc-tabel', 'cc-peringatan', 'cc-video', 'cc-peserta-tabel', 'cc-peserta', 'cc-cocreation', 'cc-cara-baca']);
-kartuMasuk(C, 109.0);
+sapuan(109.0); tl.set(C.el, { opacity: 1, scale: KS }, 109.26);   /* sapuan sendiri: sapuan keluar Sisi peserta (108,9) sudah dipakai jembatan 8b */
 pita('6 · Command Center', 109.1, 205.0);
 kalimat('Semua jejak belajar itu bermuara ke sini: | [[Command Center.]]', 109.2, 113.8);
 const zC0 = 1.55, kC0 = kam(zC0, 415, 253);
@@ -1095,13 +1144,13 @@ const Suara = (function () {
 /* ---------- kontrol ---------- */
 const geser = $('geser'), waktu = $('waktu'), btnPutar = $('btnPutar');
 const fmt = (t) => Math.floor(t / 60) + ':' + String(Math.floor(t % 60)).padStart(2, '0') + ',' + Math.floor((t % 1) * 10);
-tl.eventCallback('onUpdate', () => { if (tl.paused() && window.__vidSeek) window.__vidSeek(); geser.value = tl.time(); waktu.textContent = fmt(tl.time()) + ' / 4:16'; });
+tl.eventCallback('onUpdate', () => { if (tl.paused() && window.__vidSeek) window.__vidSeek(); geser.value = tl.time(); waktu.textContent = fmt(tl.time()) + ' / 4:21'; });
 tl.eventCallback('onComplete', () => { btnPutar.textContent = 'Putar'; Suara.jeda(); if (document.body.classList.contains('rekam')) setTimeout(keluarRekam, 800); });
 function putar() { Suara.aktifkan(); if (tl.progress() >= 1) tl.restart(); else tl.play(); btnPutar.textContent = 'Jeda'; }
 function jeda() { tl.pause(); btnPutar.textContent = 'Putar'; Suara.jeda(); }
 btnPutar.onclick = () => (tl.paused() || tl.progress() >= 1 ? putar() : jeda());
 $('btnUlang').onclick = () => { tl.restart(); Suara.aktifkan(); btnPutar.textContent = 'Jeda'; };
-geser.oninput = () => { tl.pause(); tl.seek(+geser.value, true); if (window.__angkaRekap) window.__angkaRekap(); btnPutar.textContent = 'Putar'; Suara.jeda(); waktu.textContent = fmt(+geser.value) + ' / 4:16'; };
+geser.oninput = () => { tl.pause(); tl.seek(+geser.value, true); if (window.__angkaRekap) window.__angkaRekap(); btnPutar.textContent = 'Putar'; Suara.jeda(); waktu.textContent = fmt(+geser.value) + ' / 4:21'; };
 $('btnSuara').onclick = () => { Suara.setBisu(!Suara.bisu()); $('btnSuara').textContent = 'Suara: ' + (Suara.bisu() ? 'mati' : 'nyala'); };
 function penuh() { const d = document.documentElement; if (!document.fullscreenElement && d.requestFullscreen) d.requestFullscreen().catch(() => {}); }
 $('btnPenuh').onclick = () => (document.fullscreenElement ? document.exitFullscreen() : penuh());

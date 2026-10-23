@@ -1,6 +1,6 @@
 # Storyboard Video Promosi — TEMPA (versi panjang)
 
-**Durasi:** ±4:16 (256 detik) · **Format:** 16:9, 1920 × 1080 · **Tanpa narator, tanpa musik** — efek suara saja.
+**Durasi:** ±4:21 (261 detik) · **Format:** 16:9, 1920 × 1080 · **Tanpa narator, tanpa musik** — efek suara saja.
 **Penonton:** PTP (Pengembang Teknologi Pembelajaran) · **Sapaan:** "kamu", santai semi-formal.
 **Bentuk jadi:** halaman animasi `video-promosi/panjang.html` (mesin disalin dari video Simulator Pajak Minimum Global), direkam pemilik dengan Win + Alt + R.
 **Status:** DISETUJUI & DIBANGUN (`panjang.html`) — revisi 2 — tiap blok yang dipamerkan kini memakai **karya penyusun sungguhan yang terbaik** (lihat bagian H). Menunggu persetujuan pemilik sebelum foto layar dan pembangunan video.
@@ -87,7 +87,7 @@ Dipilih pemilik lewat pertanyaan penajaman: arah **Bara TEMPA**, transisi **sapu
 | 1 | Materinya sudah ada di [[PowerPoint.]] | 0,9 – 4,6 | — |
 | 2 | Tapi menjadikannya modul web interaktif \| biasanya berarti {{mengetik ulang dan menulis kode.}} | 4,9 – 10,0 | — |
 | 3 | Setelah diunggah, laporan durasi bisa menipu: \| yang modulnya {{ditinggal makan siang}} tampak paling rajin. | 10,3 – 15,4 | — |
-| 4 | Rekap aktivitas peserta lintas modul \| {{terpantau sepenuhnya.}} | 15,7 – 20,2 | — |
+| 4 | Rekap peserta lintas modul? \| {{Digabung sendiri di Excel.}} | 15,7 – 20,2 | — |
 | 5 | Kenalkan: [[TEMPA,]] ekosistem modul interaktif. | 20,8 – 24,8 | Beranda |
 | 6 | Dari file PowerPoint sampai [[laporan aktivitas peserta,]] \| tanpa menulis satu baris kode pun. | 25,1 – 30,0 | Beranda |
 | 7 | [[Enam tab,]] berurutan seperti alur kerjamu. | 30,3 – 33,8 | Beranda |
@@ -105,6 +105,7 @@ Dipilih pemilik lewat pertanyaan penajaman: arah **Bara TEMPA**, transisi **sapu
 | 19 | Jalankan modulnya utuh, \| [[persis seperti yang dilihat peserta.]] | 92,8 – 97,6 | 5 Preview & Export |
 | 20 | Hasilnya satu [[berkas HTML mandiri]] tanpa server, \| atau [[paket SCORM]] siap unggah ke LMS. | 97,9 – 103,0 | 5 Preview & Export |
 | 21 | Slide yang dibuka jauh di bawah [[waktu baca wajar]] \| memicu peringatan sebelum kuis. | 103,4 – 108,8 | Sisi peserta |
+| 21a | Rekap aktivitas peserta lintas modul \| {{terpantau sepenuhnya.}} | sisipan +5,2 dtk (waktu sebenarnya 2:14,6 – 2:18,9) | — (jembatan) |
 | 22 | Semua jejak belajar itu bermuara ke sini: \| [[Command Center.]] | 109,2 – 113,8 | 6 Command Center |
 | 23 | Isinya data pribadi, jadi [[dikunci password]] \| yang diperiksa di server. | 114,1 – 119,0 | 6 Command Center |
 | 24 | Mau belajar membacanya dulu? \| Ada [[mode contoh]] berisi data karangan. | 119,3 – 124,2 | 6 Command Center |
@@ -141,7 +142,7 @@ Kalimat "mode gelap" dari draf pertama dibuang untuk memberi ruang adegan karya 
 | 0:01,5 – 0:04,6 | Lima "slide PowerPoint" generik (kotak 16:9 putih: bilah judul + baris abu, **digambar**, bukan foto aplikasi) jatuh menumpuk dan miring | Jatuh `back.out`, memantul 2 px, selang 0,4 dtk | #1 | `kertas` ×5 |
 | 0:04,9 – 0:10,0 | Tumpukan memudar dan kehilangan warna; muncul ikon `</>` dan kursor ketik oranye yang berkedip di atasnya | Saturasi turun; ikon masuk dengan skala 1,4 → 1 | #2 (oranye: "mengetik ulang dan menulis kode") | `stempel` saat ikon mendarat |
 | 0:10,3 – 0:15,4 | Tumpukan tergeser ke kiri. Di kanan muncul **dua batang tanpa angka**: batang tinggi berlabel mono "modul terbuka" dan batang pendek "benar-benar ditatap". Ikon piring/jam kecil di atas batang tinggi | Batang tumbuh dari bawah (0,6 dtk); batang tinggi diberi stabilo oranye | #3 | `tik` ×2 (sama) |
-| 0:15,7 – 0:20,2 | Panel "Rekap lintas modul · 6 peserta" (lampu hijau "terpantau"): enam baris kartu peserta karangan (inisial, nama, NIP disamarkan, bilah Modul 1–3, jam tatap layar). **Digambar**, bukan foto aplikasi | Baris pop-in beruntun 0,11 dtk (skala 0,84 + kabur → tajam); bilah & persen naik, jam tatap terus berjalan; 17,0 garis pemindai menyapu, tiap baris dapat centang hijau; 17,75 data naik lagi lalu 18,55 baris bertukar urutan (naik peringkat menyala); label mungil (kuis ✓, +3 slide, video 84%, cek paham ✓, refleksi ✓) muncul lalu melayang hilang; 19,6 pop-out halus satu-satu | #4 | `tik` ×3 masuk, `tik` ×3 pemindai, `sapu` 18,5 |
+| 0:15,7 – 0:20,2 | Tiga panel data terpisah "Modul 1/2/3" (gaya baris kartu yang sama dengan jembatan 8b, **bukan** lembar Excel): nama & urutan peserta tidak sejajar antarmodul ("Andi S.", "A. Saputra", "Andi") | Panel pop-in miring beruntun 0,25 dtk, bilah terisi; 17,4 orang yang sama disorot merah di tiap panel; 18,3 label "orang yang sama?"; 18,8 getar; 19,85 tersapu ke kiri dengan kabur gerak | #4 | `kertas` ×3, `tik` ×3, `whoosh` 19,8 |
 
 ### Adegan 2 — Perkenalan TEMPA (0:20,4 – 0:33,8) · label `TEMPA · Beranda`
 
@@ -252,6 +253,14 @@ Daftar draft (memuat nama penyusun) tidak ikut terpotret; alamat draft di daftar
 |---|---|---|---|---|
 | 1:43,2 | Foto **peserta-slide** (modul hasil ekspor di pratinjau, data contoh) | Kartu masuk | #21 | — |
 | 1:44,8 | Foto **peserta-peringatan** muncul sebagai jendela dari tengah kartu: "Kami lihat beberapa halaman terbuka cukup cepat…" dengan tombol Yakin / Kembali | `jendela()`; stabilo pada kalimat peringatan | #21 | `buka` |
+
+### Adegan 8b — Jembatan: rekap lintas modul terpantau (sisipan +5,2 dtk, waktu sebenarnya 2:14,0 – 2:19,3)
+
+Ditempatkan di sini karena sesudah sisi peserta (jejak per orang) kalimat ini merangkum semuanya, lalu langsung disambung "Semua jejak belajar itu bermuara ke sini: Command Center". Sekaligus menjawab masalah #4 di pembuka (panel terpisah → satu rekap). Bukan pengulangan #33: #33 foto asli tampilan per peserta untuk **satu orang**; 8b grafis gambaran besar **semua peserta**. Semua adegan sesudahnya bergeser +5,2 dtk (di kode lewat `GESER`).
+
+| Detik (sebenarnya) | Yang tampil | Efek | Teks | Suara |
+|---|---|---|---|---|
+| 2:14,6 – 2:19,3 | Panel "Rekap lintas modul · 6 peserta" (lampu hijau "terpantau"): enam baris kartu peserta karangan (inisial, nama, NIP disamarkan, bilah Modul 1–3, jam tatap layar). **Digambar**, bukan foto aplikasi | Baris pop-in beruntun 0,11 dtk (skala 0,84 + kabur → tajam); bilah & persen naik, jam tatap berjalan; pemindai menyapu → centang hijau per baris; data naik lagi lalu baris bertukar urutan; label mungil (kuis ✓, +3 slide, video 84%, cek paham ✓, refleksi ✓) muncul-melayang; pop-out halus sebelum sapuan masuk Command Center | #21a | `tik` ×6, `sapu` |
 
 ### Adegan 9 — KLIMAKS: Command Center (1:49,0 – 3:25,2) · label `6 · Command Center`
 
