@@ -87,7 +87,7 @@ Dipilih pemilik lewat pertanyaan penajaman: arah **Bara TEMPA**, transisi **sapu
 | 1 | Materinya sudah ada di [[PowerPoint.]] | 0,9 – 4,6 | — |
 | 2 | Tapi menjadikannya modul web interaktif \| biasanya berarti {{mengetik ulang dan menulis kode.}} | 4,9 – 10,0 | — |
 | 3 | Setelah diunggah, laporan durasi bisa menipu: \| yang modulnya {{ditinggal makan siang}} tampak paling rajin. | 10,3 – 15,4 | — |
-| 4 | Rekap peserta lintas modul? \| {{Digabung sendiri di Excel.}} | 15,7 – 20,2 | — |
+| 4 | Rekap aktivitas peserta lintas modul \| {{terpantau sepenuhnya.}} | 15,7 – 20,2 | — |
 | 5 | Kenalkan: [[TEMPA,]] ekosistem modul interaktif. | 20,8 – 24,8 | Beranda |
 | 6 | Dari file PowerPoint sampai [[laporan aktivitas peserta,]] \| tanpa menulis satu baris kode pun. | 25,1 – 30,0 | Beranda |
 | 7 | [[Enam tab,]] berurutan seperti alur kerjamu. | 30,3 – 33,8 | Beranda |
@@ -141,7 +141,7 @@ Kalimat "mode gelap" dari draf pertama dibuang untuk memberi ruang adegan karya 
 | 0:01,5 – 0:04,6 | Lima "slide PowerPoint" generik (kotak 16:9 putih: bilah judul + baris abu, **digambar**, bukan foto aplikasi) jatuh menumpuk dan miring | Jatuh `back.out`, memantul 2 px, selang 0,4 dtk | #1 | `kertas` ×5 |
 | 0:04,9 – 0:10,0 | Tumpukan memudar dan kehilangan warna; muncul ikon `</>` dan kursor ketik oranye yang berkedip di atasnya | Saturasi turun; ikon masuk dengan skala 1,4 → 1 | #2 (oranye: "mengetik ulang dan menulis kode") | `stempel` saat ikon mendarat |
 | 0:10,3 – 0:15,4 | Tumpukan tergeser ke kiri. Di kanan muncul **dua batang tanpa angka**: batang tinggi berlabel mono "modul terbuka" dan batang pendek "benar-benar ditatap". Ikon piring/jam kecil di atas batang tinggi | Batang tumbuh dari bawah (0,6 dtk); batang tinggi diberi stabilo oranye | #3 | `tik` ×2 (sama) |
-| 0:15,7 – 0:20,2 | Tiga lembar kisi tabel (gaya spreadsheet generik) bergeser dan saling tumpang; panah-panah salin-tempel di antaranya | Masuk beruntun 0,2 dtk; saat kata oranye lengkap tumpukan bergetar 0,3 dtk; 19,6 dtk garis biru mencoret kalimat; seluruh benda tersapu ke kiri dengan kabur gerak | #4 | `kertas`, lalu `whoosh` 19,8 |
+| 0:15,7 – 0:20,2 | Panel "Rekap lintas modul · 6 peserta" (lampu hijau "terpantau"): enam baris kartu peserta karangan (inisial, nama, NIP disamarkan, bilah Modul 1–3, jam tatap layar). **Digambar**, bukan foto aplikasi | Baris pop-in beruntun 0,11 dtk (skala 0,84 + kabur → tajam); bilah & persen naik, jam tatap terus berjalan; 17,0 garis pemindai menyapu, tiap baris dapat centang hijau; 17,75 data naik lagi lalu 18,55 baris bertukar urutan (naik peringkat menyala); label mungil (kuis ✓, +3 slide, video 84%, cek paham ✓, refleksi ✓) muncul lalu melayang hilang; 19,6 pop-out halus satu-satu | #4 | `tik` ×3 masuk, `tik` ×3 pemindai, `sapu` 18,5 |
 
 ### Adegan 2 — Perkenalan TEMPA (0:20,4 – 0:33,8) · label `TEMPA · Beranda`
 

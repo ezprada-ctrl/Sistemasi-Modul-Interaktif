@@ -62,6 +62,28 @@ body.rekam,body.rekam *{cursor:none!important}
 .batang b{position:absolute;left:50%;top:-74px;transform:translateX(-50%);font-size:52px}
 .sheet{position:absolute;width:520px;height:380px;border-radius:10px;background-color:#F4F5F7;box-shadow:0 30px 60px rgba(0,0,0,.45);opacity:0;
   background-image:linear-gradient(#1D6F42 0 34px,transparent 34px),repeating-linear-gradient(0deg,transparent 0 31px,#cfd5df 31px 32px),repeating-linear-gradient(90deg,transparent 0 103px,#cfd5df 103px 104px)}
+/* rekap lintas modul: baris kartu peserta yang hidup (adegan 1, kalimat #4) */
+.rekap{position:absolute;left:720px;top:236px;width:1100px;height:620px;z-index:15;opacity:0}
+.rekap .kepala{position:absolute;left:4px;right:4px;top:0;display:flex;justify-content:space-between;align-items:center;font:600 19px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--redup)}
+.rekap .kepala b{color:var(--putih);font-weight:600}
+.rekap .langsung{display:flex;align-items:center;gap:12px;color:var(--hijau)}
+.rekap .langsung i{width:12px;height:12px;border-radius:50%;background:var(--hijau);box-shadow:0 0 0 0 rgba(123,216,143,.6)}
+.rekap .grid{display:grid;grid-template-columns:300px 1fr 1fr 1fr 130px;gap:30px;align-items:center}
+.rekap .judul-kol{position:absolute;left:0;right:0;top:52px;padding:0 24px;font:500 16px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#8C7A69}
+.rekap .judul-kol span:last-child{text-align:right}
+.rekap .baris{position:absolute;left:0;right:0;height:70px;padding:0 24px;border-radius:10px;background:#22170F;border:1.5px solid #4A3226;box-shadow:8px 8px 0 rgba(122,45,14,.55);opacity:0;will-change:transform,filter,opacity}
+.rekap .org{display:flex;align-items:center;gap:14px;min-width:0}
+.rekap .av{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font:800 19px/1 var(--huruf);color:#1A0F08}
+.rekap .nm{font:700 22px/1.1 var(--huruf);color:var(--putih);white-space:nowrap}
+.rekap .nip{font:500 13px/1 var(--mono);color:#8C7A69;margin-top:5px;letter-spacing:.04em}
+.rekap .mod{position:relative;padding-top:20px}
+.rekap .mod em{position:absolute;right:0;top:0;font:600 15px/1 var(--mono);font-style:normal;color:#E9D8C6;font-variant-numeric:tabular-nums}
+.rekap .jalur{height:10px;border-radius:5px;background:rgba(255,255,255,.07);overflow:hidden}
+.rekap .isi{height:100%;border-radius:5px;background:linear-gradient(90deg,#B9531F,#FF9A55);transform-origin:0 50%;transform:scaleX(0)}
+.rekap .tatap{text-align:right;font:600 22px/1 var(--mono);color:var(--kuning);font-variant-numeric:tabular-nums}
+.rekap .cek{position:absolute;right:-16px;top:-14px;width:32px;height:32px;border-radius:50%;background:var(--hijau);color:#0E2A15;display:grid;place-items:center;font:800 18px/1 var(--huruf);box-shadow:0 0 18px rgba(123,216,143,.55);transform:scale(0)}
+.rekap .cip{position:absolute;right:190px;top:-18px;padding:6px 12px;border-radius:4px;background:#F7E6C4;color:#2A170D;font:600 15px/1 var(--mono);white-space:nowrap;box-shadow:4px 5px 0 rgba(0,0,0,.35);opacity:0;z-index:2}
+.rekap .pindai{position:absolute;left:-30px;right:-30px;top:0;height:3px;border-radius:2px;background:linear-gradient(90deg,transparent,#FF9A55 18%,#FFD24A 50%,#FF9A55 82%,transparent);box-shadow:0 0 22px 4px rgba(255,154,85,.55);opacity:0;z-index:3}
 .panah-alir{position:absolute;width:28px;height:4px;border-radius:2px;background:var(--aksen-terang);box-shadow:0 0 14px var(--aksen);opacity:0}
 .panah-alir::after{content:"";position:absolute;right:-6px;top:-6px;border:8px solid transparent;border-left:10px solid var(--aksen-terang)}
 .pil-blok{position:absolute;right:373px;top:30px;padding:10px 20px;border-radius:999px;background:var(--kaca);border:1px solid var(--tepi);backdrop-filter:blur(14px);font:600 22px/1 var(--huruf);color:var(--aksen-terang);opacity:0;z-index:22}
@@ -489,12 +511,86 @@ tl.fromTo(batang.querySelectorAll('.bt'), { scaleY: 0 }, { scaleY: 1, duration: 
 sfx('tik0', 10.7); sfx('tik1', 10.9);
 tl.to(batang.querySelector('.tinggi'), { boxShadow: '0 0 0 4px #FF9F0A, 0 0 40px rgba(255,159,10,.6)', duration: .3 }, 12.6);
 tl.to(batang, { opacity: 0, x: -2600, duration: .45, ease: 'power3.in' }, 15.45);
-kalimat('Rekap peserta lintas modul? | {{Digabung sendiri di Excel.}}', 15.7, 20.2);
-const lembarX = [0, 1, 2].map((i) => { const s = el('div', 'sheet', P, ''); s.style.left = (820 + i * 170) + 'px'; s.style.top = (150 + i * 40) + 'px';
-  tl.fromTo(s, { opacity: 0, y: 40, rotation: (i - 1) * 4 }, { opacity: 1, y: 0, duration: .35, ease: 'power3.out' }, 16.0 + i * .2); sfx('kertas', 16.0 + i * .2); return s; });
-tl.to(lembarX, { x: 6, duration: .05, yoyo: true, repeat: 5, ease: 'none' }, 18.4);
-tl.to(lembarX, { x: -2600, filter: 'blur(14px)', duration: .45, ease: 'power3.in', stagger: .04 }, 19.85).set(lembarX, { opacity: 0 }, 20.5);
-sfx('whoosh', 19.8);
+kalimat('Rekap aktivitas peserta lintas modul | {{terpantau sepenuhnya.}}', 15.7, 20.2);
+/* baris kartu peserta (data karangan): muncul satu-satu, bilah & angka naik, pemindai memberi centang,
+   data berubah lalu baris bertukar urutan, label kecil muncul-melayang; keluar dengan pop-out halus */
+(function () {
+  const PESERTA = [   // [nama, NIP samaran, warna, M1 M2 M3 awal, M1 M2 M3 akhir, tatap awal dtk, tatap akhir dtk]
+    ['Andi Saputra', '1987••••', '#FF9A55', [100, 72, 40], [100, 88, 64], 742, 811],
+    ['Rina Pratiwi', '1991••••', '#7BD88F', [100, 100, 66], [100, 100, 92], 902, 968],
+    ['Dimas Hakim', '1989••••', '#FFD24A', [84, 38, 12], [92, 56, 30], 497, 553],
+    ['Sari Lestari', '1993••••', '#FF6B5B', [92, 64, 30], [100, 100, 96], 655, 754],
+    ['Bayu Nugroho', '1990••••', '#E7B98F', [62, 20, 0], [78, 34, 10], 318, 360],
+    ['Maya Kusuma', '1995••••', '#9FD4C8', [100, 84, 52], [100, 92, 70], 811, 860]
+  ];
+  const Y0 = 96, JARAK = 86, jam = (s) => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(Math.round(s % 60)).padStart(2, '0');
+  const r = el('div', 'rekap', P, '<div class="kepala"><span><b>Rekap lintas modul</b> · ' + PESERTA.length + ' peserta</span><span class="langsung"><i></i>terpantau</span></div>' +
+    '<div class="judul-kol grid"><span>Peserta</span><span>Modul 1</span><span>Modul 2</span><span>Modul 3</span><span>Tatap layar</span></div><div class="pindai"></div>');
+  const baris = PESERTA.map((p, i) => {
+    const b = el('div', 'baris grid', r, '<div class="org"><span class="av" style="background:' + p[2] + '">' + p[0][0] + '</span><div><div class="nm">' + p[0] + '</div><div class="nip">NIP ' + p[1] + '</div></div></div>' +
+      [0, 1, 2].map(() => '<div class="mod"><em>0%</em><div class="jalur"><div class="isi"></div></div></div>').join('') + '<div class="tatap">00:00</div><span class="cek">✓</span>');
+    b.style.top = (Y0 + i * JARAK) + 'px';
+    return b;
+  });
+  /* angka ditulis tiap bingkai dari objeknya (onUpdate tidak jalan saat linimasa digeser lewat penggeser) */
+  const ANGKA = [];
+  ANGKA.push = function (f, e) { Array.prototype.push.call(this, [f, e]); };
+  const tulisAngka = () => { if (r.style.opacity === '0' || !r.style.opacity) return; ANGKA.forEach(([f, e]) => { const v = f(); if (e.textContent !== v) e.textContent = v; }); };
+  gsap.ticker.add(tulisAngka); window.__angkaRekap = tulisAngka;   // juga dipanggil penggeser (tab tersembunyi tidak menjalankan ticker)
+  /* angka & bilah: satu objek per sel supaya bisa digulir maju-mundur */
+  function isiKe(i, nilai, at, dur) {
+    baris[i].querySelectorAll('.mod').forEach((m, j) => {
+      const o = m._o || (m._o = { v: 0 }), em = m.querySelector('em');
+      if (!m._o.ikat) { m._o.ikat = 1; ANGKA.push(() => Math.round(o.v) + '%', em); }
+      tl.to(o, { v: nilai[j], duration: dur, ease: 'power3.out' }, at + j * .08);
+      tl.to(m.querySelector('.isi'), { scaleX: nilai[j] / 100, duration: dur, ease: 'power3.out' }, at + j * .08);
+    });
+  }
+  tl.set(r, { opacity: 1 }, 15.75);
+  tl.fromTo(r.querySelectorAll('.kepala, .judul-kol'), { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration: .45, ease: 'power3.out', stagger: .08 }, 15.8);
+  tl.fromTo(r.querySelector('.langsung i'), { boxShadow: '0 0 0 0 rgba(123,216,143,.6)' }, { boxShadow: '0 0 0 12px rgba(123,216,143,0)', duration: .9, repeat: 4, ease: 'power1.out' }, 16.0);
+  tl.fromTo(r, { y: 6 }, { y: -6, duration: 4.4, ease: 'sine.inOut' }, 15.75);   // melayang pelan
+  baris.forEach((b, i) => {
+    const p = PESERTA[i], at = 16.0 + i * .11;
+    tl.fromTo(b, { opacity: 0, scale: .84, y: 28, filter: 'blur(10px)' }, { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)', duration: .6, ease: 'back.out(1.5)' }, at);
+    if (i % 2 === 0) sfx('tik' + i, at);
+    isiKe(i, p[3], at + .3, .8);
+    const t = { s: p[5] }, el_ = b.querySelector('.tatap');
+    ANGKA.push(() => jam(t.s), el_);
+    tl.to(t, { s: p[6], duration: 19.6 - (at + .3), ease: 'none' }, at + .3);
+  });
+  /* pemindai menyapu baris; tiap baris yang dilewati dapat centang */
+  const pindai = r.querySelector('.pindai');
+  tl.fromTo(pindai, { opacity: 0, y: Y0 - 8 }, { opacity: 1, duration: .15 }, 16.95);
+  tl.to(pindai, { y: Y0 + PESERTA.length * JARAK - 8, duration: 1.1, ease: 'power1.inOut' }, 17.0);
+  tl.to(pindai, { opacity: 0, duration: .2 }, 18.05);
+  baris.forEach((b, i) => {
+    const at = 17.0 + (i + .5) / PESERTA.length * 1.1;
+    tl.to(b, { borderColor: '#FF9A55', duration: .12 }, at).to(b, { borderColor: '#4A3226', duration: .5 }, at + .2);
+    tl.fromTo(b.querySelector('.cek'), { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: .4, ease: 'back.out(3)' }, at);
+  });
+  sfx('tik1', 17.2); sfx('tik3', 17.6); sfx('tik5', 18.0);
+  /* data berubah, lalu baris bertukar urutan mengikuti total progres */
+  baris.forEach((b, i) => isiKe(i, PESERTA[i][4], 17.75 + i * .05, .7));
+  const total = (i) => PESERTA[i][4].reduce((a, v) => a + v, 0);
+  const urut = PESERTA.map((_, i) => i).sort((a, b) => total(b) - total(a));
+  urut.forEach((asal, ke) => {
+    if (asal === ke) return;
+    tl.to(baris[asal], { y: (ke - asal) * JARAK, duration: .75, ease: 'power3.inOut' }, 18.55);
+    if (ke < asal) tl.to(baris[asal], { boxShadow: '8px 8px 0 rgba(122,45,14,.55), 0 0 28px rgba(255,154,85,.45)', duration: .3, yoyo: true, repeat: 1 }, 18.6);
+  });
+  sfx('sapu', 18.5);
+  /* label kecil muncul lalu melayang hilang, menempel pada barisnya */
+  [[1, 'kuis ✓', 17.3], [3, '+3 slide', 17.75], [0, 'video 84%', 18.15], [5, 'cek paham ✓', 18.75], [2, 'refleksi ✓', 19.05]].forEach(([i, teks, at]) => {
+    const c = el('div', 'cip', baris[i], teks);
+    tl.fromTo(c, { opacity: 0, scale: .6, y: 10 }, { opacity: 1, scale: 1, y: 0, duration: .35, ease: 'back.out(2.2)' }, at);
+    tl.to(c, { opacity: 0, y: -30, duration: .55, ease: 'power2.in' }, at + .85);
+  });
+  /* keluar: pop-out halus satu-satu */
+  tl.to(urut.map((i) => baris[i]), { opacity: 0, scale: .9, filter: 'blur(8px)', y: '-=18', duration: .4, ease: 'power2.in', stagger: .06 }, 19.6);
+  tl.to(r.querySelectorAll('.kepala, .judul-kol'), { opacity: 0, y: -10, duration: .3, ease: 'power2.in' }, 19.85);
+  tl.set(r, { opacity: 0 }, 20.4);
+})();
 
 /* ===== ADEGAN 2 — perkenalan (0:20,4–0:33,8) ===== */
 const B1 = buatKartu(['beranda']);
@@ -1005,7 +1101,7 @@ function putar() { Suara.aktifkan(); if (tl.progress() >= 1) tl.restart(); else 
 function jeda() { tl.pause(); btnPutar.textContent = 'Putar'; Suara.jeda(); }
 btnPutar.onclick = () => (tl.paused() || tl.progress() >= 1 ? putar() : jeda());
 $('btnUlang').onclick = () => { tl.restart(); Suara.aktifkan(); btnPutar.textContent = 'Jeda'; };
-geser.oninput = () => { tl.pause(); tl.seek(+geser.value, true); btnPutar.textContent = 'Putar'; Suara.jeda(); waktu.textContent = fmt(+geser.value) + ' / 4:16'; };
+geser.oninput = () => { tl.pause(); tl.seek(+geser.value, true); if (window.__angkaRekap) window.__angkaRekap(); btnPutar.textContent = 'Putar'; Suara.jeda(); waktu.textContent = fmt(+geser.value) + ' / 4:16'; };
 $('btnSuara').onclick = () => { Suara.setBisu(!Suara.bisu()); $('btnSuara').textContent = 'Suara: ' + (Suara.bisu() ? 'mati' : 'nyala'); };
 function penuh() { const d = document.documentElement; if (!document.fullscreenElement && d.requestFullscreen) d.requestFullscreen().catch(() => {}); }
 $('btnPenuh').onclick = () => (document.fullscreenElement ? document.exitFullscreen() : penuh());
