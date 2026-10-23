@@ -113,7 +113,7 @@ Dipilih pemilik lewat pertanyaan penajaman: arah **Bara TEMPA**, transisi **sapu
 | 26 | Sekilas langsung terbaca: jumlah peserta, yang tuntas, \| yang {{perlu ditindaklanjuti,}} dan [[rata-rata tatap layar.]] | 129,5 – 134,6 | 6 Command Center |
 | 27 | Pindah tab atau diam lebih dari [[4 menit?]] \| Jam tatap layar berhenti, waktunya masuk {{ditinggal.}} (catatan: "⚠ total ditinggal sesi ini > 10 menit") | 134,9 – 140,6 | 6 Command Center |
 | 28 | Kolom slide langsung menjawab: \| [[ada materi yang terlewat atau tidak.]] | 140,9 – 146,0 | 6 Command Center |
-| 29 | Klik peringatan: kelihatan [[slide mana]] \| yang dibuka kurang dari separuh waktu bacanya. | 146,3 – 151,6 | 6 Command Center |
+| 29 | Klik peringatan: kelihatan [[slide mana]] \| yang dibuka kurang dari 50% waktu bacanya. | 146,3 – 151,6 | 6 Command Center |
 | 30 | Video juga: [[berapa persen ditonton,]] \| yang di bawah 20% ditandai. | 151,9 – 157,0 | 6 Command Center |
 | 31 | Kuis dihitung dari [[berapa kali gagal]] — \| yang gagal lalu berhenti pun tetap tercatat. → (ketukan 2, +2,5 dtk) Angka [[0]] berarti belum pernah gagal: \| lulus sekali coba, atau belum sampai kuisnya. | 157,3 – 162,4 | 6 Command Center |
 | 32 | Cek paham dicatat terpisah dari kuis: \| [[mengukur pemahaman,]] bukan kelulusan. | 162,7 – 167,2 | 6 Command Center |
