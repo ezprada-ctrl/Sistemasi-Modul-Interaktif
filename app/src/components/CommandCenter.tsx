@@ -217,7 +217,7 @@ function ArticulateAktif({ menit, langkah, titik }: { menit: number | null; lang
   if (menit == null) return null;
   const m = menit > 0 && menit < 1 ? '<1' : String(Math.round(menit));
   return (
-    <div style={{ fontSize: 10.5, color: 'var(--text-faint)', marginTop: 1, whiteSpace: 'nowrap' }}
+    <div style={{ fontSize: 10.5, lineHeight: 1.2, color: 'var(--text-faint)', marginTop: 1, whiteSpace: 'nowrap' }}
          title="Menit aktif = waktu ada klik/gerak di dalam paket Articulate (berhenti kalau ditinggal). Langkah = pindah posisi di dalamnya, maju maupun mundur; dalam kurung = titik berbeda yang didatangi">
       {/* dua baris pendek, bukan satu baris panjang: kolomnya gak melebar dan tabel tetap muat di layar laptop */}
       <div>{m} m aktif</div>
