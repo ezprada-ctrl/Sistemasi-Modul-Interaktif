@@ -481,6 +481,7 @@ function gabung(a, b) { const x = Math.min(a.x, b.x), y = Math.min(a.y, b.y); re
 function rujukan(teks, at, akhir) {   /* label sumber riset di kiri bawah, hanya di momen yang berdasar riset */
   const r = el('div', 'rujukan', P, '<b>Rujukan</b>' + teks);
   tl.fromTo(r, { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: .3, ease: 'power2.out' }, at).to(r, { opacity: 0, duration: .2 }, akhir);
+  return r;
 }
 function pita(teks, at, akhir) {   /* label menu/modul di kiri atas kartu */
   const p = teks.split(' · ');
@@ -816,7 +817,17 @@ const B8 = buatKartu(['peserta-slide', 'peserta-peringatan']);
 kartuMasuk(B8, 103.2);
 pita('Sisi peserta', 103.3, 108.6);
 kalimat('Slide yang dibuka jauh di bawah [[waktu baca wajar]] | memicu peringatan sebelum kuis.', 103.4, 108.8);
-rujukan('238 kata/menit · Brysbaert (2019), meta-analisis 190 studi', 103.7, 108.6);
+const rjk = rujukan('238 kata/menit · Brysbaert (2019), meta-analisis 190 studi', 103.7, 108.6);
+/* sesudah peringatan disorot: coret juga rujukannya — dari sinilah "waktu baca wajar" dihitung */
+{
+  const pad = 8, w = rjk.offsetWidth + pad * 2, h = rjk.offsetHeight + pad * 2;
+  const s = el('div', 'sorot', P); s.style.zIndex = 22;
+  Object.assign(s.style, { left: rjk.offsetLeft - pad + 'px', top: rjk.offsetTop - pad + 'px', width: w + 'px', height: h + 'px' });
+  s.innerHTML = '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none"><path d="' + coretKotak(w, h, 238) + '"/></svg>';
+  sorotMasuk(s, 107.1, 1); sorotKeluar(s, 108.5); sfx('tik0', 107.1);
+  tl.to(rjk, { scale: 1.04, transformOrigin: '0% 100%', duration: .3, ease: 'back.out(2)' }, 107.1);
+  balon('patokan kecepatan baca', 107.4, { x: 680, y: rjk.offsetTop - 10 }, 108.5);
+}
 jendela(B8, 'peserta-peringatan', R([483, 224, 400, 321])).buka(104.8);
 kamera(B8, 105.3, 1.5, 683, 384, .7);
 stabilo(B8, R([515, 342, 336, 40]), 106.0, 108.5);
