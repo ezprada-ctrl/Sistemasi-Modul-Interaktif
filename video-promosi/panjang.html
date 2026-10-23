@@ -369,7 +369,7 @@ const tl = gsap.timeline({ paused: true });
 /* [mulai, tambahan dtk]: pratinjau hover blok (+6), Paket Modul (+9), kolom Kuis dua ketukan (+2,5).
    mode 'semua' = linimasa biasa; 'awal' = blok sisipan lama yang ditulis dgn waktu sebenarnya sebelum sisipan hover ada
    (cukup ditambah +6); 'tanpa' = blok yang ditulis dengan waktu akhir apa adanya. */
-const GESER = { mode: 'semua', sisip: [[50.31, 6], [63.05, 1.6], [72.7, 2.5], [82.31, 6], [103.15, 9], [108.95, 5.2], [162.55, 2.5]], susulan: [[50.31, 6], [63.05, 1.6], [72.7, 2.5], [82.31, 6]] };   /* +6: 10 gaya grafis */   /* +1,6: Video 3 dtk; +2,5: Refleksi digulir */
+const GESER = { mode: 'semua', sisip: [[50.31, 6], [63.05, 1.6], [72.7, 2.5], [82.31, 6], [103.15, 9], [108.95, 5.2], [162.55, 2.5]], susulan: [[50.31, 6], [63.05, 1.6], [72.7, 2.5], [82.31, 6], [150, 5.2]] };   /* [150, 5.2]: jembatan 8b, hanya mengenai blok kuis dua ketukan (blok paket < 113 tak tersentuh) */   /* +6: 10 gaya grafis */   /* +1,6: Video 3 dtk; +2,5: Refleksi digulir */
 ['to', 'fromTo', 'set', 'call'].forEach((m) => { const asli = tl[m].bind(tl); const idx = { to: 2, fromTo: 3, set: 2, call: 2 }[m];
   tl[m] = function () { const a = [...arguments]; if (GESER.mode !== 'tanpa' && typeof a[idx] === 'number') { const t0 = a[idx]; (GESER.mode === 'awal' ? GESER.susulan : GESER.sisip).forEach(([m, d]) => { if (t0 >= m) a[idx] += d; }); } return asli(...a); }; });
 const sfx = (nama, t) => tl.call(() => Suara.bunyi(nama), null, t);
@@ -426,6 +426,7 @@ function label(at, kode, teks, akhir) {
   const l = el('div', 'label', P, '<b>' + kode + '</b><span>' + teks + '</span>');
   tl.fromTo(l, { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: .3, ease: 'power2.out' }, at);
   tl.to(l, { opacity: 0, x: -10, duration: .2 }, akhir);
+  return l;
 }
 /* kursor di ruang panggung; titik tujuan dihitung dari posisi kamera saat itu */
 function kursor(at, titik, dur) { tl.to('#kursor', { x: titik.x - 6, y: titik.y - 4, opacity: 1, duration: dur || .7, ease: 'power2.inOut' }, at); }
@@ -493,7 +494,7 @@ function rujukan(teks, at, akhir, sorotPada) {   /* label sumber riset di kiri b
 }
 function pita(teks, at, akhir) {   /* label menu/modul di kiri atas kartu */
   const p = teks.split(' · ');
-  label(at, p[0], p.slice(1).join(' · ') || '', akhir);
+  return label(at, p[0], p.slice(1).join(' · ') || '', akhir);
 }
 
 /* ---------- posisi (css px pada foto 1366 × 768; dicatat alat/ambil-aset.mjs & ambil-karya.mjs) ---------- */
@@ -718,7 +719,7 @@ tl.set(ketik, { opacity: 0 }, 0); tl.set(ketik, { opacity: 1, scaleX: 1 }, 75.65
 /* ===== ADEGAN 5 — Tema (1:17,2–1:27,2) ===== */
 const B5 = buatKartu(['tema-emas', 'tema-biru', 'tema-rekam']);
 kartuMasuk(B5, 77.2);
-pita('3 · Tema', 77.3, 87.0);
+const pitaTema = pita('3 · Tema', 77.3, 87.0);
 kalimat('[[Enam tema warna,]] sepuluh gaya grafis. | Satu klik, seluruh modul ikut berubah.', 77.4, 82.2);
 const zM = 1.5, kM = kam(zM, 330, 470);
 kamera(B5, 77.6, zM, 330, 470, .7);
@@ -738,6 +739,7 @@ GESER.mode = 'tanpa';
   sapuan(92.2); tl.set(GY.el, { opacity: 1, scale: KS }, 92.46);
   const zG = 1.85, kG = kam(zG, 372, 400); tl.set(GY.kamera, kG, 92.46);
   pita('3 · Tema · gaya grafis', 92.5, 98.1);
+  tl.set(pitaTema, { opacity: 0 }, 92.5).set(pitaTema, { opacity: 1 }, 98.3);   /* label induk disembunyikan selama label 'gaya grafis' tampil di tempat yang sama */
   kalimat('Tiap [[gaya grafis]] cukup disorot kursor: | sampul, slide, dan penutupnya langsung terlihat.', 92.6, 98.1);
   const yOpsi = [289.5, 324.7, 359.8, 395, 430.1, 465.2, 500.4, 535.5, 570.7, 590];
   kursor(92.7, keP(90, 272, kG), .4);
