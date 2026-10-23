@@ -132,8 +132,12 @@ await foto('cc-tabel', tabelCatat);
 await ev(`const t=[...document.querySelectorAll('tbody tr')].find(x=>x.cells.length>5&&x.textContent.includes('Budi'));[...t.querySelectorAll('button')].find(b=>/×\\s*▸/.test(b.textContent)).click();await w(1200);return 1`);
 await foto('cc-peringatan', tabelCatat.replace('return {', `const t=[...document.querySelectorAll('tbody tr')].find(x=>x.cells.length>5&&x.textContent.includes('Budi'));const rin=t.nextElementSibling;return {rincian:R(rin),tombol:R([...t.querySelectorAll('button')].find(b=>/×\\s*▸/.test(b.textContent))),`));
 await ev(`const t=[...document.querySelectorAll('tbody tr')].find(x=>x.cells.length>5&&x.textContent.includes('Budi'));[...t.querySelectorAll('button')].find(b=>/×\\s*▾|×\\s*▸/.test(b.textContent)).click();await w(600);[...t.querySelectorAll('button')].find(b=>b.textContent.includes('diklik')).click();await w(1200);return 1`);
+/* wadah tabel dibatasi tingginya (gulir sendiri); rincian video 4 baris di bawah baris Budi terpotong
+   olehnya sejak baris kolom Articulate jadi 3 tingkat -> dilepas sementara khusus foto ini */
+await ev(`document.querySelector('table').parentElement.style.maxHeight='none';await w(400);return 1`);
 await foto('cc-video', tabelCatat.replace('return {', `const t=[...document.querySelectorAll('tbody tr')].find(x=>x.cells.length>5&&x.textContent.includes('Budi'));const rin=t.nextElementSibling;return {rincian:R(rin),tombol:R([...t.querySelectorAll('button')].find(b=>b.textContent.includes('diklik'))),`));
 await ev(`const t=[...document.querySelectorAll('tbody tr')].find(x=>x.cells.length>5&&x.textContent.includes('Budi'));[...t.querySelectorAll('button')].find(b=>b.textContent.includes('diklik')).click();await w(600);return 1`);
+await ev(`document.querySelector('table').parentElement.style.maxHeight='';await w(300);return 1`);
 await ev(`window.scrollTo(0,0);await w(500);T('Per Peserta','button').click();await w(3000);await geserKe(T('PESERTA'),330);return 1`);
 await foto('cc-peserta', tabelCatat.replace('return {', `const k=['PESERTA','MATERI TUNTAS','PERLU DITINDAKLANJUTI','RATA-RATA TATAP LAYAR'].map(x=>R(naik(T(x),200)));return {kartu:k, csv:['CSV rekap per peserta','CSV rincian per slide','CSV rincian per video'].map(x=>R(TM(x,'button'))),`));
 await ev(`await geserKe(document.querySelector('thead'),160);return 1`);
