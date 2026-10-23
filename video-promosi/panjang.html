@@ -249,7 +249,12 @@ body.rekam,body.rekam *{cursor:none!important}
 .lencana19{left:auto;right:150px;top:150px;border-radius:6px;background:#FF9A55;color:#1A0F08;box-shadow:8px 8px 0 #7A2D0E;font:800 64px/1 var(--huruf)}
 .zip{background:#D9692B;color:#1A0F08;border-radius:6px;box-shadow:6px 6px 0 #7A2D0E}
 .jam{background:#F7E6C4;color:#2A170D;border:0;font:700 30px/1 var(--tangan);border-radius:3px}
-.jam .lgk{display:inline-block;font:700 30px/1 var(--mono);color:#B9531F}
+.klik-demo{display:flex;align-items:center;gap:12px}
+.klik-demo .obj-baris{display:inline-flex;gap:8px;margin-right:6px}
+.klik-demo .obj{display:block;width:26px;height:26px;border-radius:5px;background:#B9531F;opacity:.22}
+.klik-demo .klik-n{position:relative;display:inline-block;width:22px;height:30px;font:700 30px/1 var(--mono);color:#B9531F}
+.klik-demo .klik-n b{position:absolute;left:0;top:0;opacity:0}
+.klik-demo .klik-ket{font:700 26px/1 var(--tangan)}
 .panah-alir{background:var(--aksen-terang);box-shadow:none}
 .panah-alir::after{border-left-color:var(--aksen-terang)}
 .kode-ikon{left:1270px}
@@ -502,9 +507,9 @@ function pita(teks, at, akhir) {   /* label menu/modul di kiri atas kartu */
 const TAB = [[28, 232, 134, 42], [166, 232, 134, 42], [304, 232, 87, 42], [395, 232, 80, 42], [480, 232, 157, 42], [641, 232, 160, 42]].map(R);
 const TABP = [[28, 232, 131, 42], [163, 232, 134, 42], [300, 232, 87, 42], [392, 232, 80, 42], [476, 232, 163, 42], [643, 232, 160, 42]].map(R);
 /* tabel per modul (foto cc-tabel dkk., dipotret ulang 2026-10-24 sesudah kolom Articulate dapat
-   baris menit aktif & langkah): kepala di y 159,5, baris ke-i mulai di BARIS_Y(i), tinggi BARIS_H */
-const TABEL = R([29, 159.5, 1304, 535.5]);
-const KOL = { tatap: R([312.5, 159.5, 96.2, 35.5]), tinggal: R([408.8, 159.5, 85.2, 35.5]), slide: R([494, 159.5, 85.2, 35.5]), kuis: R([661.3, 159.5, 71.2, 35.5]), kc: R([732.5, 159.5, 135.3, 35.5]), video: R([867.8, 159.5, 132.5, 35.5]), art: R([1000.3, 159.5, 134.7, 35.5]), per: R([1208.6, 159.5, 124, 35.5]) };
+   baris menit aktif & "x/y klik objek"): kepala di y 159,5, baris ke-i mulai di BARIS_Y(i), tinggi BARIS_H */
+const TABEL = R([29, 159.5, 1298, 535.5]);
+const KOL = { tatap: R([317.1, 159.5, 97.8, 35.5]), tinggal: R([414.8, 159.5, 86.5, 35.5]), slide: R([501.4, 159.5, 86.6, 35.5]), kuis: R([671.4, 159.5, 72.3, 35.5]), kc: R([743.7, 159.5, 137.4, 35.5]), video: R([881.2, 159.5, 134.6, 35.5]), art: R([1015.8, 159.5, 110.4, 35.5]), per: R([1201, 159.5, 126, 35.5]) };
 const BARIS_H = 62.6, BARIS_Y = (i) => 195 + i * BARIS_H;   /* 0 Siti · 1 Rahmat · 2 Dewi · 3-4 Fajar · 5 Yulianti · 6-7 Budi */
 const sel = (kol, i) => R([kol.x, BARIS_Y(i), kol.w, BARIS_H]);
 const SITI_SLIDE = sel(KOL.slide, 0);
@@ -965,75 +970,81 @@ silang(C, 'cc-tabel', 134.7, .4); sembunyi(C, 'cc-modul-ringkasan', 135.2);
 tl.set(C.kamera, kam(1, 683, 384), 134.7);
 kalimat('Pindah tab atau diam lebih dari [[4 menit?]] | Jam tatap layar berhenti, waktunya masuk {{ditinggal.}}', 134.9, 140.6);
 rujukan('Ambang diam 3–5 menit · Hubstaff; Huang, White &amp; Buscher (2012)', 135.2, 140.4);
-const zC5 = 1.5, kC5 = kam(zC5, 420, 427);
-kamera(C, 135.1, zC5, 420, 427, .7);
+const zC5 = 1.5, kC5 = kam(zC5, 425, 427);
+kamera(C, 135.1, zC5, 425, 427, .7);
 sorotan(C, kolom(KOL.tatap, TABEL), 136.0, 140.3, '', zC5, 2, false);
 sorotan(C, kolom(KOL.tinggal, TABEL), 136.4, 140.3, 'kuning', zC5, 2, false); sfx('tik0', 136.0); sfx('tik1', 136.4);
-balon('⚠ total ditinggal sesi ini > 10 menit', 137.4, (function () { const q = keP(451, 602, kC5); return { x: q.x - 90, y: q.y + 36 }; })(), 140.3, true);
+balon('⚠ total ditinggal sesi ini > 10 menit', 137.4, (function () { const q = keP(458, 602, kC5); return { x: q.x - 90, y: q.y + 36 }; })(), 140.3, true);
 const jam = el('div', 'jam', P, 'diam > 4 menit → ditinggal'); tl.fromTo(jam, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .3 }, 138.2).to(jam, { opacity: 0, duration: .2 }, 140.3); sfx('ketuk', 138.2);
 kalimat('Kolom slide langsung menjawab: | [[ada materi yang terlewat atau tidak.]]', 140.9, 146.0);
 const zC6 = 2.2, kC6 = kam(zC6, 540, 300);
 kamera(C, 141.0, zC6, 540, 300, .7);
 sorotan(C, SITI_SLIDE, 141.9, 145.7, '', zC6, 2);
-balon('94 dari 95 slide dibuka · 96 kunjungan', 142.6, (function () { const q = keP(579, 226, kC6); return { x: q.x + 30, y: q.y - 30 }; })(), 145.7);
+balon('94 dari 95 slide dibuka · 96 kunjungan', 142.6, (function () { const q = keP(588, 226, kC6); return { x: q.x + 30, y: q.y - 30 }; })(), 145.7);
 kalimat('Klik peringatan: kelihatan [[slide mana]] | yang dibuka kurang dari 50% waktu bacanya.', 146.3, 151.6);
 rujukan('Waktu baca minimum = kata ÷ 238 × 60 detik · Brysbaert (2019)', 146.6, 151.4);
 const zC7 = 1, kC7 = kam(zC7, 683, 384);
 kamera(C, 146.3, zC7, 683, 384, .7);
-p = keP(1240, 602, kC7); kursor(146.9, p, .7); klik(147.8, p); kursorHilang(148.3);
-const jP = jendela(C, 'cc-peringatan', R([29, 633, 1304, 69])); jP.buka(147.9);
+p = keP(1233, 602, kC7); kursor(146.9, p, .7); klik(147.8, p); kursorHilang(148.3);
+const jP = jendela(C, 'cc-peringatan', R([29, 633, 1288, 69])); jP.buka(147.9);
 stabilo(C, R([85, 654, 220, 18]), 148.8, 151.3);
 jP.tutup(151.6);
 kalimat('Video juga: [[berapa persen ditonton,]] | yang di bawah 20% ditandai.', 151.9, 157.0);
-p = keP(931, 602, kC7); kursor(152.1, p, .7); klik(152.9, p); kursorHilang(153.4);
-const jV = jendela(C, 'cc-video', R([29, 633, 1304, 112])); jV.buka(153.0);
+p = keP(937, 602, kC7); kursor(152.1, p, .7); klik(152.9, p); kursorHilang(153.4);
+const jV = jendela(C, 'cc-video', R([29, 633, 1288, 112])); jV.buka(153.0);
 sorotan(C, R([29, 639, 260, 100]), 153.9, 156.7, 'kuning', zC7, 3, false);
 jV.tutup(157.0);
-const zC8 = 1.45, kC8 = kam(zC8, 800, 427);
-kamera(C, 157.3, zC8, 800, 427);
+const zC8 = 1.45, kC8 = kam(zC8, 810, 427);
+kamera(C, 157.3, zC8, 810, 427);
 /* kolom Kuis, dua ketukan (waktu sebenarnya): sel yang gagal dulu, lalu sel 0 */
 GESER.mode = 'awal';
 {
   const simpan = __akhir; const kolomKuis = (i) => sel(KOL.kuis, i);
   kalimat('Kuis dihitung dari [[berapa kali gagal]] — | yang gagal lalu berhenti pun tetap tercatat.', 166.3, 169.9);
   [1, 2, 3, 6].forEach((b, i) => { sorotan(C, kolomKuis(b), 167.0 + i * .2, 169.8, '', zC8, 3, false); sfx('tik' + i, 167.0 + i * .2); });
-  balon('jumlah kirim jawaban yang gagal', 167.8, (function () { const q = keP(697, 160, kC8); return { x: q.x - 160, y: q.y - 66 }; })(), 169.8, true);
+  balon('jumlah kirim jawaban yang gagal', 167.8, (function () { const q = keP(707, 160, kC8); return { x: q.x - 160, y: q.y - 66 }; })(), 169.8, true);
   kalimat('Angka [[0]] berarti belum pernah gagal: | lulus sekali coba, atau belum sampai kuisnya.', 170.3, 173.8);
   [0, 4, 5, 7].forEach((b, i) => { sorotan(C, kolomKuis(b), 170.9 + i * .2, 173.6, 'kuning', zC8, 3, false); sfx('tik' + i, 170.9 + i * .2); });
-  balon('0 = belum pernah gagal', 171.6, (function () { const q = keP(697, 160, kC8); return { x: q.x - 110, y: q.y - 66 }; })(), 173.6, true);
+  balon('0 = belum pernah gagal', 171.6, (function () { const q = keP(707, 160, kC8); return { x: q.x - 110, y: q.y - 66 }; })(), 173.6, true);
   __akhir = simpan > 162.4 ? simpan : 162.4;
 }
 GESER.mode = 'semua';
 kalimat('Cek paham dicatat terpisah dari kuis: | [[mengukur pemahaman,]] bukan kelulusan.', 162.7, 167.2);
 sorotan(C, kolom(KOL.kc, TABEL), 163.4, 166.9, '', zC8, 2, false); sfx('tik0', 163.4);
-balon('cek paham: benar / dijawab, terpisah dari kuis', 164.6, (function () { const q = keP(800, 160, kC8); return { x: q.x - 200, y: q.y - 66 }; })(), 166.9, true);
+balon('cek paham: benar / dijawab, terpisah dari kuis', 164.6, (function () { const q = keP(812, 160, kC8); return { x: q.x - 200, y: q.y - 66 }; })(), 166.9, true);
 
-/* ===== ketukan Articulate (sisipan +7 dtk, waktu sebenarnya 200,0–207,2): menit aktif & langkah =====
+/* ===== ketukan Articulate (sisipan +7 dtk, waktu sebenarnya 200,0–207,2): menit aktif & klik objek =====
    Gambarnya mengikuti kalimat: kolom Articulate didekati, lalu dua orang dibandingkan -
-   Rahmat (lama tapi cuma 3 langkah, belum selesai) vs Yulianti (47 langkah bolak-balik, selesai),
-   ditutup pil yang memperagakan apa itu "langkah": maju ATAU mundur sama-sama dihitung. */
+   Rahmat (21 menit tapi cuma 3/33 klik objek, bertanda peringatan) vs Yulianti (60/33: klik
+   ulang ikut dihitung, semua objek dibuka), ditutup peragaan "klik demi klik tiap objek":
+   objek menyala satu per satu saat diklik, satu diklik dua kali, sisanya tetap redup. */
 GESER.mode = 'tanpa';
 {
   const simpan = __akhir;
-  kalimat('Konten [[Articulate]] pun terekam: | [[menit aktif dan langkahnya,]] bukan sekadar selesai.', 200.4, 206.9);
-  const zA = 1.9, kA = kam(zA, 1067, 414);
-  kamera(C, 200.3, zA, 1067, 414, .7);
+  kalimat('Konten [[Articulate]] pun terekam: | menit aktif, bahkan [[klik demi klik tiap objek]] yang dilakukan peserta, bukan sekadar selesai.', 200.4, 206.9);
+  const zA = 1.9, kA = kam(zA, 1071, 414);
+  kamera(C, 200.3, zA, 1071, 414, .7);
   sorotan(C, kolom(KOL.art, TABEL), 200.9, 206.8, '', zA, 2, false); sfx('tik0', 200.9);
   sorotan(C, sel(KOL.art, 1), 201.7, 204.0, 'merah', zA, 3); sfx('tik1', 201.7);
-  balon('Rahmat: 21 menit, cuma 3 langkah → patut dicek', 202.0, (function () { const q = keP(1000, BARIS_Y(1), kA); return { x: q.x - 400, y: q.y - 52 }; })(), 204.0);
+  balon('Rahmat: 21 menit, cuma 3/33 klik objek ⚠ → patut dicek', 202.0, (function () { const q = keP(1015, BARIS_Y(1), kA); return { x: q.x - 470, y: q.y - 52 }; })(), 204.0);
   sorotan(C, sel(KOL.art, 5), 204.0, 206.8, 'hijau', zA, 3); sfx('tik2', 204.0);
-  balon('Yulianti: 16 menit, 47 langkah → benar dikerjakan', 204.3, (function () { const q = keP(1000, BARIS_Y(5), kA); return { x: q.x - 410, y: q.y - 52 }; })(), 206.8, true);
-  /* "langkah" diperagakan: panah maju & mundur menyala satu per satu, lalu jumlahnya.
+  balon('Yulianti: 16 menit, 60/33 klik objek → semua objek dibuka', 204.3, (function () { const q = keP(1015, BARIS_Y(5), kA); return { x: q.x - 480, y: q.y - 52 }; })(), 206.8, true);
+  /* peragaan: 6 objek; diklik berurutan 1-2-3-2-4 -> 5 klik, 4 dari 6 objek dibuka.
      Semua lewat tween opasitas (bukan tl.call) supaya tetap benar saat linimasa digeser. */
-  const ARAH = ['→', '→', '←', '→', '←', '→'];
-  const pil = el('div', 'jam', P, ARAH.map((a) => '<span class="lgk">' + a + '</span>').join(' ') +
-    ' <span class="lgk-jml">= ' + ARAH.length + ' langkah · maju atau mundur, sama-sama dihitung</span>');
-  tl.fromTo(pil, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .3 }, 204.8).to(pil, { opacity: 0, duration: .2 }, 206.8);
-  pil.querySelectorAll('.lgk').forEach((e, i) => {
-    tl.fromTo(e, { opacity: .15, scale: .7 }, { opacity: 1, scale: 1, duration: .18, ease: 'back.out(3)' }, 205.0 + i * .22);
-    sfx('tik' + (i % 8), 205.0 + i * .22);
+  const URUT = [0, 1, 2, 1, 3];
+  const pil = el('div', 'jam klik-demo', P, '<span class="obj-baris">' + Array.from({ length: 6 }, () => '<i class="obj"></i>').join('') + '</span>' +
+    '<span class="klik-n">' + URUT.map((_, k) => '<b>' + (k + 1) + '</b>').join('') + '</span> klik · <span class="klik-ket">klik ulang ikut dihitung, objek redup = belum dibuka</span>');
+  const obj = pil.querySelectorAll('.obj'), angka = pil.querySelectorAll('.klik-n b');
+  tl.fromTo(pil, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .3 }, 204.6).to(pil, { opacity: 0, duration: .2 }, 206.8);
+  URUT.forEach((o, k) => {
+    const t = 204.9 + k * .26;
+    tl.fromTo(obj[o], { scale: 1 }, { scale: 1.35, duration: .1, yoyo: true, repeat: 1 }, t);
+    if (URUT.indexOf(o) === k) tl.fromTo(obj[o], { opacity: .22 }, { opacity: 1, duration: .12 }, t);   /* pertama kali dibuka: menyala */
+    if (k) tl.set(angka[k - 1], { opacity: 0 }, t);
+    tl.fromTo(angka[k], { opacity: 0 }, { opacity: 1, duration: .08 }, t);
+    sfx('tik' + (k % 8), t);
   });
-  tl.fromTo(pil.querySelector('.lgk-jml'), { opacity: 0 }, { opacity: 1, duration: .25 }, 205.0 + ARAH.length * .22);
+  tl.fromTo(pil.querySelector('.klik-ket'), { opacity: 0 }, { opacity: 1, duration: .25 }, 204.9 + URUT.length * .26);
   __akhir = simpan;
 }
 GESER.mode = 'semua';
