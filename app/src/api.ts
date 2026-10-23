@@ -293,12 +293,14 @@ export interface ActivitySession {
   // ditanam - beda dari "modul ini gak punya paket Articulate" (0).
   articulate_selesai: number;
   total_articulate: number | null;
-  // Menit aktif, langkah (pindah posisi ke arah mana pun), dan titik berbeda
-  // DI DALAM paket Articulate. null = modul di-export sebelum perekamnya ada
-  // (atau modulnya gak punya paket) - ditampilkan "—", bukan 0.
+  // Menit aktif & klik objek DI DALAM paket Articulate. klik = klik pada objek
+  // yang bisa diklik (Next/Back gak dihitung, klik ulang dihitung); klik_unik =
+  // objek berbeda yang pernah diklik; total_objek = semua objek bisa-diklik di
+  // paketnya (null = gak diketahui, mis. Rise). null semua = modul lama.
   articulate_aktif_menit: number | null;
-  articulate_langkah: number | null;
-  articulate_titik: number | null;
+  articulate_klik: number | null;
+  articulate_klik_unik: number | null;
+  articulate_total_objek: number | null;
   // Catatan Co-creation yang DISENTUH di sesi ini (ditulis atau diubah).
   // Bukan jumlah catatan hidup peserta - satu catatan yang disunting berkali
   // di sesi yang sama tetap dihitung satu.
@@ -387,8 +389,9 @@ export interface ActivityLearner {
   total_articulate_program: number | null;
   // Sama seperti ActivitySession, dijumlah lintas modul.
   articulate_aktif_menit: number | null;
-  articulate_langkah: number | null;
-  articulate_titik: number | null;
+  articulate_klik: number | null;
+  articulate_klik_unik: number | null;
+  articulate_total_objek: number | null;
   // Jumlah catatan Co-creation yang MASIH HIDUP milik peserta ini (yang sudah
   // dihapus tidak dihitung), digabung lintas semua modulnya.
   catatan: number;

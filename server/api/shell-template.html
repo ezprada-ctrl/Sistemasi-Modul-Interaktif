@@ -2400,6 +2400,26 @@ const SLIDE_KC = __SLIDE_KC_JS__;
 const SLIDE_ART = __SLIDE_ART_JS__;
 const ART_PACKAGED = __ART_PACKAGED_JS__;
 const HAS_ART = ART_PACKAGED && Object.keys(SLIDE_ART).length > 0;
+/* {idBlok: {total, ids}} objek Storyline yang bisa diklik (tanpa Next/Back).
+   BUKAN dari generator: perakit paket SCORM (scormZip.ts) menukar token di
+   bawah ini dengan hasil membaca isi paket Articulate-nya. Di Live Preview /
+   HTML tunggal tetap null. total null = paketnya gak bisa dibaca (mis. Rise). */
+const ART_KLIK = /*__ART_KLIK__*/null;
+/* Total objek bisa-diklik di SEMUA paket modul ini - penyebut "x/y klik objek".
+   null kalau ada satu saja paket yang daftarnya gak diketahui: penyebut yang
+   cuma menghitung sebagian paket bakal bikin x/y menyesatkan. */
+function artTotalObjek(){
+  if(!ART_KLIK) return null;
+  let n = 0;
+  const blok = new Set();
+  Object.keys(SLIDE_ART).forEach(function(k){ SLIDE_ART[k].forEach(function(a){ blok.add(a.block); }); });
+  for(const b of blok){
+    const k = ART_KLIK[b];
+    if(!k || k.total == null) return null;
+    n += k.total;
+  }
+  return blok.size ? n : null;
+}
 
 /* ---------------- Quiz data ---------------- */
 const QUIZZES = __QUIZZES_JS__;
@@ -2746,8 +2766,8 @@ function artMarkDone(blockId, status){
   try{ actEvent('articulate_selesai', {blok: blockId, status: status || 'completed'}); }catch(e){}
 }
 
-/* ---- menit aktif & langkah DI DALAM Articulate ----
-   Kolom Articulate dulu cuma tahu "selesai/belum". Dua hal yang ditambah:
+/* ---- menit aktif & klik objek DI DALAM Articulate ----
+   Kolom Articulate dulu cuma tahu "selesai/belum". Yang ditambah:
 
    1. Klik/gerak/ketik/sentuh/gulir di DALAM iframe Articulate gak pernah nyampe
       ke listener actBindActivity() (sama persis kayak bug YouTube, lihat
@@ -2757,18 +2777,47 @@ function artMarkDone(blockId, status){
       dokumennya SE-ORIGIN dan bisa didengar langsung - lihat artDengarIframe().
    2. Menit aktif per paket: dihitung cuma dari segmen yang ada sinyal dari
       dalam iframe, dipotong di ambang idle polos (ACT_IDLE_MS, tanpa tambahan
-      waktu baca - gak ada "jumlah kata" buat konten Articulate). Langkah =
-      tiap kali lokasi resume (cmi.core.lesson_location / cmi.location)
-      berubah, ARAH APA PUN - maju, mundur, lompat lewat menu sama-sama tanda
-      aktif. Titik berbeda = himpunan nilai lokasi itu.
+      waktu baca - gak ada "jumlah kata" buat konten Articulate).
+   3. Klik objek: tiap klik pada objek yang MEMANG bisa diklik (tombol, hotspot,
+      pembuka layer...) = 1, klik ulang tetap dihitung. Daftar objeknya
+      (ART_KLIK) dibaca dari isi paket Storyline waktu Export SCORM (lihat
+      articulateKlik.ts) - id-nya sama persis dengan atribut data-model-id
+      objek di layar. Next/Back (bawaan pemutar maupun tombol buatan yang cuma
+      pindah ke slide sebelah) sengaja gak masuk daftar. Paket tanpa daftar
+      (Rise, atau gagal dibaca) pakai elemen interaktif HTML biasa, dan
+      Command Center gak dapat penyebutnya.
 
    Batas yang disadari: nonton video di dalam Storyline tanpa nyentuh apa pun
    lebih dari ambang tetap berhenti dihitung - isi player-nya gak bisa
-   diandalkan buat disadap. Dan paket yang resume-nya dimatikan jarang nulis
-   lokasi, jadi langkahnya bisa kecil walau aktif - menit aktif tetap jalan. */
-const artTrack = {};   /* blockId -> {ms, t0, last, langkah, titik:Set} selama slide ini terbuka */
+   diandalkan buat disadap. */
+const artTrack = {};   /* blockId -> {ms, t0, last, klik, objek:Set} selama slide ini terbuka */
 function artTrackOf(blockId){
-  return artTrack[blockId] || (artTrack[blockId] = { ms: 0, t0: 0, last: 0, langkah: 0, titik: new Set() });
+  return artTrack[blockId] || (artTrack[blockId] = { ms: 0, t0: 0, last: 0, klik: 0, objek: new Set() });
+}
+/* Objek yang diklik, atau null kalau yang kena bukan objek yang bisa diklik
+   (area kosong, teks, Next/Back). Naik dari target ke leluhurnya: yang dikenai
+   kursor sering anak dari objeknya (teks di dalam tombol, isi grup). */
+const artKlikSet = {};
+function artObjekKlik(target, blockId){
+  const k = ART_KLIK && ART_KLIK[blockId];
+  if(k && k.ids){
+    const ids = artKlikSet[blockId] || (artKlikSet[blockId] = new Set(k.ids));
+    for(let e = target; e && e.nodeType === 1; e = e.parentElement){
+      const id = e.getAttribute('data-model-id');
+      if(id && ids.has(id)) return id;
+    }
+    return null;
+  }
+  const el = target && target.closest ? target.closest('button,a[href],[role=button],[role=tab],[role=checkbox],[role=radio],[role=menuitem],input,select,summary,label') : null;
+  if(!el) return null;
+  return (el.id || el.getAttribute('data-id') || (el.textContent || '').trim().slice(0, 30) || el.tagName).slice(0, 40);
+}
+function artCatatKlik(blockId, id){
+  if(!TRACK_READY || !actSessionId || !id) return;
+  artNoteActivity(blockId);   /* klik = tanda aktif juga (sentuhan di HP gak selalu bawa mousedown) */
+  const t = artTrackOf(blockId);
+  t.klik++;
+  t.objek.add(id);
 }
 function artNoteActivity(blockId){
   if(!TRACK_READY) return;
@@ -2795,10 +2844,10 @@ function artFlushTrack(){
   for(const b in artTrack){
     const t = artTrack[b];
     artSegClose(t, now);
-    if(t.ms >= 1000 || t.langkah){
-      /* titik dibatasi 100 x 40 karakter - payload event di database dibatasi 8 KB */
-      try{ actEvent('articulate_aktif', { blok: b, ms: Math.round(t.ms), langkah: t.langkah,
-        titik: Array.from(t.titik).slice(0, 100).map(function(x){ return String(x).slice(0, 40); }) }); }catch(e){}
+    if(t.ms >= 1000 || t.klik){
+      /* objek dibatasi 150 x 40 karakter - payload event di database dibatasi 8 KB */
+      try{ actEvent('articulate_aktif', { blok: b, ms: Math.round(t.ms), klik: t.klik,
+        objek: Array.from(t.objek).slice(0, 150).map(function(x){ return String(x).slice(0, 40); }) }); }catch(e){}
     }
     delete artTrack[b];
   }
@@ -2813,6 +2862,16 @@ function artDengarDok(doc, blockId){
   ['mousemove','mousedown','keydown','touchstart','wheel','scroll'].forEach(function(n){
     doc.addEventListener(n, tanda, { passive: true, capture: true });
   });
+  /* Klik = tekan lalu lepas di objek yang SAMA. Sengaja pointerdown/up, bukan
+     'click': pemutar yang membatalkan sentuhan (preventDefault di touchstart)
+     bikin 'click' gak pernah lahir di HP. Geser lalu lepas di objek lain gak dihitung. */
+  let tekan = null;
+  doc.addEventListener('pointerdown', function(e){ tekan = artObjekKlik(e.target, blockId); }, { passive: true, capture: true });
+  doc.addEventListener('pointerup', function(e){
+    const id = artObjekKlik(e.target, blockId);
+    if(id && id === tekan) artCatatKlik(blockId, id);
+    tekan = null;
+  }, { passive: true, capture: true });
   doc.addEventListener('load', function(e){
     if(e.target && e.target.tagName === 'IFRAME'){ try{ artDengarDok(e.target.contentDocument, blockId); }catch(er){} }
   }, true);
@@ -2849,13 +2908,6 @@ function artMakeShim(version){
     const blockId = artResolveBlock();
     if(!blockId) return 'true';
     const cmi = artLoadCmi(blockId);
-    if(/lesson_location|cmi\.location$/.test(name) && String(value) !== '' && TRACK_READY && actSessionId){
-      /* Lokasi resume berubah = peserta pindah posisi di dalam Articulate (arah apa pun). */
-      const lama = cmi[name], t = artTrackOf(blockId);
-      if(lama != null && lama !== String(value)) t.langkah++;
-      t.titik.add(String(value));
-      artNoteActivity(blockId);
-    }
     cmi[name] = String(value);
     cmi['__started'] = '1';
     artSaveCmi(blockId, cmi);
@@ -3601,9 +3653,11 @@ function actStart(){
     total_video: TOTAL_VIDEO,
     total_interaktif: TOTAL_INTERAKTIF,
     total_articulate: TOTAL_ARTICULATE,
-    /* penanda: modul ini merekam menit aktif & langkah Articulate (event articulate_aktif).
+    /* penanda: modul ini merekam menit aktif & klik objek Articulate (event articulate_aktif).
        Server pakai ini buat bedain "0 menit" dari "modul lama, gak direkam". */
-    art_aktif: 1,
+    art_aktif: 2,
+    /* penyebut "x/y klik objek" di Command Center (lihat artTotalObjek) */
+    art_total_objek: artTotalObjek(),
     /* Judul section berkuis ikut dikirim (kecil, cuma beberapa entri) karena
        rekap perlu nyebut "Section B (Judulnya)" DAN perlu tau modul ini punya
        kuis apa nggak. Judul SLIDE sengaja TIDAK ikut: jumlahnya gak terbatas

@@ -210,18 +210,35 @@ function CocreationModulView({ m, tampilkanJudulModul }: { m: CocreationModule; 
 // depan ("ikram-...", "wendi_tp-..."). Dipakai buat mengelompokkan daftar
 // modul biar 45 baris jadi beberapa kelompok yang bisa dilipat - satu orang
 // hampir selalu cuma peduli kelompoknya sendiri.
-/* Baris kecil di bawah "x/y selesai" kolom Articulate: menit aktif + langkah.
-   Menit cuma dihitung selama ada klik/gerak di DALAM paketnya (ditinggal = berhenti),
-   langkah = pindah posisi ke arah mana pun. null = modul lama, belum merekam. */
-function ArticulateAktif({ menit, langkah, titik }: { menit: number | null; langkah: number | null; titik: number | null }) {
+/* Baris kecil di bawah "x/y selesai" kolom Articulate: menit aktif + "x/y klik objek".
+   Menit cuma dihitung selama ada klik/gerak di DALAM paketnya (ditinggal = berhenti).
+   x = klik pada objek yang bisa diklik (klik ulang dihitung, Next/Back tidak), y = semua
+   objek bisa-diklik di paketnya. x boleh > y; ⚠ kalau objek yang PERNAH dibuka kurang
+   dari separuh y - angka "berbeda"-nya sengaja gak ditampilkan (bikin baca gak instan),
+   cukup jadi tanda + penjelasan saat disorot kursor. null = modul lama, belum merekam. */
+function ArticulateAktif({ menit, klik, unik, total }: { menit: number | null; klik: number | null; unik: number | null; total: number | null }) {
   if (menit == null) return null;
   const m = menit > 0 && menit < 1 ? '<1' : String(Math.round(menit));
+  const x = klik ?? 0, z = unik ?? 0;
+  const curiga = !!total && z < total / 2;
+  const alasan = !curiga ? '' : [
+    `Baru ${z} dari ${total} objek yang pernah dibuka.`,
+    x === 0 ? 'Belum ada satu pun klik di dalam Articulate.'
+      : x >= 2 * z && x >= 4 ? `${x} kali klik berulang di objek yang sama; ${total! - z} objek lainnya belum pernah disentuh.`
+      : menit >= 10 ? `Hanya ${x} kali klik selama ${m} menit aktif — kemungkinan jendelanya cuma dibiarkan terbuka.`
+      : `Hanya ${x} kali klik — kemungkinan baru dibuka sebentar lalu dilewati.`,
+  ].join(' ');
   return (
-    <div style={{ fontSize: 10.5, lineHeight: 1.2, color: 'var(--text-faint)', marginTop: 1, whiteSpace: 'nowrap' }}
-         title="Menit aktif = waktu ada klik/gerak di dalam paket Articulate (berhenti kalau ditinggal). Langkah = pindah posisi di dalamnya, maju maupun mundur; dalam kurung = titik berbeda yang didatangi">
+    <div style={{ fontSize: 10.5, lineHeight: 1.2, color: 'var(--text-faint)', marginTop: 1, whiteSpace: 'nowrap' }}>
       {/* dua baris pendek, bukan satu baris panjang: kolomnya gak melebar dan tabel tetap muat di layar laptop */}
-      <div>{m} m aktif</div>
-      <div>{langkah ?? 0} langkah ({titik ?? 0} berbeda)</div>
+      <div title="Menit aktif = waktu ada klik/gerak di dalam paket Articulate (berhenti kalau ditinggal)">{m} m aktif</div>
+      {/* paket tanpa satu pun objek bisa-diklik (materi linear, cuma Next/Back): angka klik gak bermakna */}
+      {total !== 0 && (
+        <div title="Klik pada objek yang bisa diklik di dalam Articulate (tombol, pembuka layer, dll.; Next/Back tidak dihitung). Klik ulang ikut dihitung, jadi angka kiri bisa melebihi total objek di kanan.">
+          {total ? `${x}/${total}` : x} klik objek
+          {curiga && <span title={alasan} style={{ marginLeft: 4, color: 'var(--danger)', cursor: 'help' }}>⚠</span>}
+        </div>
+      )}
     </div>
   );
 }
@@ -597,8 +614,9 @@ export default function CommandCenter() {
         articulate_selesai: l.articulate_selesai,
         articulate_total: l.total_articulate_program ?? '',
         articulate_menit_aktif: l.articulate_aktif_menit ?? '',
-        articulate_langkah: l.articulate_langkah ?? '',
-        articulate_titik_berbeda: l.articulate_titik ?? '',
+        articulate_klik_objek: l.articulate_klik ?? '',
+        articulate_total_objek: l.articulate_total_objek ?? '',
+        articulate_objek_berbeda: l.articulate_klik_unik ?? '',
         pertama: l.pertama,
         terakhir: l.terakhir,
       };
@@ -1214,7 +1232,7 @@ export default function CommandCenter() {
                             <span style={{ color: 'var(--text-faint)' }}>—</span>
                           ) : (
                             <>{l.articulate_selesai}/{l.total_articulate_program} selesai
-                              <ArticulateAktif menit={l.articulate_aktif_menit} langkah={l.articulate_langkah} titik={l.articulate_titik} /></>
+                              <ArticulateAktif menit={l.articulate_aktif_menit} klik={l.articulate_klik} unik={l.articulate_klik_unik} total={l.articulate_total_objek} /></>
                           )}
                         </td>
                         <td style={{ padding: '8px 11px', fontVariantNumeric: 'tabular-nums' }}
@@ -1539,7 +1557,7 @@ export default function CommandCenter() {
                           <span style={{ color: 'var(--text-faint)' }}>—</span>
                         ) : (
                           <>{s.articulate_selesai}/{s.total_articulate} selesai
-                            <ArticulateAktif menit={s.articulate_aktif_menit} langkah={s.articulate_langkah} titik={s.articulate_titik} /></>
+                            <ArticulateAktif menit={s.articulate_aktif_menit} klik={s.articulate_klik} unik={s.articulate_klik_unik} total={s.articulate_total_objek} /></>
                         )}
                       </td>
                       <td style={{ padding: '8px 11px', fontVariantNumeric: 'tabular-nums' }}

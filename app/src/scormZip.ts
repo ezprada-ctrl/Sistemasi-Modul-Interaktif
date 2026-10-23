@@ -14,6 +14,7 @@
 
 import type { Block, ModuleData } from './types';
 import { fetchArticulateZip, generateHtmlForZip } from './api';
+import { hitungObjekKlik, type ArtKlik } from './articulateKlik';
 // Kenapa gambar harus ikut dibungkus & bukan tetap nunjuk Storage: lihat
 // komentar pembuka assetEmbed.ts.
 import { namaAset, urlGambar } from './assetEmbed';
@@ -245,8 +246,10 @@ export async function exportScormZip(
     console.warn('[scorm] gambar gagal disematkan:', gagalGambar);
   }
 
-  await pastikanFolder(`${AKAR}index.html`);
-  await writer.add(`${AKAR}index.html`, new TextReader(htmlFinal), OPSI_ENTRI);
+  // index.html baru ditulis SESUDAH semua paket Articulate disalin: daftar
+  // objek bisa-diklik tiap paket (ART_KLIK) dibaca dari isi paketnya di loop
+  // bawah, lalu ditanam ke HTML. Urutan entri di ZIP gak berpengaruh ke LMS.
+  const artKlik: Record<string, ArtKlik> = {};
 
   for (let i = 0; i < blocks.length; i++) {
     const b = blocks[i];
@@ -262,6 +265,7 @@ export async function exportScormZip(
     });
     const reader = new ZipReader(new BlobReader(zipBlob));
     let entryKetemu = false;
+    const dataStoryline = new Map<string, string>();
     try {
       const entries = await reader.getEntries();
       // Kalau paketnya dibungkus satu folder induk, folder itu DIBUANG dari
@@ -290,6 +294,7 @@ export async function exportScormZip(
           level: SUDAH_TERKOMPRESI.test(rel) ? 0 : 1,
         });
         daftarFile.push(target);
+        if (/(^|\/)html5\/data\/js\/[^/]+\.js$/i.test(rel)) dataStoryline.set(rel, await data.text());
         if (rel === entry) entryKetemu = true;
         n++;
         if (n % 25 === 0) {
@@ -303,6 +308,8 @@ export async function exportScormZip(
     } finally {
       await reader.close();
     }
+    const klik = hitungObjekKlik(dataStoryline);
+    artKlik[b.id] = klik || { total: null, ids: [] };
     // Sabuk pengaman: kalau file pembukanya gak ikut kesalin, paketnya bakal
     // keluar "sukses" tapi iframe-nya 404 di dalam LMS — kegagalan yang baru
     // ketahuan setelah diupload. Lebih baik gagal keras di sini.
@@ -313,6 +320,10 @@ export async function exportScormZip(
       );
     }
   }
+
+  htmlFinal = htmlFinal.split('/*__ART_KLIK__*/null').join('/*__ART_KLIK__*/' + JSON.stringify(artKlik));
+  await pastikanFolder(`${AKAR}index.html`);
+  await writer.add(`${AKAR}index.html`, new TextReader(htmlFinal), OPSI_ENTRI);
 
   if (pathKepanjangan.length) {
     const contoh = pathKepanjangan.sort((a, b2) => b2.length - a.length)[0];

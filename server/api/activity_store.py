@@ -612,14 +612,18 @@ def summarize_sessions(module_slug):
             # kali (peserta buka ulang, atau SCORM di dalamnya ngirim status
             # dua kali) dan itu tetap satu paket yang sama.
             '_articulate_selesai': set(),
-            # Menit aktif & langkah DI DALAM paket Articulate (event
+            # Menit aktif & klik objek DI DALAM paket Articulate (event
             # articulate_aktif, lihat artFlushTrack di shell-template.html).
             # _art_rekam = modul ini di-export SESUDAH perekamnya ada (flag
             # art_aktif di session_start). Tanpa flag itu angkanya jujur None
             # ("-"), bukan 0: modul lama memang gak pernah merekamnya.
-            '_art_rekam': False, '_art_ms': 0, '_art_langkah': 0,
-            # (blok, titik) - titik berbeda dihitung per paket, bukan dicampur.
-            '_art_titik': set(),
+            '_art_rekam': False, '_art_ms': 0, '_art_klik': 0,
+            # (blok, idObjek) - objek berbeda yang pernah diklik.
+            '_art_objek': set(),
+            # Penyebut "x/y klik objek": total objek bisa-diklik di semua paket
+            # modul ini, dibaca dari isi paketnya waktu export. None = gak
+            # diketahui (modul lama / paket Rise) -> tampil tanpa "/y".
+            'articulate_total_objek': None,
             # Rincian tiap kejadian reading_warning (section + nomor slide
             # persis yang ketangkap + pilihan peserta) - beda dari
             # peringatan_baca_cepat/peringatan_diabaikan yang cuma angka
@@ -650,6 +654,7 @@ def summarize_sessions(module_slug):
             s['total_video'] = p.get('total_video')
             s['total_articulate'] = p.get('total_articulate')
             s['_art_rekam'] = bool(p.get('art_aktif'))
+            s['articulate_total_objek'] = p.get('art_total_objek')
         elif t == 'video_progress':
             block = p.get('block')
             persen = p.get('persen')
@@ -722,9 +727,9 @@ def summarize_sessions(module_slug):
         elif t == 'articulate_aktif':
             s['_art_rekam'] = True
             s['_art_ms'] += p.get('ms') or 0
-            s['_art_langkah'] += p.get('langkah') or 0
-            for x in p.get('titik') or []:
-                s['_art_titik'].add((p.get('blok'), x))
+            s['_art_klik'] += p.get('klik') or 0
+            for x in p.get('objek') or []:
+                s['_art_objek'].add((p.get('blok'), x))
 
     out = list(sessions.values())
     for s in out:
@@ -755,11 +760,11 @@ def summarize_sessions(module_slug):
             key=lambda d: d['persen'])
         s['catatan'] = len(s.pop('_catatan_ids'))
         s['articulate_selesai'] = len(s.pop('_articulate_selesai'))
-        art_rekam, art_ms, art_langkah, art_titik = s.pop('_art_rekam'), s.pop('_art_ms'), s.pop('_art_langkah'), s.pop('_art_titik')
+        art_rekam, art_ms, art_klik, art_objek = s.pop('_art_rekam'), s.pop('_art_ms'), s.pop('_art_klik'), s.pop('_art_objek')
         ada_art = art_rekam and bool(s['total_articulate'])
         s['articulate_aktif_menit'] = round(art_ms / 60000, 1) if ada_art else None
-        s['articulate_langkah'] = art_langkah if ada_art else None
-        s['articulate_titik'] = len(art_titik) if ada_art else None
+        s['articulate_klik'] = art_klik if ada_art else None
+        s['articulate_klik_unik'] = len(art_objek) if ada_art else None
         s['peringatan_detail'] = s.pop('_peringatan_detail')
         # Kalau sesi ditutup paksa (tab dibunuh HP), session_end gak pernah
         # terkirim -> total_ms 0. Pakai jumlah durasi slide sebagai gantinya
@@ -841,8 +846,9 @@ def summarize_learners():
         articulate_sesi = set()
         art_rekam_sesi = False
         art_ms_sesi = 0
-        art_langkah_sesi = 0
-        art_titik_sesi = set()
+        art_klik_sesi = 0
+        art_objek_sesi = set()
+        art_total_objek_modul = None
         catatan_sesi = []
         video_max_sesi = {}
         video_slide_sesi = {}
@@ -866,6 +872,7 @@ def summarize_learners():
                 total_video_modul = p.get('total_video')
                 total_articulate_modul = p.get('total_articulate')
                 art_rekam_sesi = art_rekam_sesi or bool(p.get('art_aktif'))
+                art_total_objek_modul = p.get('art_total_objek')
             elif t == 'video_progress':
                 block = p.get('block')
                 persen = p.get('persen')
@@ -933,9 +940,9 @@ def summarize_learners():
             elif t == 'articulate_aktif':
                 art_rekam_sesi = True
                 art_ms_sesi += p.get('ms') or 0
-                art_langkah_sesi += p.get('langkah') or 0
-                for x in p.get('titik') or []:
-                    art_titik_sesi.add((p.get('blok'), x))
+                art_klik_sesi += p.get('klik') or 0
+                for x in p.get('objek') or []:
+                    art_objek_sesi.add((p.get('blok'), x))
         if not total_ms:
             total_ms = terekam_ms
 
@@ -986,12 +993,14 @@ def summarize_learners():
             # (slug, block) - block id yang kebetulan sama di modul BEDA gak
             # boleh ketuker jadi satu paket, sama alasannya kayak _video_max.
             '_articulate_selesai': set(),
-            # Menit aktif & langkah Articulate lintas modul - lihat catatan
+            # Menit aktif & klik objek Articulate lintas modul - lihat catatan
             # di summarize_sessions. _art_rekam: minimal satu sesinya dari
             # modul yang sudah merekam ini; kalau enggak, tampil None.
-            '_art_rekam': False, '_art_ms': 0, '_art_langkah': 0,
-            # (slug, blok, titik)
-            '_art_titik': set(),
+            '_art_rekam': False, '_art_ms': 0, '_art_klik': 0,
+            # (slug, blok, idObjek)
+            '_art_objek': set(),
+            # slug -> total objek bisa-diklik modul itu (None = gak diketahui)
+            '_art_total_objek': {},
             # (slug, section) -> nilai kuis: skor terbaik, jumlah percobaan,
             # ambang lulus. Kunci pakai slug juga karena id section ('a','b')
             # jelas-jelas berulang di modul yang beda.
@@ -1021,9 +1030,10 @@ def summarize_learners():
         if art_rekam_sesi and total_articulate_modul:
             L['_art_rekam'] = True
             L['_art_ms'] += art_ms_sesi
-            L['_art_langkah'] += art_langkah_sesi
-            for blok, x in art_titik_sesi:
-                L['_art_titik'].add((slug, blok, x))
+            L['_art_klik'] += art_klik_sesi
+            for blok, x in art_objek_sesi:
+                L['_art_objek'].add((slug, blok, x))
+            L['_art_total_objek'][slug] = art_total_objek_modul
         for n in catatan_sesi:
             kunci = (slug, n['id'])
             lama = L['_catatan'].get(kunci)
@@ -1151,10 +1161,15 @@ def summarize_learners():
         art_totals = [m['total_articulate'] for m in L['modul'].values() if m['total_articulate'] is not None]
         L['total_articulate_program'] = sum(art_totals) if art_totals else None
         L['articulate_selesai'] = len(L.pop('_articulate_selesai'))
-        art_rekam, art_ms, art_langkah, art_titik = L.pop('_art_rekam'), L.pop('_art_ms'), L.pop('_art_langkah'), L.pop('_art_titik')
+        art_rekam, art_ms, art_klik, art_objek = L.pop('_art_rekam'), L.pop('_art_ms'), L.pop('_art_klik'), L.pop('_art_objek')
+        art_total = L.pop('_art_total_objek')
         L['articulate_aktif_menit'] = round(art_ms / 60000, 1) if art_rekam else None
-        L['articulate_langkah'] = art_langkah if art_rekam else None
-        L['articulate_titik'] = len(art_titik) if art_rekam else None
+        L['articulate_klik'] = art_klik if art_rekam else None
+        L['articulate_klik_unik'] = len(art_objek) if art_rekam else None
+        # Penyebut lintas modul cuma sah kalau SEMUA modulnya diketahui -
+        # sebagian saja bikin x/y menyesatkan (y kekecilan).
+        L['articulate_total_objek'] = (sum(art_total.values())
+                                       if art_rekam and art_total and None not in art_total.values() else None)
         L['catatan'] = len([n for n in L.pop('_catatan').values() if not n.get('deleted')])
         video_max = L.pop('_video_max')
         video_slide = L.pop('_video_slide')

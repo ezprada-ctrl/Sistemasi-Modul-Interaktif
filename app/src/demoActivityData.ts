@@ -13,8 +13,9 @@ import type { ActivityModule, ActivitySession, ActivityLearner, CocreationModule
  * - Budi: 2 sesi, SEBAGIAN tanpa session_end -> Ditinggal parsial + tanda *,
  *   video rendah+peringatan+kuis gagal sekaligus (persona "paling bermasalah").
  * - Siti & Yulianti: kontras peserta rapi (video tinggi, nol peringatan).
- * - Rahmat juga: Articulate 21 menit aktif tapi cuma 3 langkah dan belum selesai -
- *   contoh "lama tapi diam" yang patut dicurigai, dibanding Yulianti 16 m / 47 langkah.
+ * - Articulate (x/y klik objek, y = 33): Rahmat 21 menit tapi 3/33 klik ⚠ ("ditinggal
+ *   ngopi"), Budi sesi 1 2 menit tapi 40/33 klik di 4 objek saja ⚠ (bingung, klik
+ *   berulang), dibanding Yulianti 16 menit 60/33 klik dan semua objek dibuka.
  */
 
 const SLUG = 'demo-modul-contoh';
@@ -24,6 +25,8 @@ const TOTAL_VIDEO = 4;
 // Modul contoh ini punya satu paket Articulate 360 - biar kolom Articulate
 // di Command Center kelihatan terisi waktu mode contoh, bukan cuma garis '-'.
 const TOTAL_ARTICULATE = 1;
+// Objek bisa-diklik di paket Articulate contoh itu (penyebut "x/y klik objek").
+const TOTAL_OBJEK_ART = 33;
 
 export const DEMO_MODULES: ActivityModule[] = [
   {
@@ -51,7 +54,7 @@ export const DEMO_SESSIONS: ActivitySession[] = [
     kuis_dijawab: 8, kuis_benar: 8, kuis_diulang: 0, kuis_gagal: 0,
     peringatan_baca_cepat: 0, peringatan_diabaikan: 0, peringatan_detail: [],
     kc_dijawab: 0, kc_benar: 0, catatan: 3,
-    articulate_selesai: 1, total_articulate: TOTAL_ARTICULATE, articulate_aktif_menit: 14, articulate_langkah: 38, articulate_titik: 22,
+    articulate_selesai: 1, total_articulate: TOTAL_ARTICULATE, articulate_aktif_menit: 14, articulate_klik: 41, articulate_klik_unik: 30, articulate_total_objek: TOTAL_OBJEK_ART,
     perangkat: 'desktop',
   },
   {
@@ -66,7 +69,7 @@ export const DEMO_SESSIONS: ActivitySession[] = [
     peringatan_baca_cepat: 1, peringatan_diabaikan: 0,
     peringatan_detail: [{ section: 'b', slides: [14], choice: 'kembali' }],
     kc_dijawab: 12, kc_benar: 7, catatan: 0,
-    articulate_selesai: 0, total_articulate: TOTAL_ARTICULATE, articulate_aktif_menit: 21, articulate_langkah: 3, articulate_titik: 2,
+    articulate_selesai: 0, total_articulate: TOTAL_ARTICULATE, articulate_aktif_menit: 21, articulate_klik: 3, articulate_klik_unik: 2, articulate_total_objek: TOTAL_OBJEK_ART,
     perangkat: 'desktop',
   },
   {
@@ -84,7 +87,7 @@ export const DEMO_SESSIONS: ActivitySession[] = [
       { section: 'c', slides: [21], choice: 'yakin' },
     ],
     kc_dijawab: 9, kc_benar: 9, catatan: 2,
-    articulate_selesai: 1, total_articulate: TOTAL_ARTICULATE, articulate_aktif_menit: 12, articulate_langkah: 41, articulate_titik: 24,
+    articulate_selesai: 1, total_articulate: TOTAL_ARTICULATE, articulate_aktif_menit: 12, articulate_klik: 38, articulate_klik_unik: 33, articulate_total_objek: TOTAL_OBJEK_ART,
     perangkat: 'mobile',
   },
   {
@@ -97,7 +100,7 @@ export const DEMO_SESSIONS: ActivitySession[] = [
     kuis_dijawab: 3, kuis_benar: 2, kuis_diulang: 1, kuis_gagal: 1,
     peringatan_baca_cepat: 0, peringatan_diabaikan: 0, peringatan_detail: [],
     kc_dijawab: 1, kc_benar: 1, catatan: 4,
-    articulate_selesai: 1, total_articulate: TOTAL_ARTICULATE, articulate_aktif_menit: 9, articulate_langkah: 26, articulate_titik: 20,
+    articulate_selesai: 1, total_articulate: TOTAL_ARTICULATE, articulate_aktif_menit: 9, articulate_klik: 25, articulate_klik_unik: 22, articulate_total_objek: TOTAL_OBJEK_ART,
     perangkat: 'desktop',
   },
   {
@@ -113,7 +116,7 @@ export const DEMO_SESSIONS: ActivitySession[] = [
     kuis_dijawab: 0, kuis_benar: 0, kuis_diulang: 0, kuis_gagal: 0,
     peringatan_baca_cepat: 0, peringatan_diabaikan: 0, peringatan_detail: [],
     kc_dijawab: 2, kc_benar: 1, catatan: 0,
-    articulate_selesai: 0, total_articulate: TOTAL_ARTICULATE, articulate_aktif_menit: 0, articulate_langkah: 0, articulate_titik: 0,
+    articulate_selesai: 0, total_articulate: TOTAL_ARTICULATE, articulate_aktif_menit: 0, articulate_klik: 0, articulate_klik_unik: 0, articulate_total_objek: TOTAL_OBJEK_ART,
     perangkat: 'mobile',
   },
   {
@@ -127,7 +130,7 @@ export const DEMO_SESSIONS: ActivitySession[] = [
     kuis_dijawab: 10, kuis_benar: 10, kuis_diulang: 0, kuis_gagal: 0,
     peringatan_baca_cepat: 0, peringatan_diabaikan: 0, peringatan_detail: [],
     kc_dijawab: 0, kc_benar: 0, catatan: 1,
-    articulate_selesai: 1, total_articulate: TOTAL_ARTICULATE, articulate_aktif_menit: 16, articulate_langkah: 47, articulate_titik: 24,
+    articulate_selesai: 1, total_articulate: TOTAL_ARTICULATE, articulate_aktif_menit: 16, articulate_klik: 60, articulate_klik_unik: 33, articulate_total_objek: TOTAL_OBJEK_ART,
     perangkat: 'desktop',
   },
   {
@@ -145,7 +148,7 @@ export const DEMO_SESSIONS: ActivitySession[] = [
       { section: 'c', slides: [44], choice: 'kembali' },
     ],
     kc_dijawab: 6, kc_benar: 3, catatan: 0,
-    articulate_selesai: 0, total_articulate: TOTAL_ARTICULATE, articulate_aktif_menit: 2, articulate_langkah: 4, articulate_titik: 4,
+    articulate_selesai: 0, total_articulate: TOTAL_ARTICULATE, articulate_aktif_menit: 2, articulate_klik: 40, articulate_klik_unik: 4, articulate_total_objek: TOTAL_OBJEK_ART,
     perangkat: 'desktop',
   },
   {
@@ -161,7 +164,7 @@ export const DEMO_SESSIONS: ActivitySession[] = [
     kuis_dijawab: 0, kuis_benar: 0, kuis_diulang: 0, kuis_gagal: 0,
     peringatan_baca_cepat: 0, peringatan_diabaikan: 0, peringatan_detail: [],
     kc_dijawab: 0, kc_benar: 0, catatan: 2,
-    articulate_selesai: 1, total_articulate: TOTAL_ARTICULATE, articulate_aktif_menit: 11, articulate_langkah: 30, articulate_titik: 21,
+    articulate_selesai: 1, total_articulate: TOTAL_ARTICULATE, articulate_aktif_menit: 11, articulate_klik: 30, articulate_klik_unik: 25, articulate_total_objek: TOTAL_OBJEK_ART,
     perangkat: 'mobile',
   },
 ];
@@ -184,7 +187,7 @@ export const DEMO_LEARNERS: ActivityLearner[] = [
     peringatan_baca_cepat: 0, peringatan_diabaikan: 0, peringatan_detail: [],
     kc_dijawab: 0, kc_benar: 0,
     catatan: 3,
-    articulate_selesai: 1, total_articulate_program: TOTAL_ARTICULATE, articulate_aktif_menit: 14, articulate_langkah: 38, articulate_titik: 22,
+    articulate_selesai: 1, total_articulate_program: TOTAL_ARTICULATE, articulate_aktif_menit: 14, articulate_klik: 41, articulate_klik_unik: 30, articulate_total_objek: TOTAL_OBJEK_ART,
     pertama: '2026-07-20T01:00:00.000Z', terakhir: '2026-07-20T01:56:00.000Z',
   },
   {
@@ -205,7 +208,7 @@ export const DEMO_LEARNERS: ActivityLearner[] = [
     peringatan_detail: [{ modul: SLUG, section: 'b', slides: [14], choice: 'kembali' }],
     kc_dijawab: 12, kc_benar: 7,
     catatan: 0,
-    articulate_selesai: 0, total_articulate_program: TOTAL_ARTICULATE, articulate_aktif_menit: 21, articulate_langkah: 3, articulate_titik: 2,
+    articulate_selesai: 0, total_articulate_program: TOTAL_ARTICULATE, articulate_aktif_menit: 21, articulate_klik: 3, articulate_klik_unik: 2, articulate_total_objek: TOTAL_OBJEK_ART,
     pertama: '2026-07-20T02:00:00.000Z', terakhir: '2026-07-20T03:15:00.000Z',
   },
   {
@@ -227,7 +230,7 @@ export const DEMO_LEARNERS: ActivityLearner[] = [
     ],
     kc_dijawab: 9, kc_benar: 9,
     catatan: 2,
-    articulate_selesai: 1, total_articulate_program: TOTAL_ARTICULATE, articulate_aktif_menit: 12, articulate_langkah: 41, articulate_titik: 24,
+    articulate_selesai: 1, total_articulate_program: TOTAL_ARTICULATE, articulate_aktif_menit: 12, articulate_klik: 38, articulate_klik_unik: 33, articulate_total_objek: TOTAL_OBJEK_ART,
     pertama: '2026-07-20T03:00:00.000Z', terakhir: '2026-07-20T03:39:00.000Z',
   },
   {
@@ -245,7 +248,7 @@ export const DEMO_LEARNERS: ActivityLearner[] = [
     peringatan_baca_cepat: 0, peringatan_diabaikan: 0, peringatan_detail: [],
     kc_dijawab: 5, kc_benar: 2,
     catatan: 4,
-    articulate_selesai: 1, total_articulate_program: TOTAL_ARTICULATE, articulate_aktif_menit: 9, articulate_langkah: 26, articulate_titik: 20,
+    articulate_selesai: 1, total_articulate_program: TOTAL_ARTICULATE, articulate_aktif_menit: 9, articulate_klik: 25, articulate_klik_unik: 22, articulate_total_objek: TOTAL_OBJEK_ART,
     pertama: '2026-07-20T04:00:00.000Z', terakhir: '2026-07-20T05:07:00.000Z',
   },
   {
@@ -265,7 +268,7 @@ export const DEMO_LEARNERS: ActivityLearner[] = [
     peringatan_baca_cepat: 0, peringatan_diabaikan: 0, peringatan_detail: [],
     kc_dijawab: 0, kc_benar: 0,
     catatan: 0,
-    articulate_selesai: 1, total_articulate_program: TOTAL_ARTICULATE, articulate_aktif_menit: 16, articulate_langkah: 47, articulate_titik: 24,
+    articulate_selesai: 1, total_articulate_program: TOTAL_ARTICULATE, articulate_aktif_menit: 16, articulate_klik: 60, articulate_klik_unik: 33, articulate_total_objek: TOTAL_OBJEK_ART,
     pertama: '2026-07-20T06:00:00.000Z', terakhir: '2026-07-20T07:18:00.000Z',
   },
   {
@@ -292,7 +295,7 @@ export const DEMO_LEARNERS: ActivityLearner[] = [
     ],
     kc_dijawab: 6, kc_benar: 3,
     catatan: 1,
-    articulate_selesai: 1, total_articulate_program: TOTAL_ARTICULATE, articulate_aktif_menit: 13, articulate_langkah: 34, articulate_titik: 23,
+    articulate_selesai: 1, total_articulate_program: TOTAL_ARTICULATE, articulate_aktif_menit: 13, articulate_klik: 70, articulate_klik_unik: 27, articulate_total_objek: TOTAL_OBJEK_ART,
     pertama: '2026-07-20T08:00:00.000Z', terakhir: '2026-07-20T09:42:00.000Z',
   },
 ];
