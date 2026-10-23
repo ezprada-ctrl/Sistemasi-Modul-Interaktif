@@ -1,6 +1,6 @@
 # Storyboard Video Promosi — TEMPA (versi panjang)
 
-**Durasi:** ±4:21 (261 detik) · **Format:** 16:9, 1920 × 1080 · **Tanpa narator, tanpa musik** — efek suara saja.
+**Durasi:** ±4:28 (268 detik) · **Format:** 16:9, 1920 × 1080 · **Tanpa narator, tanpa musik** — efek suara saja.
 **Penonton:** PTP (Pengembang Teknologi Pembelajaran) · **Sapaan:** "kamu", santai semi-formal.
 **Bentuk jadi:** halaman animasi `video-promosi/panjang.html` (mesin disalin dari video Simulator Pajak Minimum Global), direkam pemilik dengan Win + Alt + R.
 **Status:** DISETUJUI & DIBANGUN (`panjang.html`) — revisi 2 — tiap blok yang dipamerkan kini memakai **karya penyusun sungguhan yang terbaik** (lihat bagian H). Menunggu persetujuan pemilik sebelum foto layar dan pembangunan video.
@@ -117,6 +117,7 @@ Dipilih pemilik lewat pertanyaan penajaman: arah **Bara TEMPA**, transisi **sapu
 | 30 | Video juga: [[berapa persen ditonton,]] \| yang di bawah 20% ditandai. | 151,9 – 157,0 | 6 Command Center |
 | 31 | Kuis dihitung dari [[berapa kali gagal]] — \| yang gagal lalu berhenti pun tetap tercatat. → (ketukan 2, +2,5 dtk) Angka [[0]] berarti belum pernah gagal: \| lulus sekali coba, atau belum sampai kuisnya. | 157,3 – 162,4 | 6 Command Center |
 | 32 | Cek paham dicatat terpisah dari kuis: \| [[mengukur pemahaman,]] bukan kelulusan. | 162,7 – 167,2 | 6 Command Center |
+| 32a | Konten [[Articulate]] pun terekam: \| [[menit aktif dan langkahnya,]] bukan sekadar selesai. | sisipan +7 dtk (waktu sebenarnya 3:20,4 – 3:26,9) | 6 Command Center |
 | 33 | Tampilan per peserta merangkum [[satu orang lintas modul,]] \| lengkap dengan nilai tiap modulnya. | 167,5 – 172,8 | 6 Command Center |
 | 34 | Satu NIP dengan nama berbeda? \| [[Ditandai,]] bukan disembunyikan. | 173,1 – 177,8 | 6 Command Center |
 | 35 | Semua bisa [[diunduh ke Excel:]] \| per sesi, per peserta, per slide, per video. | 178,1 – 183,2 | 6 Command Center |
@@ -290,6 +291,14 @@ Adegan terpanjang (±96 detik). Semua foto dari **Mode Contoh**, berisi data kar
 | 3:14,1 – 3:19,6 | Foto **cc-cara-baca** (panel "📖 Cara baca tabel" terbuka) | Kursor klik "📖 Cara baca tabel" → panel muncul lewat `jendela()`; stabilo "Kenapa begini" lalu "Kapan curiga" | #38 | `klik`, `buka` |
 | 3:19,9 – 3:25,0 | Foto **cc-tabel** penuh | Kamera mundur ke 0,92; seluruh tabel terlihat; cahaya mekar pelan | #39 | `denting` |
 | 3:25,2 | — | Kartu keluar | — | — |
+
+### Ketukan 9a — Articulate: menit aktif & langkah (sisipan +7 dtk sesudah "Cek paham", waktu sebenarnya 3:20,0 – 3:27,2)
+
+Sorotan Articulate yang dulu menumpang di ketukan Cek paham dipindah ke sini. Foto tabel Command Center dipotret ulang (kolom Articulate kini dua baris keterangan: menit aktif, lalu langkah + titik berbeda), jadi semua koordinat sorotan di adegan 9 ikut diperbarui. Semua adegan sesudahnya bergeser +7 dtk (di kode lewat `GESER`).
+
+| Detik (sebenarnya) | Yang tampil | Efek | Teks | Suara |
+|---|---|---|---|---|
+| 3:20,3 – 3:27,0 | Foto **cc-tabel**, kamera mendekat ke kolom Articulate (zoom 1,9) | Kolom Articulate dicoret; sel Rahmat dicoret **merah** + balon "Rahmat: 21 menit, cuma 3 langkah → patut dicek"; sel Yulianti dicoret **hijau** + balon "Yulianti: 16 menit, 47 langkah → benar dikerjakan"; pil di atas memperagakan arti langkah: panah → → ← → ← → menyala satu per satu lalu "= 6 langkah · maju atau mundur, sama-sama dihitung" | #32a | `tik` ×3, `tik` ×6 (panah) |
 
 ### Adegan 10 — Fitur pendukung (3:25,4 – 3:30,6) · label `TEMPA`
 

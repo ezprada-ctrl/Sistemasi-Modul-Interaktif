@@ -249,6 +249,7 @@ body.rekam,body.rekam *{cursor:none!important}
 .lencana19{left:auto;right:150px;top:150px;border-radius:6px;background:#FF9A55;color:#1A0F08;box-shadow:8px 8px 0 #7A2D0E;font:800 64px/1 var(--huruf)}
 .zip{background:#D9692B;color:#1A0F08;border-radius:6px;box-shadow:6px 6px 0 #7A2D0E}
 .jam{background:#F7E6C4;color:#2A170D;border:0;font:700 30px/1 var(--tangan);border-radius:3px}
+.jam .lgk{display:inline-block;font:700 30px/1 var(--mono);color:#B9531F}
 .panah-alir{background:var(--aksen-terang);box-shadow:none}
 .panah-alir::after{border-left-color:var(--aksen-terang)}
 .kode-ikon{left:1270px}
@@ -284,8 +285,8 @@ body.rekam,body.rekam *{cursor:none!important}
 <div id="kontrol">
   <button id="btnPutar" class="utama" type="button">Jeda</button>
   <button id="btnUlang" type="button">Ulang</button>
-  <input id="geser" type="range" min="0" max="261" step="0.01" value="0" aria-label="Posisi video">
-  <span id="waktu">0:00,0 / 4:21</span>
+  <input id="geser" type="range" min="0" max="268" step="0.01" value="0" aria-label="Posisi video">
+  <span id="waktu">0:00,0 / 4:28</span>
   <button id="btnSuara" type="button">Suara: nyala</button>
   <button id="btnPenuh" type="button">Layar penuh</button>
   <button id="btnRekam" type="button">Rekam bersih</button>
@@ -296,7 +297,7 @@ body.rekam,body.rekam *{cursor:none!important}
 'use strict';
 const P = document.getElementById('panggung');
 const $ = (id) => document.getElementById(id);
-const DURASI = 228.2;   /* + sisipan lewat GESER = 4:21,0 */
+const DURASI = 228.2;   /* + sisipan lewat GESER = 4:28,0 */
 
 /* ---------- skala panggung ---------- */
 function skala() { const s = Math.min(innerWidth / 1920, innerHeight / 1080); P.style.transform = 'translate(' + (innerWidth - 1920 * s) / 2 + 'px,' + (innerHeight - 1080 * s) / 2 + 'px) scale(' + s + ')'; }
@@ -369,7 +370,7 @@ const tl = gsap.timeline({ paused: true });
 /* [mulai, tambahan dtk]: pratinjau hover blok (+6), Paket Modul (+9), kolom Kuis dua ketukan (+2,5).
    mode 'semua' = linimasa biasa; 'awal' = blok sisipan lama yang ditulis dgn waktu sebenarnya sebelum sisipan hover ada
    (cukup ditambah +6); 'tanpa' = blok yang ditulis dengan waktu akhir apa adanya. */
-const GESER = { mode: 'semua', sisip: [[50.31, 6], [63.05, 1.6], [72.7, 2.5], [82.31, 6], [103.15, 9], [108.95, 5.2], [162.55, 2.5]], susulan: [[50.31, 6], [63.05, 1.6], [72.7, 2.5], [82.31, 6], [150, 5.2]] };   /* [150, 5.2]: jembatan 8b, hanya mengenai blok kuis dua ketukan (blok paket < 113 tak tersentuh) */   /* +6: 10 gaya grafis */   /* +1,6: Video 3 dtk; +2,5: Refleksi digulir */
+const GESER = { mode: 'semua', sisip: [[50.31, 6], [63.05, 1.6], [72.7, 2.5], [82.31, 6], [103.15, 9], [108.95, 5.2], [162.55, 2.5], [167.3, 7]], susulan: [[50.31, 6], [63.05, 1.6], [72.7, 2.5], [82.31, 6], [150, 5.2]] };   /* [150, 5.2]: jembatan 8b, hanya mengenai blok kuis dua ketukan (blok paket < 113 tak tersentuh) */   /* +6: 10 gaya grafis */   /* +1,6: Video 3 dtk; +2,5: Refleksi digulir */
 ['to', 'fromTo', 'set', 'call'].forEach((m) => { const asli = tl[m].bind(tl); const idx = { to: 2, fromTo: 3, set: 2, call: 2 }[m];
   tl[m] = function () { const a = [...arguments]; if (GESER.mode !== 'tanpa' && typeof a[idx] === 'number') { const t0 = a[idx]; (GESER.mode === 'awal' ? GESER.susulan : GESER.sisip).forEach(([m, d]) => { if (t0 >= m) a[idx] += d; }); } return asli(...a); }; });
 const sfx = (nama, t) => tl.call(() => Suara.bunyi(nama), null, t);
@@ -445,7 +446,7 @@ function balon(teks, at, titik, akhir, gelap) {
   tl.to(b, { opacity: 0, y: -8, duration: .25 }, akhir);
 }
 
-/* ====================== VIDEO PANJANG TEMPA (±4:21) — tanpa narator, tanpa musik, teks tampil penuh ====================== */
+/* ====================== VIDEO PANJANG TEMPA (±4:28) — tanpa narator, tanpa musik, teks tampil penuh ====================== */
 const svgNS = 'http://www.w3.org/2000/svg';
 /* teks dua baris: " | " = pindah baris */
 let __akhir = -1;
@@ -500,10 +501,13 @@ function pita(teks, at, akhir) {   /* label menu/modul di kiri atas kartu */
 /* ---------- posisi (css px pada foto 1366 × 768; dicatat alat/ambil-aset.mjs & ambil-karya.mjs) ---------- */
 const TAB = [[28, 232, 134, 42], [166, 232, 134, 42], [304, 232, 87, 42], [395, 232, 80, 42], [480, 232, 157, 42], [641, 232, 160, 42]].map(R);
 const TABP = [[28, 232, 131, 42], [163, 232, 134, 42], [300, 232, 87, 42], [392, 232, 80, 42], [476, 232, 163, 42], [643, 232, 160, 42]].map(R);
-const TABEL = R([29, 222, 1308, 464]);
-const KOL = { tatap: R([323, 222, 100, 36]), tinggal: R([423, 222, 88, 36]), slide: R([512, 222, 88, 36]), kuis: R([685, 222, 74, 36]), kc: R([759, 222, 140, 36]), video: R([900, 222, 138, 36]), art: R([1037, 222, 94, 36]), per: R([1208, 222, 129, 36]) };
-const BUDI = { tinggal: R([423, 580, 88, 54]), video: R([900, 580, 138, 54]), per: R([1208, 580, 129, 54]), kuis: R([685, 580, 74, 54]) };
-const SITI_SLIDE = R([512, 258, 88, 54]);
+/* tabel per modul (foto cc-tabel dkk., dipotret ulang 2026-10-24 sesudah kolom Articulate dapat
+   baris menit aktif & langkah): kepala di y 159,5, baris ke-i mulai di BARIS_Y(i), tinggi BARIS_H */
+const TABEL = R([29, 159.5, 1304, 535.5]);
+const KOL = { tatap: R([312.5, 159.5, 96.2, 35.5]), tinggal: R([408.8, 159.5, 85.2, 35.5]), slide: R([494, 159.5, 85.2, 35.5]), kuis: R([661.3, 159.5, 71.2, 35.5]), kc: R([732.5, 159.5, 135.3, 35.5]), video: R([867.8, 159.5, 132.5, 35.5]), art: R([1000.3, 159.5, 134.7, 35.5]), per: R([1208.6, 159.5, 124, 35.5]) };
+const BARIS_H = 62.6, BARIS_Y = (i) => 195 + i * BARIS_H;   /* 0 Siti · 1 Rahmat · 2 Dewi · 3-4 Fajar · 5 Yulianti · 6-7 Budi */
+const sel = (kol, i) => R([kol.x, BARIS_Y(i), kol.w, BARIS_H]);
+const SITI_SLIDE = sel(KOL.slide, 0);
 const KARTU4 = (y, h) => [[28, y, 327, h], [355, y, 328, h], [683, y, 327, h], [1010, y, 328, h]].map(R);
 
 /* ===== ADEGAN 1 — masalahnya (0:00–0:20,4) ===== */
@@ -961,49 +965,78 @@ silang(C, 'cc-tabel', 134.7, .4); sembunyi(C, 'cc-modul-ringkasan', 135.2);
 tl.set(C.kamera, kam(1, 683, 384), 134.7);
 kalimat('Pindah tab atau diam lebih dari [[4 menit?]] | Jam tatap layar berhenti, waktunya masuk {{ditinggal.}}', 134.9, 140.6);
 rujukan('Ambang diam 3–5 menit · Hubstaff; Huang, White &amp; Buscher (2012)', 135.2, 140.4);
-const zC5 = 1.5, kC5 = kam(zC5, 460, 450);
-kamera(C, 135.1, zC5, 460, 450, .7);
+const zC5 = 1.5, kC5 = kam(zC5, 420, 427);
+kamera(C, 135.1, zC5, 420, 427, .7);
 sorotan(C, kolom(KOL.tatap, TABEL), 136.0, 140.3, '', zC5, 2, false);
 sorotan(C, kolom(KOL.tinggal, TABEL), 136.4, 140.3, 'kuning', zC5, 2, false); sfx('tik0', 136.0); sfx('tik1', 136.4);
-balon('⚠ total ditinggal sesi ini > 10 menit', 137.4, (function () { const q = keP(467, 607, kC5); return { x: q.x - 90, y: q.y + 36 }; })(), 140.3, true);
+balon('⚠ total ditinggal sesi ini > 10 menit', 137.4, (function () { const q = keP(451, 602, kC5); return { x: q.x - 90, y: q.y + 36 }; })(), 140.3, true);
 const jam = el('div', 'jam', P, 'diam > 4 menit → ditinggal'); tl.fromTo(jam, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .3 }, 138.2).to(jam, { opacity: 0, duration: .2 }, 140.3); sfx('ketuk', 138.2);
 kalimat('Kolom slide langsung menjawab: | [[ada materi yang terlewat atau tidak.]]', 140.9, 146.0);
-const zC6 = 2.2, kC6 = kam(zC6, 560, 290);
-kamera(C, 141.0, zC6, 560, 290, .7);
+const zC6 = 2.2, kC6 = kam(zC6, 540, 300);
+kamera(C, 141.0, zC6, 540, 300, .7);
 sorotan(C, SITI_SLIDE, 141.9, 145.7, '', zC6, 2);
-balon('94 dari 95 slide dibuka · 96 kunjungan', 142.6, (function () { const q = keP(600, 285, kC6); return { x: q.x + 30, y: q.y - 30 }; })(), 145.7);
+balon('94 dari 95 slide dibuka · 96 kunjungan', 142.6, (function () { const q = keP(579, 226, kC6); return { x: q.x + 30, y: q.y - 30 }; })(), 145.7);
 kalimat('Klik peringatan: kelihatan [[slide mana]] | yang dibuka kurang dari 50% waktu bacanya.', 146.3, 151.6);
 rujukan('Waktu baca minimum = kata ÷ 238 × 60 detik · Brysbaert (2019)', 146.6, 151.4);
 const zC7 = 1, kC7 = kam(zC7, 683, 384);
 kamera(C, 146.3, zC7, 683, 384, .7);
-p = keP(1240, 607, kC7); kursor(146.9, p, .7); klik(147.8, p); kursorHilang(148.3);
-const jP = jendela(C, 'cc-peringatan', R([29, 634, 1308, 69])); jP.buka(147.9);
-stabilo(C, R([85, 655, 220, 18]), 148.8, 151.3);
+p = keP(1240, 602, kC7); kursor(146.9, p, .7); klik(147.8, p); kursorHilang(148.3);
+const jP = jendela(C, 'cc-peringatan', R([29, 633, 1304, 69])); jP.buka(147.9);
+stabilo(C, R([85, 654, 220, 18]), 148.8, 151.3);
 jP.tutup(151.6);
 kalimat('Video juga: [[berapa persen ditonton,]] | yang di bawah 20% ditandai.', 151.9, 157.0);
-p = keP(963, 607, kC7); kursor(152.1, p, .7); klik(152.9, p); kursorHilang(153.4);
-const jV = jendela(C, 'cc-video', R([29, 634, 1308, 112])); jV.buka(153.0);
-sorotan(C, R([29, 640, 260, 100]), 153.9, 156.7, 'kuning', zC7, 3, false);
+p = keP(931, 602, kC7); kursor(152.1, p, .7); klik(152.9, p); kursorHilang(153.4);
+const jV = jendela(C, 'cc-video', R([29, 633, 1304, 112])); jV.buka(153.0);
+sorotan(C, R([29, 639, 260, 100]), 153.9, 156.7, 'kuning', zC7, 3, false);
 jV.tutup(157.0);
-const zC8 = 1.45, kC8 = kam(zC8, 820, 450);
-kamera(C, 157.3, zC8, 820, 450);
+const zC8 = 1.45, kC8 = kam(zC8, 800, 427);
+kamera(C, 157.3, zC8, 800, 427);
 /* kolom Kuis, dua ketukan (waktu sebenarnya): sel yang gagal dulu, lalu sel 0 */
 GESER.mode = 'awal';
 {
-  const simpan = __akhir; const kolomKuis = (y) => R([685, y, 74, 54]);
+  const simpan = __akhir; const kolomKuis = (i) => sel(KOL.kuis, i);
   kalimat('Kuis dihitung dari [[berapa kali gagal]] — | yang gagal lalu berhenti pun tetap tercatat.', 166.3, 169.9);
-  [312, 365, 419, 580].forEach((y, i) => { sorotan(C, kolomKuis(y), 167.0 + i * .2, 169.8, '', zC8, 3, false); sfx('tik' + i, 167.0 + i * .2); });
-  balon('jumlah kirim jawaban yang gagal', 167.8, (function () { const q = keP(722, 222, kC8); return { x: q.x - 160, y: q.y - 66 }; })(), 169.8, true);
+  [1, 2, 3, 6].forEach((b, i) => { sorotan(C, kolomKuis(b), 167.0 + i * .2, 169.8, '', zC8, 3, false); sfx('tik' + i, 167.0 + i * .2); });
+  balon('jumlah kirim jawaban yang gagal', 167.8, (function () { const q = keP(697, 160, kC8); return { x: q.x - 160, y: q.y - 66 }; })(), 169.8, true);
   kalimat('Angka [[0]] berarti belum pernah gagal: | lulus sekali coba, atau belum sampai kuisnya.', 170.3, 173.8);
-  [258, 472, 526, 634].forEach((y, i) => { sorotan(C, kolomKuis(y), 170.9 + i * .2, 173.6, 'kuning', zC8, 3, false); sfx('tik' + i, 170.9 + i * .2); });
-  balon('0 = belum pernah gagal', 171.6, (function () { const q = keP(722, 222, kC8); return { x: q.x - 110, y: q.y - 66 }; })(), 173.6, true);
+  [0, 4, 5, 7].forEach((b, i) => { sorotan(C, kolomKuis(b), 170.9 + i * .2, 173.6, 'kuning', zC8, 3, false); sfx('tik' + i, 170.9 + i * .2); });
+  balon('0 = belum pernah gagal', 171.6, (function () { const q = keP(697, 160, kC8); return { x: q.x - 110, y: q.y - 66 }; })(), 173.6, true);
   __akhir = simpan > 162.4 ? simpan : 162.4;
 }
 GESER.mode = 'semua';
 kalimat('Cek paham dicatat terpisah dari kuis: | [[mengukur pemahaman,]] bukan kelulusan.', 162.7, 167.2);
 sorotan(C, kolom(KOL.kc, TABEL), 163.4, 166.9, '', zC8, 2, false); sfx('tik0', 163.4);
-sorotan(C, kolom(KOL.art, TABEL), 164.8, 166.9, '', zC8, 2, false); sfx('tik1', 164.8);
-balon('Articulate: status selesai dari laporan paketnya sendiri', 165.1, (function () { const q = keP(1084, 222, kC8); return { x: q.x - 330, y: q.y - 66 }; })(), 166.9, true);
+balon('cek paham: benar / dijawab, terpisah dari kuis', 164.6, (function () { const q = keP(800, 160, kC8); return { x: q.x - 200, y: q.y - 66 }; })(), 166.9, true);
+
+/* ===== ketukan Articulate (sisipan +7 dtk, waktu sebenarnya 200,0–207,2): menit aktif & langkah =====
+   Gambarnya mengikuti kalimat: kolom Articulate didekati, lalu dua orang dibandingkan -
+   Rahmat (lama tapi cuma 3 langkah, belum selesai) vs Yulianti (47 langkah bolak-balik, selesai),
+   ditutup pil yang memperagakan apa itu "langkah": maju ATAU mundur sama-sama dihitung. */
+GESER.mode = 'tanpa';
+{
+  const simpan = __akhir;
+  kalimat('Konten [[Articulate]] pun terekam: | [[menit aktif dan langkahnya,]] bukan sekadar selesai.', 200.4, 206.9);
+  const zA = 1.9, kA = kam(zA, 1067, 414);
+  kamera(C, 200.3, zA, 1067, 414, .7);
+  sorotan(C, kolom(KOL.art, TABEL), 200.9, 206.8, '', zA, 2, false); sfx('tik0', 200.9);
+  sorotan(C, sel(KOL.art, 1), 201.7, 204.0, 'merah', zA, 3); sfx('tik1', 201.7);
+  balon('Rahmat: 21 menit, cuma 3 langkah → patut dicek', 202.0, (function () { const q = keP(1000, BARIS_Y(1), kA); return { x: q.x - 400, y: q.y - 52 }; })(), 204.0);
+  sorotan(C, sel(KOL.art, 5), 204.0, 206.8, 'hijau', zA, 3); sfx('tik2', 204.0);
+  balon('Yulianti: 16 menit, 47 langkah → benar dikerjakan', 204.3, (function () { const q = keP(1000, BARIS_Y(5), kA); return { x: q.x - 410, y: q.y - 52 }; })(), 206.8, true);
+  /* "langkah" diperagakan: panah maju & mundur menyala satu per satu, lalu jumlahnya.
+     Semua lewat tween opasitas (bukan tl.call) supaya tetap benar saat linimasa digeser. */
+  const ARAH = ['→', '→', '←', '→', '←', '→'];
+  const pil = el('div', 'jam', P, ARAH.map((a) => '<span class="lgk">' + a + '</span>').join(' ') +
+    ' <span class="lgk-jml">= ' + ARAH.length + ' langkah · maju atau mundur, sama-sama dihitung</span>');
+  tl.fromTo(pil, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .3 }, 204.8).to(pil, { opacity: 0, duration: .2 }, 206.8);
+  pil.querySelectorAll('.lgk').forEach((e, i) => {
+    tl.fromTo(e, { opacity: .15, scale: .7 }, { opacity: 1, scale: 1, duration: .18, ease: 'back.out(3)' }, 205.0 + i * .22);
+    sfx('tik' + (i % 8), 205.0 + i * .22);
+  });
+  tl.fromTo(pil.querySelector('.lgk-jml'), { opacity: 0 }, { opacity: 1, duration: .25 }, 205.0 + ARAH.length * .22);
+  __akhir = simpan;
+}
+GESER.mode = 'semua';
 silang(C, 'cc-peserta-tabel', 167.4, .4); sembunyi(C, 'cc-tabel', 167.9);
 tl.set(C.kamera, kam(1, 683, 384), 167.4);
 kalimat('Tampilan per peserta merangkum [[satu orang lintas modul,]] | lengkap dengan nilai tiap modulnya.', 167.5, 172.8);
@@ -1156,13 +1189,13 @@ const Suara = (function () {
 /* ---------- kontrol ---------- */
 const geser = $('geser'), waktu = $('waktu'), btnPutar = $('btnPutar');
 const fmt = (t) => Math.floor(t / 60) + ':' + String(Math.floor(t % 60)).padStart(2, '0') + ',' + Math.floor((t % 1) * 10);
-tl.eventCallback('onUpdate', () => { if (tl.paused() && window.__vidSeek) window.__vidSeek(); geser.value = tl.time(); waktu.textContent = fmt(tl.time()) + ' / 4:21'; });
+tl.eventCallback('onUpdate', () => { if (tl.paused() && window.__vidSeek) window.__vidSeek(); geser.value = tl.time(); waktu.textContent = fmt(tl.time()) + ' / 4:28'; });
 tl.eventCallback('onComplete', () => { btnPutar.textContent = 'Putar'; Suara.jeda(); if (document.body.classList.contains('rekam')) setTimeout(keluarRekam, 800); });
 function putar() { Suara.aktifkan(); if (tl.progress() >= 1) tl.restart(); else tl.play(); btnPutar.textContent = 'Jeda'; }
 function jeda() { tl.pause(); btnPutar.textContent = 'Putar'; Suara.jeda(); }
 btnPutar.onclick = () => (tl.paused() || tl.progress() >= 1 ? putar() : jeda());
 $('btnUlang').onclick = () => { tl.restart(); Suara.aktifkan(); btnPutar.textContent = 'Jeda'; };
-geser.oninput = () => { tl.pause(); tl.seek(+geser.value, true); if (window.__angkaRekap) window.__angkaRekap(); btnPutar.textContent = 'Putar'; Suara.jeda(); waktu.textContent = fmt(+geser.value) + ' / 4:21'; };
+geser.oninput = () => { tl.pause(); tl.seek(+geser.value, true); if (window.__angkaRekap) window.__angkaRekap(); btnPutar.textContent = 'Putar'; Suara.jeda(); waktu.textContent = fmt(+geser.value) + ' / 4:28'; };
 $('btnSuara').onclick = () => { Suara.setBisu(!Suara.bisu()); $('btnSuara').textContent = 'Suara: ' + (Suara.bisu() ? 'mati' : 'nyala'); };
 function penuh() { const d = document.documentElement; if (!document.fullscreenElement && d.requestFullscreen) d.requestFullscreen().catch(() => {}); }
 $('btnPenuh').onclick = () => (document.fullscreenElement ? document.exitFullscreen() : penuh());
