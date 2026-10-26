@@ -3489,7 +3489,15 @@ function actNewSessionId(){
    server bisa mbuang SELURUH sesi itu lewat session_id-nya (lihat _sesi_dev()
    di activity_store.py). Urutannya penting: penanda dikirim DULU, baru
    perekaman dimatikan. */
-let devTrackStop = false;
+/* Live Preview di aplikasi penyusun (tab Preview & Export, pratinjau slide,
+   pratinjau paket) memuat modul lewat <iframe srcdoc>, dan itu satu-satunya
+   cara modul ini dimuat dengan alamat 'about:srcdoc' - peserta sungguhan selalu
+   datang dari LMS atau berkas HTML. Penyusun yang ngetes sambil isi nama/NIP
+   di form "Sebelum mulai" bukan peserta, jadi sesinya gak boleh lahir sama
+   sekali (bukan dilahirkan lalu disaring belakangan): kalau enggak, tiap
+   percobaan numpuk di Command Center berdampingan sama peserta asli. Mulai
+   dari kondisi "sudah berhenti" yang sama dengan hasil devHentikanRekam(). */
+let devTrackStop = (location.href === 'about:srcdoc');
 function devHentikanRekam(){
   if(devTrackStop) return;
   if(TRACK_READY && actSessionId){
