@@ -2888,6 +2888,19 @@ function artResolveBlock(){
   return artActive.length ? artActive[0].block : null;
 }
 
+/* Satu pintu buat SEMUA tulisan dari Articulate: lewat shim (panggilan
+   langsung) maupun lewat jembatan pesan di bawah. */
+function artSimpanCmi(blockId, name, value){
+  const cmi = artLoadCmi(blockId);
+  cmi[name] = String(value);
+  cmi['__started'] = '1';
+  artSaveCmi(blockId, cmi);
+  const v = String(value).toLowerCase();
+  if(/lesson_status|completion_status|success_status/.test(name) && (v === 'completed' || v === 'passed')){
+    artMarkDone(blockId, v);
+  }
+}
+
 function artMakeShim(version){
   function getValue(name){
     const blockId = artResolveBlock();
@@ -2906,15 +2919,7 @@ function artMakeShim(version){
   }
   function setValue(name, value){
     const blockId = artResolveBlock();
-    if(!blockId) return 'true';
-    const cmi = artLoadCmi(blockId);
-    cmi[name] = String(value);
-    cmi['__started'] = '1';
-    artSaveCmi(blockId, cmi);
-    const v = String(value).toLowerCase();
-    if(/lesson_status|completion_status|success_status/.test(name) && (v === 'completed' || v === 'passed')){
-      artMarkDone(blockId, v);
-    }
+    if(blockId) artSimpanCmi(blockId, name, value);
     return 'true';
   }
   return {
@@ -2945,6 +2950,25 @@ function artMakeShim(version){
 if(HAS_ART){
   window.API = artMakeShim('1.2');
   window.API_1484_11 = artMakeShim('2004');
+
+  /* Jembatan buat paket SCORM yang diekstrak lalu dibuka langsung dari disk
+     (file://). Di situ browser menganggap tiap file beda origin, jadi
+     Articulate gak bisa manjat ke window.API di atas dan nembak peringatan
+     "unable to acquire LMS API". Perakit paket (scormZip.ts, JEMBATAN_ART)
+     menanam API pengganti di dalam paket Articulate yang cuma hidup kalau
+     induknya memang gak terjangkau, dan tulisannya diteruskan ke sini lewat
+     postMessage. Pengirimnya dicocokkan ke iframe Articulate di slide ini -
+     pesan dari tempat lain diabaikan. */
+  window.addEventListener('message', function(e){
+    const d = e.data;
+    if(!d || d.__modulArt !== 1 || typeof d.name !== 'string') return;
+    const a = artActive.find(function(x){
+      const frame = document.getElementById('artframe-' + x.block);
+      const fr = frame && frame.querySelector('iframe');
+      return fr && fr.contentWindow === e.source;
+    });
+    if(a) artSimpanCmi(a.block, d.name, d.value);
+  });
 }
 
 function artBindSlide(item){

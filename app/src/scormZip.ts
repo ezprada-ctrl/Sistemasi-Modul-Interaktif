@@ -44,6 +44,72 @@ const OPSI_ENTRI = {
   extendedTimestamp: false,
 } as const;
 
+// Ditanam di file pembuka tiap paket Articulate, SEBELUM scormdriver-nya jalan.
+// Pemutar Articulate nyari API SCORM mulai dari window-nya sendiri, lalu
+// manjat ke induk - tempat modul memasang shim (lihat artMakeShim di
+// shell-template.html). Kalau paketnya diekstrak lalu dibuka dari disk
+// (file://), browser menganggap tiap file beda origin dan manjatnya diblokir:
+// Articulate nembak "unable to acquire LMS API" dan status selesainya gak
+// pernah nyampe ke modul. Skrip ini cuma hidup di kondisi itu (induk ada TAPI
+// gak terjangkau) - di LMS induknya terjangkau, skripnya langsung keluar dan
+// semuanya jalan lewat shim seperti biasa. Tulisannya diteruskan ke modul
+// lewat postMessage, satu-satunya jalur yang tetap dibuka browser.
+const JEMBATAN_ART = `<script>(function(){
+  if (window.parent === window) return;
+  try { void window.parent.document; return; } catch (e) {}
+  var cmi = {};
+  function get(n){
+    if (n in cmi) return cmi[n];
+    if (/lesson_status|completion_status/.test(n)) return 'incomplete';
+    if (/success_status/.test(n)) return 'unknown';
+    if (/lesson_mode/.test(n)) return 'normal';
+    if (/credit/.test(n)) return 'credit';
+    if (/\\bentry\\b/.test(n)) return 'ab-initio';
+    return '';
+  }
+  function set(n, v){
+    cmi[n] = String(v);
+    try { window.parent.postMessage({ __modulArt: 1, name: String(n), value: String(v) }, '*'); } catch (e) {}
+    return 'true';
+  }
+  function ok(){ return 'true'; }
+  function nol(){ return '0'; }
+  function tanpaError(){ return 'No error'; }
+  function kosong(){ return ''; }
+  window.API = { LMSInitialize: ok, LMSFinish: ok, LMSGetValue: get, LMSSetValue: set, LMSCommit: ok,
+    LMSGetLastError: nol, LMSGetErrorString: tanpaError, LMSGetDiagnostic: kosong };
+  window.API_1484_11 = { Initialize: ok, Terminate: ok, GetValue: get, SetValue: set, Commit: ok,
+    GetLastError: nol, GetErrorString: tanpaError, GetDiagnostic: kosong };
+  window.__modulJembatan = 1;
+})();</script>`;
+
+// Pasangannya, ditaruh SESUDAH scormdriver.js dimuat. API di window sendiri
+// saja gak cukup: pencari bawaan scormdriver (SCORM_GetAPI, diuji pada paket
+// Storyline 3) langsung mulai dari window.parent tanpa memeriksa window-nya
+// sendiri, dan akses ke induk yang diblokir melempar error yang membatalkan
+// seluruh pencarian. Jadi pencarinya diganti - lagi-lagi cuma kalau jembatannya
+// memang hidup.
+const JEMBATAN_CARI = `<script>if (window.__modulJembatan) {
+  if (typeof SCORM_GetAPI === 'function') SCORM_GetAPI = function(){ return window.API; };
+  if (typeof SCORM2004_GetAPI === 'function') SCORM2004_GetAPI = function(){ return window.API_1484_11; };
+}</script>`;
+
+/** Tanam JEMBATAN_ART tepat sesudah <head>, dan JEMBATAN_CARI sesudah tag
+ *  scormdriver.js (atau sebelum </body> kalau tag-nya gak ketemu). */
+function tanamJembatan(html: string): string {
+  const m = html.match(/<head\b[^>]*>/i);
+  let out = (!m || m.index === undefined)
+    ? JEMBATAN_ART + html
+    : html.slice(0, m.index + m[0].length) + JEMBATAN_ART + html.slice(m.index + m[0].length);
+  const driver = out.match(/<script\b[^>]*scormdriver\.js[^>]*>\s*<\/script>/i);
+  if (driver && driver.index !== undefined) {
+    const i = driver.index + driver[0].length;
+    return out.slice(0, i) + JEMBATAN_CARI + out.slice(i);
+  }
+  const body = out.search(/<\/body>/i);
+  return body < 0 ? out + JEMBATAN_CARI : out.slice(0, body) + JEMBATAN_CARI + out.slice(body);
+}
+
 export interface ZipProgress {
   fase: 'html' | 'aset' | 'articulate' | 'manifest' | 'selesai';
   pesan: string;
@@ -288,7 +354,10 @@ export async function exportScormZip(
         // Satu entri pada satu waktu — inilah yang bikin paket 150MB tetap
         // muat: yang ada di memori cuma file terbesar di dalamnya, bukan
         // seluruh paket.
-        const data: Blob = await e.getData!(new BlobWriter());
+        let data: Blob = await e.getData!(new BlobWriter());
+        if (rel === entry && /\.html?$/i.test(rel)) {
+          data = new Blob([tanamJembatan(await data.text())], { type: 'text/html' });
+        }
         await writer.add(AKAR + target, new BlobReader(data), {
           ...OPSI_ENTRI,
           level: SUDAH_TERKOMPRESI.test(rel) ? 0 : 1,
