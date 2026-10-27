@@ -895,7 +895,7 @@ def render_articulate(b):
             '<div class="card art-card">'
             '<div class="art-placeholder">'
             '<div class="art-ph-icon">&#9635;</div>'
-            '<div><strong>Konten Articulate 360</strong>'
+            '<div><strong>Konten Storyline 3 / Articulate 360</strong>'
             f'<div class="art-ph-sub">{esc(b.get("artName") or "paket Articulate")}</div>'
             '<div class="art-ph-sub">Baru hidup di hasil <strong>Export SCORM (.zip)</strong> &mdash; '
             'di Live Preview dan Export HTML tunggal, file-nya belum ikut dibawa.</div>'

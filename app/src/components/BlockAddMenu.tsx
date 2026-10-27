@@ -21,7 +21,7 @@ export const BLOCK_LABELS: Record<BlockType, string> = {
   modal: 'Modal Popup (info tambahan)',
   media: 'Media (Video / YouTube / Instagram)',
   knowledge: 'Knowledge Check (cek paham)',
-  articulate: 'Articulate 360 (paket ZIP)',
+  articulate: 'Storyline 3 / Articulate 360 (paket ZIP)',
   reflection: 'Refleksi (jawaban peserta)',
 };
 

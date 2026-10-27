@@ -145,8 +145,8 @@ export const DEMO_STEPS: DemoStep[] = [
   },
   {
     id: 'articulate',
-    label: 'Konten Articulate 360',
-    defaultCaption: 'Paket Articulate 360 berjalan di dalam modul, lengkap dengan pelaporan penyelesaiannya.',
+    label: 'Konten Storyline 3 / Articulate 360',
+    defaultCaption: 'Paket Storyline 3 / Articulate 360 berjalan di dalam modul, lengkap dengan pelaporan penyelesaiannya.',
     applies: (_m, f) => f.blockTypes.has('articulate'),
   },
   {

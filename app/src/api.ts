@@ -855,7 +855,7 @@ export async function uploadArticulate(
   onProgress?: (persen: number) => void,
 ): Promise<ArticulateInfo> {
   if (!/\.zip$/i.test(file.name)) {
-    throw new Error('File harus .zip hasil Publish dari Articulate 360.');
+    throw new Error('File harus .zip hasil Publish dari Storyline 3 / Articulate 360.');
   }
 
   const keR2 = await r2Tersedia();

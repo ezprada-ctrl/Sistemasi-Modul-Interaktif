@@ -1227,7 +1227,7 @@ export default function CommandCenter() {
                           )}
                         </td>
                         <td style={{ padding: '8px 11px', fontVariantNumeric: 'tabular-nums' }}
-                            title="Paket Articulate 360 yang dilaporkan SELESAI oleh paketnya sendiri / total paket di semua modulnya">
+                            title="Paket Storyline 3 / Articulate 360 yang dilaporkan SELESAI oleh paketnya sendiri / total paket di semua modulnya">
                           {!l.total_articulate_program ? (
                             <span style={{ color: 'var(--text-faint)' }}>—</span>
                           ) : (
@@ -1552,7 +1552,7 @@ export default function CommandCenter() {
                         )}
                       </td>
                       <td style={{ padding: '8px 11px', fontVariantNumeric: 'tabular-nums' }}
-                          title="Paket Articulate 360 yang dilaporkan SELESAI oleh paketnya sendiri / total paket di modul ini">
+                          title="Paket Storyline 3 / Articulate 360 yang dilaporkan SELESAI oleh paketnya sendiri / total paket di modul ini">
                         {!s.total_articulate ? (
                           <span style={{ color: 'var(--text-faint)' }}>—</span>
                         ) : (

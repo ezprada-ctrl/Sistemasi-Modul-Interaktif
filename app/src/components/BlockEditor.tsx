@@ -1445,7 +1445,7 @@ function ArticulateFields({ block, onChange, inp }: { block: Block; onChange: (p
   return (
     <>
       <p className="hint" style={{ fontSize: 11, margin: '-2px 0 8px' }}>
-        Upload ZIP <strong>Publish &rarr; LMS &rarr; SCORM 1.2</strong> dari Articulate 360.
+        Upload ZIP <strong>Publish &rarr; LMS &rarr; SCORM 1.2</strong> dari Storyline 3 / Articulate 360.
       </p>
 
       <input type="file" accept=".zip" disabled={busy}

@@ -80,7 +80,7 @@ const KOLOM: PanduanKolom[] = [
   },
   {
     nama: 'Articulate',
-    arti: 'Paket Articulate 360 yang dilaporkan SELESAI oleh paketnya sendiri / total paket. Di bawahnya: menit aktif (hanya saat ada klik/gerak di dalam paketnya) dan x/y klik objek (x = klik pada objek yang bisa diklik, klik ulang ikut dihitung, Next/Back tidak; y = total objeknya). ⚠ = kurang dari separuh objek pernah dibuka; arahkan kursor untuk penjelasannya.',
+    arti: 'Paket Storyline 3 / Articulate 360 yang dilaporkan SELESAI oleh paketnya sendiri / total paket. Di bawahnya: menit aktif (hanya saat ada klik/gerak di dalam paketnya) dan x/y klik objek (x = klik pada objek yang bisa diklik, klik ulang ikut dihitung, Next/Back tidak; y = total objeknya). ⚠ = kurang dari separuh objek pernah dibuka; arahkan kursor untuk penjelasannya.',
     kenapa: 'Status selesai diambil dari laporan paket itu, bukan ditebak dari lamanya dibuka.',
   },
   {

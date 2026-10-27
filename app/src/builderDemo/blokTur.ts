@@ -496,6 +496,6 @@ export const TUR_BLOK: EntriBlok[] = [
   {
     tipe: 'articulate',
     lewati: true,
-    caption: 'Paket Articulate 360 juga bisa ditanam utuh — cukup unggah berkas ZIP hasil publish-nya.',
+    caption: 'Paket Storyline 3 / Articulate 360 juga bisa ditanam utuh — cukup unggah berkas ZIP hasil publish-nya.',
   },
 ];
