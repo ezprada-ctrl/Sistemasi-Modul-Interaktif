@@ -3520,8 +3520,15 @@ function actNewSessionId(){
    di form "Sebelum mulai" bukan peserta, jadi sesinya gak boleh lahir sama
    sekali (bukan dilahirkan lalu disaring belakangan): kalau enggak, tiap
    percobaan numpuk di Command Center berdampingan sama peserta asli. Mulai
-   dari kondisi "sudah berhenti" yang sama dengan hasil devHentikanRekam(). */
-let devTrackStop = (location.href === 'about:srcdoc');
+   dari kondisi "sudah berhenti" yang sama dengan hasil devHentikanRekam().
+
+   Hal yang sama buat modul yang dibuka langsung dari folder di laptop
+   (file://) - Export HTML maupun paket SCORM yang diekstrak. Keputusan
+   penyusun: yang direkam cuma yang sudah masuk LMS, dan LMS selalu
+   menyajikan lewat http(s). SENGAJA bukan "SCORM tersambung": di KLC
+   sambungan SCORM pernah gagal untuk seluruh pelatihan (lihat scormDiag),
+   dan mensyaratkannya bakal membuang data peserta sungguhan. */
+let devTrackStop = (location.href === 'about:srcdoc' || location.protocol === 'file:');
 function devHentikanRekam(){
   if(devTrackStop) return;
   if(TRACK_READY && actSessionId){
