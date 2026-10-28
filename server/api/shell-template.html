@@ -3020,6 +3020,21 @@ function artFit(frame){
   fr.style.top = ((h - ah*k)/2)+'px';
   fr.style.transform = 'scale('+k+')';
 }
+function artUkurIsi(frame, fr){
+  let d;
+  try{ d = fr.contentDocument; }catch(e){ return; }
+  if(!d || !d.documentElement) return;
+  const aw0 = +frame.dataset.aw0, ah0 = +frame.dataset.ah0;
+  const w = Math.max(aw0, d.documentElement.scrollWidth);
+  const h = Math.max(ah0, d.documentElement.scrollHeight);
+  /* Batas 1.5x: kalau isinya melar terus mengikuti layar (mode scale-to-fit),
+     jangan sampai ikut membesar tanpa henti. */
+  if(w > aw0*1.5 || h > ah0*1.5) return;
+  if(w === +frame.dataset.aw && h === +frame.dataset.ah) return;
+  frame.dataset.aw = w;
+  frame.dataset.ah = h;
+  artFit(frame);
+}
 /* Slide dirender saat dibuka (bukan di awal), jadi kotaknya baru muncul di DOM
    belakangan: dia didaftarkan ke pengamat ukuran dari artBindSlide, bukan
    sekali di awal. */
@@ -3027,6 +3042,19 @@ var artRO = null;
 function artObserve(frame){
   if(!frame || !frame.dataset.aw || frame.__artSeen) return;
   frame.__artSeen = true;
+  /* Player Storyline sering lebih besar dari slide-nya (bilah kontrol, margin),
+     jadi di layar virtual seukuran slide dia masih munculin scrollbar. Ukur isi
+     aslinya setelah dimuat, lalu lebarkan layar virtualnya sebesar itu. Cuma
+     bisa kalau paketnya satu origin dengan modul (SCORM zip); di file://
+     browser menolak, ya sudah, tetap jalan tanpa penyesuaian ini. */
+  const fr = frame.querySelector('iframe.art-fixed');
+  if(fr){
+    frame.dataset.aw0 = frame.dataset.aw;
+    frame.dataset.ah0 = frame.dataset.ah;
+    const ukur = function(){ artUkurIsi(frame, fr); };
+    fr.addEventListener('load', function(){ [200, 900, 2500].forEach(function(t){ setTimeout(ukur, t); }); });
+    [600, 2000, 4500].forEach(function(t){ setTimeout(ukur, t); });
+  }
   if(window.ResizeObserver){
     if(!artRO) artRO = new ResizeObserver(function(es){ es.forEach(function(e){ artFit(e.target); }); });
     artRO.observe(frame);
