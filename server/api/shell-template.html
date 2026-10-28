@@ -3034,9 +3034,17 @@ function artUkurIsi(frame, fr){
     st.textContent = 'html,body{overflow:hidden!important;}';
     d.head.appendChild(st);
   }
+  artTerapkanUkuran(frame, d.documentElement.scrollWidth, d.documentElement.scrollHeight);
+}
+/* Ukuran isi player -> layar virtual kotak. Datang dari dua jalur: diukur
+   langsung (artUkurIsi, kalau satu origin) atau dilaporkan paketnya sendiri
+   lewat postMessage (JEMBATAN_UKURAN di scormZip.ts) - jalur kedua ini yang
+   tetap jalan waktu modul dibuka dari disk (file://). */
+function artTerapkanUkuran(frame, iw, ih){
+  if(!frame.dataset.aw0){ frame.dataset.aw0 = frame.dataset.aw; frame.dataset.ah0 = frame.dataset.ah; }
   const aw0 = +frame.dataset.aw0, ah0 = +frame.dataset.ah0;
-  const w = Math.max(aw0, d.documentElement.scrollWidth);
-  const h = Math.max(ah0, d.documentElement.scrollHeight);
+  const w = Math.max(aw0, iw || 0);
+  const h = Math.max(ah0, ih || 0);
   /* Batas 1.5x: kalau isinya melar terus mengikuti layar (mode scale-to-fit),
      jangan sampai ikut membesar tanpa henti. */
   if(w > aw0*1.5 || h > ah0*1.5) return;
@@ -3054,13 +3062,12 @@ function artObserve(frame){
   frame.__artSeen = true;
   /* Player Storyline sering lebih besar dari slide-nya (bilah kontrol, margin),
      jadi di layar virtual seukuran slide dia masih munculin scrollbar. Ukur isi
-     aslinya setelah dimuat, lalu lebarkan layar virtualnya sebesar itu. Cuma
-     bisa kalau paketnya satu origin dengan modul (SCORM zip); di file://
-     browser menolak, ya sudah, tetap jalan tanpa penyesuaian ini. */
+     aslinya setelah dimuat, lalu lebarkan layar virtualnya sebesar itu. Ini
+     cuma bisa kalau paketnya satu origin dengan modul; di file:// paketnya
+     sendiri yang melapor lewat postMessage (lihat listener di bawah). */
   const fr = frame.querySelector('iframe.art-fixed');
   if(fr){
-    frame.dataset.aw0 = frame.dataset.aw;
-    frame.dataset.ah0 = frame.dataset.ah;
+    if(!frame.dataset.aw0){ frame.dataset.aw0 = frame.dataset.aw; frame.dataset.ah0 = frame.dataset.ah; }
     const ukur = function(){ artUkurIsi(frame, fr); };
     fr.addEventListener('load', function(){ [200, 900, 2500].forEach(function(t){ setTimeout(ukur, t); }); });
     [600, 2000, 4500].forEach(function(t){ setTimeout(ukur, t); });
@@ -3071,6 +3078,14 @@ function artObserve(frame){
   }
   artFit(frame);
 }
+window.addEventListener('message', function(e){
+  const d = e.data;
+  if(!d || d.__modulArtUkuran !== 1) return;
+  document.querySelectorAll('.art-frame[data-aw]').forEach(function(frame){
+    const fr = frame.querySelector('iframe.art-fixed');
+    if(fr && fr.contentWindow === e.source) artTerapkanUkuran(frame, +d.w, +d.h);
+  });
+});
 function artFitAll(){
   document.querySelectorAll('.art-frame[data-aw]').forEach(artFit);
 }

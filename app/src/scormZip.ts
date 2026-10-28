@@ -94,13 +94,41 @@ const JEMBATAN_CARI = `<script>if (window.__modulJembatan) {
   if (typeof SCORM2004_GetAPI === 'function') SCORM2004_GetAPI = function(){ return window.API_1484_11; };
 }</script>`;
 
-/** Tanam JEMBATAN_ART tepat sesudah <head>, dan JEMBATAN_CARI sesudah tag
- *  scormdriver.js (atau sebelum </body> kalau tag-nya gak ketemu). */
+// Pas-kan player ke kotaknya di modul. Player Storyline lebih besar dari
+// slide-nya (Storyline 3: slide 960x540 + jarak 10px = 980x560) dan, setelah
+// dimuat, menyetel body-nya overflow:scroll - jadi muncul scrollbar dan
+// pinggirnya kepotong. Dari dalam sini scrollbar-nya dimatikan dan ukuran isi
+// aslinya dilaporkan ke modul (artFit di shell-template.html), yang lalu
+// menyesuaikan skala kotaknya. Harus dari DALAM paket: kalau modulnya dibuka
+// dari disk (file://), modul gak boleh melongok ke dokumen iframe ini.
+// Cuma hidup kalau dibuka di dalam iframe; dibuka sendirian, tak tersentuh.
+const JEMBATAN_UKURAN = `<script>(function(){
+  if (window.parent === window) return;
+  var st = document.createElement('style');
+  st.textContent = 'html,body{overflow:hidden!important;}';
+  (document.head || document.documentElement).appendChild(st);
+  var lw = 0, lh = 0;
+  function lapor(){
+    var de = document.documentElement;
+    if (!de) return;
+    var w = de.scrollWidth, h = de.scrollHeight;
+    if (w === lw && h === lh) return;
+    lw = w; lh = h;
+    try { window.parent.postMessage({ __modulArtUkuran: 1, w: w, h: h }, '*'); } catch (e) {}
+  }
+  window.addEventListener('load', function(){
+    [0, 500, 1500, 3000, 6000, 10000].forEach(function(t){ setTimeout(lapor, t); });
+  });
+})();</script>`;
+
+/** Tanam JEMBATAN_ART + JEMBATAN_UKURAN tepat sesudah <head>, dan JEMBATAN_CARI
+ *  sesudah tag scormdriver.js (atau sebelum </body> kalau tag-nya gak ketemu). */
 function tanamJembatan(html: string): string {
+  const awal = JEMBATAN_ART + JEMBATAN_UKURAN;
   const m = html.match(/<head\b[^>]*>/i);
   let out = (!m || m.index === undefined)
-    ? JEMBATAN_ART + html
-    : html.slice(0, m.index + m[0].length) + JEMBATAN_ART + html.slice(m.index + m[0].length);
+    ? awal + html
+    : html.slice(0, m.index + m[0].length) + awal + html.slice(m.index + m[0].length);
   const driver = out.match(/<script\b[^>]*scormdriver\.js[^>]*>\s*<\/script>/i);
   if (driver && driver.index !== undefined) {
     const i = driver.index + driver[0].length;
