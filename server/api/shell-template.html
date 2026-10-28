@@ -3024,6 +3024,16 @@ function artUkurIsi(frame, fr){
   let d;
   try{ d = fr.contentDocument; }catch(e){ return; }
   if(!d || !d.documentElement) return;
+  /* Storyline 3 menyetel body-nya overflow:scroll setelah paketnya selesai
+     dimuat, jadi scrollbar muncul walau ukurannya sudah pas (dicek di paket
+     asli: isi 980x560, tapi area tampil jadi 965x545). Kotaknya sudah dipas
+     ke ukuran isi, jadi scrollbar gak ada gunanya: dimatikan. */
+  if(d.head && !d.getElementById('modul-noscroll')){
+    const st = d.createElement('style');
+    st.id = 'modul-noscroll';
+    st.textContent = 'html,body{overflow:hidden!important;}';
+    d.head.appendChild(st);
+  }
   const aw0 = +frame.dataset.aw0, ah0 = +frame.dataset.ah0;
   const w = Math.max(aw0, d.documentElement.scrollWidth);
   const h = Math.max(ah0, d.documentElement.scrollHeight);
