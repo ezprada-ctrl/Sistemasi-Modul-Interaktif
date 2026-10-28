@@ -1220,6 +1220,7 @@ html.pv-restoring *,html.pv-restoring *::before,html.pv-restoring *::after{
 .art-card{padding:14px;}
 .art-frame{position:relative;width:100%;border-radius:12px;overflow:hidden;background:#000;}
 .art-iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;}
+.art-iframe.art-fixed{inset:auto;left:0;top:0;transform-origin:0 0;max-width:none;}
 .art-frame:fullscreen{padding-bottom:0!important;height:100%!important;border-radius:0;}
 .art-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:9px;flex-wrap:wrap;}
 .art-status{font-size:12px;color:var(--text-faint);font-weight:600;}
@@ -2979,6 +2980,7 @@ function artBindSlide(item){
     const frame = document.getElementById('artframe-'+a.block);
     const fr = frame && frame.querySelector('iframe');
     if(!fr) return;
+    artObserve(frame);
     /* Begitu iframe-nya dimuat / disentuh peserta, dia yang dianggap pemanggil
        berikutnya. Baru relevan kalau satu slide punya lebih dari satu paket. */
     fr.addEventListener('load', function(){ artCallerBlock = a.block; });
@@ -2998,6 +3000,44 @@ function artApplyStatus(){
     el.classList.toggle('art-done', done);
   });
 }
+
+/* Kotak Articulate rasio tetap (16:9 / 4:3): iframe-nya dijalankan di "layar
+   virtual" seukuran slide (data-aw x data-ah) lalu di-scale pas ke kotak.
+   Paket Storyline yang dipublish dengan player terkunci gak ikut mengecil
+   sendiri, jadi tanpa ini isinya kepotong + muncul scrollbar. Di mode layar
+   penuh rasio kotak bisa beda dari slide, jadi skalanya ambil sisi yang
+   paling mepet dan hasilnya ditaruh di tengah (sisanya hitam). */
+function artFit(frame){
+  const fr = frame.querySelector('iframe.art-fixed');
+  if(!fr) return;
+  const aw = +frame.dataset.aw, ah = +frame.dataset.ah;
+  const w = frame.clientWidth, h = frame.clientHeight;
+  if(!aw || !ah || !w || !h) return;   /* slide lagi tersembunyi, nanti dihitung lagi */
+  const k = Math.min(w/aw, h/ah);
+  fr.style.width = aw+'px';
+  fr.style.height = ah+'px';
+  fr.style.left = ((w - aw*k)/2)+'px';
+  fr.style.top = ((h - ah*k)/2)+'px';
+  fr.style.transform = 'scale('+k+')';
+}
+/* Slide dirender saat dibuka (bukan di awal), jadi kotaknya baru muncul di DOM
+   belakangan: dia didaftarkan ke pengamat ukuran dari artBindSlide, bukan
+   sekali di awal. */
+var artRO = null;
+function artObserve(frame){
+  if(!frame || !frame.dataset.aw || frame.__artSeen) return;
+  frame.__artSeen = true;
+  if(window.ResizeObserver){
+    if(!artRO) artRO = new ResizeObserver(function(es){ es.forEach(function(e){ artFit(e.target); }); });
+    artRO.observe(frame);
+  }
+  artFit(frame);
+}
+function artFitAll(){
+  document.querySelectorAll('.art-frame[data-aw]').forEach(artFit);
+}
+window.addEventListener('resize', artFitAll);
+document.addEventListener('fullscreenchange', artFitAll);
 
 function artFullscreen(blockId){
   const el = document.getElementById('artframe-'+blockId);

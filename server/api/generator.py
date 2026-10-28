@@ -854,6 +854,12 @@ def art_entry(b):
 
 
 ART_RATIOS = {'16:9': '56.25%', '4:3': '75%'}
+# Ukuran "layar virtual" tempat paket dijalankan, lalu dikecilkan/dibesarkan
+# (CSS scale) mengikuti lebar kotak. Pakai ukuran slide Storyline apa adanya:
+# paket yang dipublish "Lock player at starting size" TIDAK menyesuaikan diri
+# ke kotak - kalau iframe-nya lebih kecil dari slide, sisanya kepotong + muncul
+# scrollbar. Dengan layar virtual sebesar slide, hasilnya selalu utuh.
+ART_VIEWPORT = {'16:9': (960, 540), '4:3': (960, 720)}
 
 
 def render_articulate(b):
@@ -887,8 +893,17 @@ def render_articulate(b):
     ratio = b.get('artRatio') or '16:9'
     if ratio == 'tinggi':
         frame_style = 'height:80vh;'
+        frame_attrs = ''
+        iframe_cls = 'art-iframe'
+        iframe_style = ''
     else:
         frame_style = f'padding-bottom:{ART_RATIOS.get(ratio, "56.25%")};height:0;'
+        aw, ah = ART_VIEWPORT.get(ratio, ART_VIEWPORT['16:9'])
+        frame_attrs = f' data-aw="{aw}" data-ah="{ah}"'
+        iframe_cls = 'art-iframe art-fixed'
+        # Ukuran layar virtual dipasang langsung; skalanya dihitung JS
+        # (artFitAll di shell-template.html).
+        iframe_style = f' style="width:{aw}px;height:{ah}px;"'
 
     if not GEN_FLAGS['art_packaged']:
         return (
@@ -905,8 +920,8 @@ def render_articulate(b):
 
     return (
         f'<div class="card art-card" data-art="{block_id}">'
-        f'<div class="art-frame" id="artframe-{block_id}" style="{frame_style}">'
-        f'<iframe class="art-iframe" src="articulate/{block_id}/{esc(entry)}" '
+        f'<div class="art-frame" id="artframe-{block_id}" style="{frame_style}"{frame_attrs}>'
+        f'<iframe class="{iframe_cls}"{iframe_style} src="articulate/{block_id}/{esc(entry)}" '
         f'title="Konten Articulate" allowfullscreen '
         f'allow="autoplay; fullscreen; encrypted-media; microphone; camera"></iframe>'
         '</div>'
