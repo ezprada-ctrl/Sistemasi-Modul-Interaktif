@@ -9,6 +9,7 @@ import CoverForm from './components/CoverForm';
 import QuizBuilder from './components/QuizBuilder';
 import PreviewExport from './components/PreviewExport';
 import CommandCenter from './components/CommandCenter';
+import Icon from './components/Icon';
 import { BuilderDemo } from './builderDemo/engine';
 import { BUILDER_DEMO_STEPS } from './builderDemo/steps';
 import { sampleProject } from './builderDemo/sampleProject';
@@ -625,14 +626,14 @@ function UndoRedo({ canUndo, canRedo, onUndo, onRedo }: {
         disabled={!canUndo}
         title={`Undo (${mod}+Z)`}
         style={{ fontSize: 15, opacity: canUndo ? 1 : 0.4 }}
-      >↶</button>
+      ><Icon name="undo" /></button>
       <button
         className="btn-icon"
         onClick={onRedo}
         disabled={!canRedo}
         title={`Redo (${mod}+Shift+Z)`}
         style={{ fontSize: 15, opacity: canRedo ? 1 : 0.4 }}
-      >↷</button>
+      ><Icon name="redo" /></button>
     </div>
   );
 }
@@ -663,7 +664,7 @@ function MenuDemo({ demoModul, onToggleDemoModul, onDemoEkosistem }: {
     <div ref={wrapRef} style={{ position: 'relative' }}>
       <button className="btn-sm" data-demo="menu-demo" onClick={() => setBuka(b => !b)}
         title="Demo modul (buat peserta) & demo ekosistem penyusunnya">
-        ▶ Demo {demoModul ? '•' : ''} ▾
+        <Icon name="play" size="0.8em" /> Demo {demoModul ? '•' : ''} ▾
       </button>
       {buka && (
         <div style={{
@@ -687,7 +688,7 @@ function MenuDemo({ demoModul, onToggleDemoModul, onDemoEkosistem }: {
             style={{ display: 'block', width: '100%', textAlign: 'left', border: 'none', background: 'transparent', padding: '9px 10px', borderRadius: 'var(--radius-sm)' }}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13.5, fontWeight: 600, color: 'var(--text)' }}>
-              <span style={{ width: 14 }}>▶</span>
+              <span style={{ width: 14 }}><Icon name="play" size="0.85em" /></span>
               Demo Operasi Ekosistem
             </span>
           </button>
@@ -705,7 +706,7 @@ function ThemeToggle({ theme, onToggle }: { theme: 'light' | 'dark'; onToggle: (
       title={theme === 'light' ? 'Ganti ke mode gelap' : 'Ganti ke mode terang'}
       style={{ fontSize: 15 }}
     >
-      {theme === 'light' ? '🌙' : '☀️'}
+      <Icon name={theme === 'light' ? 'moon' : 'sun'} />
     </button>
   );
 }

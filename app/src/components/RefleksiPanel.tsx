@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ccRefleksi } from '../api';
 import type { RefleksiKiriman, RefleksiJawaban } from '../api';
 import { buatXlsx } from '../xlsx';
+import Icon from './Icon';
 
 /* Tab "Refleksi" di Command Center: jawaban blok Refleksi satu modul, per
    peserta (NIP + nama), plus unduhan Excel tiga sheet:
@@ -131,7 +132,7 @@ export default function RefleksiPanel({ password, slug, judul, demo }: { passwor
         </span>
         <button className="btn-primary btn-sm" style={{ marginLeft: 'auto' }} onClick={unduh}
                 title="Tiga sheet: Per Peserta, Per Pertanyaan, Rekap Pilihan">
-          ⬇ Unduh Excel
+          <Icon name="download" /> Unduh Excel
         </button>
       </div>
       {terpotong && <p className="hint" style={{ color: 'var(--danger)' }}>⚠ Data kena batas tarikan, yang tampil baru sebagian.</p>}

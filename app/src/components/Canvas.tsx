@@ -10,6 +10,7 @@ import type { ModuleData, Slide, Section } from '../types';
 import { uid, renumberModule } from '../types';
 import BlockEditor from './BlockEditor';
 import SlidePreview from './SlidePreview';
+import Icon from './Icon';
 import { uploadMediaToStorage } from '../api';
 
 interface Props {
@@ -392,7 +393,7 @@ function SlideAudioField({ slide, onUpdate }: { slide: Slide; onUpdate: (p: Part
   const mode = slide.audioMode || 'manual';
   return (
     <div style={{ border: '1px dashed var(--border-strong)', borderRadius: 'var(--radius-sm)', padding: 10, marginBottom: 10, background: 'var(--surface-2)' }}>
-      <b style={{ fontSize: 12.5 }}>🔊 Audio <span style={{ fontWeight: 400, color: 'var(--text-faint)' }}>(opsional)</span></b>
+      <b style={{ fontSize: 12.5 }}><Icon name="volume" /> Audio <span style={{ fontWeight: 400, color: 'var(--text-faint)' }}>(opsional)</span></b>
       {slide.audioSrc ? (
         <div style={{ marginTop: 8 }}>
           <audio src={slide.audioSrc} controls style={{ width: '100%', marginBottom: 8 }} />

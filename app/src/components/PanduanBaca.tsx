@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { CSSProperties } from 'react';
 import type { PanduanCC, PanduanKolom, PanduanKeputusan } from '../api';import { panduanLoad, panduanVerify, panduanSave } from '../api';
 import PanduanTabel from './PanduanTabel';
+import Icon from './Icon';
 
 /* Panduan cara baca tabel Command Center.
    Tampilan bacanya = replika tabel berisi data karangan yang bisa diklik
@@ -178,7 +179,7 @@ export default function PanduanBaca() {
     <>
       <button className="btn-ghost btn-sm" onClick={() => setBuka(true)} data-demo="cc-panduan"
               title="Arti tiap kolom, kenapa dihitung begitu, dan kapan harus curiga">
-        📖 Cara baca tabel
+        <Icon name="book" /> Cara baca tabel
       </button>
       {buka && (
         <div onClick={() => { if (tahap !== 'sunting') tutup(); }} style={{
@@ -193,13 +194,13 @@ export default function PanduanBaca() {
               <h3 style={{ margin: 0 }}>{tahap === 'sunting' ? 'Sunting panduan' : 'Cara baca tabel'}</h3>
               <span style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
                 {tahap === 'baca' && (
-                  <button className="btn-ghost btn-sm" onClick={() => setTahap('sandi')} data-demo="cc-panduan-edit">✎ Edit</button>
+                  <button className="btn-ghost btn-sm" onClick={() => setTahap('sandi')} data-demo="cc-panduan-edit"><Icon name="pencil" /> Edit</button>
                 )}
                 {tahap === 'sunting' ? <>
                   <button className="btn-ghost btn-sm" onClick={batal} disabled={sibuk}>Batal</button>
                   <button className="btn-primary btn-sm" onClick={simpan} disabled={sibuk}>{sibuk ? 'Menyimpan…' : 'Simpan'}</button>
                 </> : (
-                  <button className="btn-ghost btn-sm" onClick={tutup}>Tutup ✕</button>
+                  <button className="btn-ghost btn-sm" onClick={tutup}>Tutup <Icon name="x" /></button>
                 )}
               </span>
             </div>
@@ -225,7 +226,7 @@ export default function PanduanBaca() {
                 <div style={{ marginTop: 18, paddingTop: 12, borderTop: '1px solid var(--border)' }}>
                   <button className="btn-ghost btn-sm" onClick={() => setDraf(salin(BAWAAN))}
                           title="Form diisi ulang dengan isi bawaan aplikasi. Belum tersimpan sampai Simpan ditekan.">
-                    ↺ Kembalikan ke isi bawaan
+                    <Icon name="reset" /> Kembalikan ke isi bawaan
                   </button>
                 </div>
               </>

@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { listDraftsRingkas, loadDraft, generateHtml, type DraftRingkas } from '../api';
 import { normalizeModule } from '../types';
 import { sematkanGambarDataUri } from '../assetEmbed';
+import Icon from './Icon';
 import {
   exportPaket, judulDariHtml, ringkasDeskripsi, ukuranBaca, bangunPratinjau,
   type Konsep, type ModulPaket,
@@ -580,7 +581,7 @@ export default function PaketExportDialog({ onClose }: { onClose: () => void }) 
                     </span>
                   </div>
                   <button className="btn-ghost btn-sm" type="button" disabled={busy}
-                          onClick={() => buang(p.key)} title="Keluarkan dari paket">✕</button>
+                          onClick={() => buang(p.key)} title="Keluarkan dari paket" aria-label="Keluarkan dari paket"><Icon name="x" /></button>
                 </div>
               ))}
             </div>
@@ -640,7 +641,7 @@ export default function PaketExportDialog({ onClose }: { onClose: () => void }) 
                 </span>
               </span>
               <button className="btn-ghost btn-sm" type="button" disabled={busy}
-                      onClick={() => buangLogo(l.key)} title="Keluarkan logo ini">✕</button>
+                      onClick={() => buangLogo(l.key)} title="Keluarkan logo ini" aria-label="Keluarkan logo ini"><Icon name="x" /></button>
             </div>
           ))}
           {logo.length < LOGO_MAKS && (

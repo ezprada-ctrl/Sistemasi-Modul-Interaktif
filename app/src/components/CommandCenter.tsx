@@ -3,6 +3,7 @@ import type { ActivityModule, ActivitySession, ActivityLearner, CocreationModule
 import { ccCocreation, ccListModules, ccListSessions, ccListLearners, ccRawRows, ccRincian, ccTandaiUji, ccBatalkanTanda, ccDitandai } from '../api';
 import PanduanBaca from './PanduanBaca';
 import RefleksiPanel from './RefleksiPanel';
+import Icon from './Icon';
 import { RingkasanBar, perluTindakLanjut, WADAH_TABEL, TH_ATAS, TH_NAMA, SEL_NAMA, NamaPeserta, PeringatanRincian, VideoRincian } from './ccTabel';
 import { DEMO_MODULES, DEMO_SESSIONS, DEMO_LEARNERS, DEMO_COCREATION } from '../demoActivityData';
 
@@ -426,7 +427,7 @@ export default function CommandCenter() {
         <button className="btn-sm" style={{ marginLeft: 'auto' }}
                 onClick={() => unduhCatatan(items, namaFile)}
                 title="Satu baris per catatan: NIP, nama, modul, section, slide, isi, waktu">
-          ⬇ CSV catatan
+          <Icon name="download" /> CSV catatan
         </button>
       </div>
     );
@@ -730,7 +731,7 @@ export default function CommandCenter() {
             orang lain tanpa perlu bagi password beneran. */}
         <div style={{ marginTop: 14, paddingTop: 12, borderTop: '1px solid var(--border)' }}>
           <button className="btn-ghost btn-sm" onClick={enterDemo} style={{ width: '100%' }}>
-            👁 Lihat contoh tampilan (data karangan, tanpa password)
+            <Icon name="eye" /> Lihat contoh tampilan (data karangan, tanpa password)
           </button>
         </div>
       </div>
@@ -758,7 +759,7 @@ export default function CommandCenter() {
         <p style={{ color: 'var(--text)', fontSize: 12.5, fontWeight: 600, border: '1px solid var(--border-strong)',
                     background: 'var(--surface-2)', borderRadius: 'var(--radius-sm)', padding: '9px 12px', margin: '0 0 14px',
                     display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-          👁 Mode Contoh — semua nama, NIP, dan angka di bawah ini <b>karangan</b> buat latihan baca tabel, bukan peserta sungguhan.
+          <Icon name="eye" /> Mode Contoh — semua nama, NIP, dan angka di bawah ini <b>karangan</b> buat latihan baca tabel, bukan peserta sungguhan.
           <button className="btn-ghost btn-sm" onClick={kunciLagi} style={{ marginLeft: 'auto' }}>Keluar dari Contoh</button>
         </p>
       )}
@@ -1017,7 +1018,7 @@ export default function CommandCenter() {
           })()}
           <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
             <button className="btn-sm" onClick={unduhPeserta} disabled={!learners.length}>
-              ⬇ CSV rekap per peserta
+              <Icon name="download" /> CSV rekap per peserta
             </button>
             {/* Ditaruh berdampingan dengan rekap per peserta, bukan di tab
                 per-modul: dua-duanya LINTAS MODUL, dan justru itu gunanya -
@@ -1025,11 +1026,11 @@ export default function CommandCenter() {
                 kalau modulnya bisa dibandingkan dalam satu berkas. */}
             <button className="btn-sm" onClick={unduhPerSlide} disabled={busy || demoMode}
                     title="Satu baris per peserta × modul × slide: berapa kali dibuka, total & rata-rata menit">
-              ⬇ CSV rincian per slide
+              <Icon name="download" /> CSV rincian per slide
             </button>
             <button className="btn-sm" onClick={unduhPerVideo} disabled={busy || demoMode}
                     title="Satu baris per peserta × video: persen terjauh ditonton, dilewat, dipercepat">
-              ⬇ CSV rincian per video
+              <Icon name="download" /> CSV rincian per video
             </button>
           </div>
 
@@ -1345,7 +1346,7 @@ export default function CommandCenter() {
           })()}
           <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
             <button className="btn-sm" onClick={unduhRingkasan} disabled={!sessions.length}>
-              ⬇ CSV ringkasan per sesi
+              <Icon name="download" /> CSV ringkasan per sesi
             </button>
             <button className="btn-sm" onClick={unduhMentah} disabled={busy || demoMode}
                     title={demoMode
@@ -1353,7 +1354,7 @@ export default function CommandCenter() {
                       : slugDipecah
                         ? 'Data mentah tersimpan per slug, jadi isinya SEMUA modul yang berbagi slug ini - bukan cuma yang lagi dibuka. Pisahkan lewat kolom module_title di CSV-nya.'
                         : undefined}>
-              ⬇ CSV mentah (semua event){slugDipecah && ' ⚠'}
+              <Icon name="download" /> CSV mentah (semua event){slugDipecah && ' ⚠'}
             </button>
           </div>
 

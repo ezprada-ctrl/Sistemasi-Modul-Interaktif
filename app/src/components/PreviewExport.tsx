@@ -5,6 +5,7 @@ import { generateHtml, listDrafts, loadDraft, saveDraft, renameDraft, copyDraft,
 import { articulateBlocks, exportScormZip, type ZipProgress } from '../scormZip';
 import { sematkanGambarDataUri } from '../assetEmbed';
 import PaketExportDialog from './PaketExportDialog';
+import Icon from './Icon';
 
 /** Menyorot bagian nama draft yang cocok dengan ketikan, supaya alasan sebuah
  *  baris ikut tampil kelihatan langsung — bukan cuma "percaya saja". */
@@ -102,7 +103,7 @@ export default function PreviewExport({ module, setModule, onImportJson }: Props
     if (p === null) return;
     if (p === MANAGE_PASSWORD) {
       setManage(true);
-      setStatus('Mode kelola draft aktif — seret ⠿ buat atur urutan, 🗑 buat hapus.');
+      setStatus('Mode kelola draft aktif — seret gagang titik-titik buat atur urutan, ikon tempat sampah buat hapus.');
     } else {
       setError('Password salah.');
     }
@@ -390,7 +391,7 @@ export default function PreviewExport({ module, setModule, onImportJson }: Props
         <button onClick={doSave}>Simpan Draft</button>
         <button className="btn-ghost" onClick={refreshDrafts}>Muat daftar draft</button>
         <button className="btn-ghost" onClick={toggleManage} title="Mode kelola daftar draft (hapus & atur urutan)">
-          {manage ? '🔓 Dev' : '🔒 Dev'}
+          <Icon name={manage ? 'unlock' : 'lock'} /> Dev
         </button>
         <input
           ref={importRef}
@@ -413,7 +414,7 @@ export default function PreviewExport({ module, setModule, onImportJson }: Props
       )}
       {manage && (
         <p className="hint" style={{ fontSize: 11.5, margin: '0 0 8px', color: 'var(--text-dim)' }}>
-          Seret <strong>⠿</strong> buat atur urutan, <strong>🗑</strong> buat hapus permanen.
+          Seret <strong><Icon name="grip" /></strong> buat atur urutan, <strong><Icon name="trash" /></strong> buat hapus permanen.
         </p>
       )}
       {/* Dulu semua draft ditumpuk sebagai chip yang membungkus ke bawah. Dengan
@@ -432,7 +433,7 @@ export default function PreviewExport({ module, setModule, onImportJson }: Props
               style={{ flex: 1, minWidth: 0 }}
             />
             {cariDraft && (
-              <button className="btn-sm btn-ghost" onClick={() => setCariDraft('')} title="Hapus pencarian">✕</button>
+              <button className="btn-sm btn-ghost" onClick={() => setCariDraft('')} title="Hapus pencarian" aria-label="Hapus pencarian"><Icon name="x" /></button>
             )}
             <span className="hint" style={{ fontSize: 11.5, whiteSpace: 'nowrap' }}>
               {cariDraft.trim() ? `${draftTampil.length} dari ${drafts.length}` : `${drafts.length} draft`}
@@ -460,17 +461,17 @@ export default function PreviewExport({ module, setModule, onImportJson }: Props
                       className="draft-grip"
                       style={{ cursor: bisaSeret ? 'grab' : 'not-allowed', opacity: bisaSeret ? 1 : 0.35 }}
                       title={bisaSeret ? 'Seret buat atur urutan' : 'Kosongkan kotak cari dulu buat atur urutan'}
-                    >⠿</span>
+                    ><Icon name="grip" /></span>
                   )}
                   <button className="draft-name" onClick={() => doLoad(d)} title={`Muat draft "${d}"`}>
                     <SorotCocok teks={d} cari={cariDraft} />
                   </button>
                   <span className="draft-actions">
-                    <button className="btn-icon btn-sm btn-ghost" title="Duplikat draft ini" onClick={() => doCopy(d)}>⧉</button>
-                    <button className="btn-icon btn-sm btn-ghost" title="Ganti nama draft ini" onClick={() => doRename(d)}>✎</button>
+                    <button className="btn-icon btn-sm btn-ghost" title="Duplikat draft ini" aria-label="Duplikat draft ini" onClick={() => doCopy(d)}><Icon name="copy" /></button>
+                    <button className="btn-icon btn-sm btn-ghost" title="Ganti nama draft ini" aria-label="Ganti nama draft ini" onClick={() => doRename(d)}><Icon name="pencil" /></button>
                     {manage && (
                       <button className="btn-icon btn-sm btn-ghost" style={{ color: 'var(--danger)' }}
-                        title="Hapus draft ini (permanen)" onClick={() => doDelete(d)}>🗑</button>
+                        title="Hapus draft ini (permanen)" aria-label="Hapus draft ini" onClick={() => doDelete(d)}><Icon name="trash" /></button>
                     )}
                   </span>
                 </div>

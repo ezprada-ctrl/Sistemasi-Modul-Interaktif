@@ -19,7 +19,7 @@
 
   --text:          #18181b;   /* primary ink */
   --text-dim:      #565660;   /* secondary */
-  --text-faint:    #9a9aa4;   /* tertiary / placeholders */
+  --text-faint:    #70707b;   /* tertiary / placeholders - kontras >= 4.5:1 di atas putih & kanvas */
 
   --ink:           #18181b;   /* the accent = ink itself */
   --ink-hover:     #000000;
@@ -73,7 +73,7 @@
 
   --text:          #f3f3f5;
   --text-dim:      #a6a6b0;
-  --text-faint:    #6c6c78;
+  --text-faint:    #8b8b97;
 
   --ink:           #f4f4f5;
   --ink-hover:     #ffffff;
@@ -111,7 +111,7 @@ body {
 
 #root { min-height: 100vh; text-align: left; }
 
-h1, h2, h3 { font-weight: 700; letter-spacing: -0.01em; color: var(--text); }
+h1, h2, h3 { font-weight: 700; letter-spacing: -0.01em; color: var(--text); text-wrap: balance; }
 h1 { font-size: 24px; }
 h2 { font-size: 19px; }
 
@@ -174,7 +174,13 @@ button:hover {
   background: var(--surface-3);
   border-color: var(--border-strong);
 }
-button:active { transform: translateY(0.5px); }
+/* Tombol terasa "kena tekan": mengecil sedikit selama ditahan. Yang disabled
+   diam, karena tombol yang gak bisa ditekan gak boleh pura-pura bereaksi. */
+button:active { transform: scale(0.97); }
+button:disabled:active { transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  button:active { transform: none; }
+}
 button:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px var(--ring);
@@ -374,6 +380,13 @@ button:disabled:hover { background: var(--surface-2); border-color: var(--border
   color: var(--text-dim);
 }
 .btn-icon.btn-sm { width: 26px; height: 26px; padding: 0; }
+/* Layar sentuh: tampilan tombol ikon tetap kecil, tapi area yang bisa disentuh
+   dilebarkan sampai ~44px lewat lapisan tak kasat mata (bukan lewat ukuran, biar
+   baris yang padat gak meledak). */
+@media (pointer: coarse) {
+  .btn-icon { position: relative; }
+  .btn-icon::before { content: ''; position: absolute; inset: -9px; }
+}
 
 /* ---- Structural helpers ---- */
 .panel {

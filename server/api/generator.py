@@ -1375,6 +1375,29 @@ def render_graphic_deco(style_id, kind):
     return f'<div class="{wrapper}" aria-hidden="true">{html}</div>'
 
 
+def _norm_judul(t):
+    """Bentuk pembanding judul: tanpa beda huruf besar/kecil, spasi ganda, dan
+    tanda baca penutup (titik dua dsb)."""
+    return re.sub(r'\s+', ' ', str(t or '')).strip().casefold().rstrip(' :.-')
+
+
+def _tanpa_judul_ganda(slide):
+    """Blok-blok slide, dengan satu perapian: kalau BLOK PERTAMA berupa Kartu
+    yang judulnya sama persis dengan judul slide, judul kartunya dibuang saat
+    ditampilkan. Hasil impor PPTX sering begini - judul slide jadi judul
+    slide DAN jadi judul kartu pertamanya - sehingga peserta membaca judul
+    yang sama dua kali berturut-turut.
+
+    Hanya di tampilan: data slide di editor tidak diubah, dan judul kartu yang
+    BEDA dari judul slide (atau kartu yang bukan blok pertama) tidak disentuh."""
+    blocks = list(slide.get('blocks', []))
+    if (blocks and blocks[0].get('type') == 'card' and blocks[0].get('heading')
+            and _norm_judul(blocks[0]['heading']) == _norm_judul(slide.get('title'))):
+        pertama = dict(blocks[0]); pertama.pop('heading', None)
+        blocks[0] = pertama
+    return blocks
+
+
 def render_slide_html(slide, graphic_style='none'):
     # Sama persis di SETIAP slide konten (bukan diacak per-slide) - "unik cuma
     # buat konteks itu sendiri" berarti satu treatment kecil/redup yang
@@ -1386,7 +1409,7 @@ def render_slide_html(slide, graphic_style='none'):
     kicker = f'<div class="kicker"><span class="num">{slide["number"]}</span>{esc(slide.get("kickerLabel",""))}</div>'
     title = f'<h1 class="slide-title">{esc(slide.get("title",""))}</h1>'
     sub = f'<p class="slide-sub">{slide.get("subtitle","")}</p>' if slide.get('subtitle') else ''
-    body = ''.join(render_block(b) for b in slide.get('blocks', []))
+    body = ''.join(render_block(b) for b in _tanpa_judul_ganda(slide))
     # Nutup float dari blok gambar "dampingi teks" biar tingginya kekurung di
     # dalam slide ini (gak bocor ke bawah/ke slide lain). Kosong + zero-height
     # kalau gak ada float sama sekali - aman selalu ditaruh.
