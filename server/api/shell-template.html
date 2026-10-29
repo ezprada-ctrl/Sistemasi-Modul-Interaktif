@@ -1931,6 +1931,23 @@ body.demo-paused #demo-badge{cursor:pointer;border-color:rgba(255,255,255,.3);}
   #sidebar-close,#menu-toggle,#theme-toggle,.recap-close,.coc-close,.modal-close{min-width:44px;min-height:44px;}
   .nav-item-btn{min-height:44px;}
 }
+
+/* ===== Tahap 2: gerak masuk yang lebih tegas & singkat, angka rata ===== */
+/* Aturan: yang muncul karena ulah pengguna masuk cepat dan "menjatuhkan diri" ke tempatnya
+   (ease-out kuat), bukan melayang pelan. Slide dulu 0,5 dtk; pop-up 0,35 dtk - terasa lambat
+   kalau dilihat berulang-ulang. Slide, pop-up, dan latarnya satu bahasa gerak. */
+@keyframes popIn{from{opacity:0;transform:translateY(8px) scale(.97);}to{opacity:1;transform:none;}}
+@keyframes overlayIn{from{opacity:0;}to{opacity:1;}}
+.slide-frame{animation:riseIn .24s cubic-bezier(.23,1,.32,1);}
+.idn-panel,.recap-panel,.coc-panel{animation:popIn .22s cubic-bezier(.23,1,.32,1);}
+#identity-overlay.show,#reading-warning-overlay.show,#recap-overlay.show,#coc-overlay.show,#coc-menu-overlay.show{animation:overlayIn .18s ease-out;}
+.modal-box{transition:transform .26s cubic-bezier(.23,1,.32,1),opacity .2s ease-out;}
+@media (prefers-reduced-motion:reduce){
+  .slide-frame,.idn-panel,.recap-panel,.coc-panel,
+  #identity-overlay.show,#reading-warning-overlay.show,#recap-overlay.show,#coc-overlay.show,#coc-menu-overlay.show{animation:none;}
+  .modal-box{transition:none;}
+}
+#progress-pct,#progress-sub,.progress-block .lbl span:last-child,#topbar-progress,.nsh-count{font-variant-numeric:tabular-nums;}
 </style>
 </head>
 <body>

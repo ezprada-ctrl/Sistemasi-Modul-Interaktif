@@ -429,39 +429,13 @@ function App() {
   }, [module, hydrated, projectReady, demoBooth]);
 
   return (
-    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '28px 28px 80px' }}>
-      {/* Baris judul SENGAJA di luar bagian yang dipatok. Dia 60px dan isinya
-          murni identitas aplikasi - sekali dibaca, gak dibutuhkan lagi selama
-          bekerja. Membekukannya bikin kepala halaman makan 26% layar 900px;
-          tanpa dia tinggal 20%, dan 60px itu balik jadi ruang kerja.
-
-          Yang TIDAK ikut dikorbankan: kendali di kanannya (status simpan,
-          undo/redo, tema). Itu dipakai terus sepanjang menyusun, jadi mereka
-          pindah ke baris project di bawah - yang tetap dipatok. Kalau ikut
-          hanyut bareng judulnya, undo/redo malah hilang persis waktu paling
-          sering dipakai. */}
-      <header style={{ marginBottom: 22, paddingTop: 4 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          <svg width="46" height="46" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path
-              d="M12,3.6 C14.4,7.8 17.4,9.6 16.2,13.8 C15.3,16.8 12.6,18.6 10.2,17.4 C7.2,15.9 7.2,12.6 9,10.8 C9,13.2 10.8,13.8 11.4,12 C12,10.2 10.2,9 10.8,6 C11.1,4.8 11.4,3.9 12,3.6 Z"
-              stroke="#c4622d"
-              strokeWidth="1.4"
-              strokeLinejoin="round"
-            />
-          </svg>
-          <span style={{ fontSize: 30, fontWeight: 700, letterSpacing: '0.12em', color: 'var(--text)' }}>
-            TEMPA
-          </span>
-        </div>
-        <p style={{ margin: '4px 0 3px', fontSize: 12.5, color: 'var(--text-faint)' }}>
-          Ekosistem Modul Interaktif
-        </p>
-        <p className="hint" style={{ margin: 0 }}>
-          Muhamad Ikram · Pengembang Teknologi Pembelajaran
-        </p>
-      </header>
-
+    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '14px 28px 40px' }}>
+      {/* Merek TEMPA kini ikut di baris project (lihat <Merek />), bukan baris judul sendiri.
+          Dulu judul + dua baris keterangan memakan ~130px layar sebelum isi mulai, dan
+          sengaja dibiarkan hanyut waktu digulir supaya kepala yang dipatok tetap ramping.
+          Sekarang merek cukup satu kelompok kecil di baris yang SUDAH dipatok, jadi
+          tinggi kepala hampir tak berubah tapi 130px itu kembali jadi ruang kerja.
+          Keterangan pembuatnya pindah ke kaki halaman. */}
       {/* Kepala aplikasi dipatok ke atas layar: baris project + tab. Keduanya
           yang bikin orang tahu "aku ada di project mana, di tahap mana", dan
           itu justru paling dibutuhkan waktu lagi menggulir jauh ke bawah
@@ -507,7 +481,7 @@ function App() {
       />
 
       <nav style={{
-        display: 'flex', gap: 4, marginBottom: 22,
+        display: 'flex', gap: 4, marginBottom: 16, overflowX: 'auto', overflowY: 'hidden',
         borderBottom: '1px solid var(--border)',
       }}>
         {TABS.map((t, i) => {
@@ -570,6 +544,7 @@ function App() {
       {tab === 'quiz' && <QuizBuilder module={module} setModule={setModule} />}
       {tab === 'preview' && <PreviewExport module={module} setModule={setModule} onImportJson={handleImportJson} />}
       {tab === 'command' && <CommandCenter />}
+      <Kaki />
     </div>
   );
 }
@@ -584,11 +559,13 @@ function ProjectBar({ module, onNewProject, kendali }: {
 }) {
   return (
     <div style={{
-      display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16,
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px 16px', flexWrap: 'wrap',
       background: 'var(--surface-2)', border: '1px solid var(--border)',
-      borderRadius: 'var(--radius)', padding: '10px 14px', marginBottom: 20,
+      borderRadius: 'var(--radius)', padding: '8px 14px', marginBottom: 8,
     }}>
-      <div style={{ minWidth: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
+        <Merek />
+        <div style={{ minWidth: 0 }} title="Tiap orang otomatis dapat project sendiri.">
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--text-faint)' }}>
             Project
@@ -599,9 +576,7 @@ function ProjectBar({ module, onNewProject, kendali }: {
             padding: '1px 7px', borderRadius: 5,
           }}>{module.slug}</code>
         </div>
-        <p className="hint" style={{ margin: '3px 0 0' }}>
-          Tiap orang otomatis dapat project sendiri.
-        </p>
+        </div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
         {kendali}
@@ -867,15 +842,46 @@ function LeaveImportWarningModal({ unaddedCount, onConfirm, onCancel }: {
   );
 }
 
+function Merek() {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M12,3.6 C14.4,7.8 17.4,9.6 16.2,13.8 C15.3,16.8 12.6,18.6 10.2,17.4 C7.2,15.9 7.2,12.6 9,10.8 C9,13.2 10.8,13.8 11.4,12 C12,10.2 10.2,9 10.8,6 C11.1,4.8 11.4,3.9 12,3.6 Z"
+          stroke="#c4622d"
+          strokeWidth="1.6"
+          strokeLinejoin="round"
+        />
+      </svg>
+      <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: '0.14em', color: 'var(--text)' }}>TEMPA</span>
+    </div>
+  );
+}
+
+// Lebar disisakan tetap (min-width) walau statusnya kosong: indikator ini muncul-hilang
+// berulang kali sepanjang menyusun, dan tanpa itu tombol undo/redo/tema di sebelahnya
+// ikut bergeser tiap kali statusnya berganti.
 function AutosaveIndicator({ status }: { status: 'idle' | 'saving' | 'saved' | 'error' }) {
-  if (status === 'idle') return null;
-  const map = {
-    saving: { text: 'Menyimpan…', color: 'var(--text-faint)' },
-    saved: { text: '✓ Tersimpan otomatis', color: 'var(--success)' },
-    error: { text: '✗ Gagal menyimpan (cek backend)', color: 'var(--danger)' },
-  } as const;
-  const cfg = map[status];
-  return <span style={{ fontSize: 12, color: cfg.color, fontWeight: 600, whiteSpace: 'nowrap' }}>{cfg.text}</span>;
+  const isi = (() => {
+    if (status === 'saving') return <span className="simpan simpan-proses"><span className="simpan-titik" />Menyimpan…</span>;
+    if (status === 'saved') return <span className="simpan simpan-ok"><Icon name="check" size="1em" />Tersimpan otomatis</span>;
+    if (status === 'error') return (
+      <span className="simpan simpan-gagal" title="Perubahan terakhir belum tersimpan. Pastikan server backend jalan, lalu ubah sesuatu sekali lagi.">
+        <Icon name="alert" size="1em" />Gagal menyimpan — cek backend
+      </span>
+    );
+    return null;
+  })();
+  return <span role="status" aria-live="polite" style={{ minWidth: 142, display: 'inline-flex', justifyContent: 'flex-end' }}>{isi}</span>;
+}
+
+function Kaki() {
+  return (
+    <footer style={{ marginTop: 48, paddingTop: 16, borderTop: '1px solid var(--border)', fontSize: 12, color: 'var(--text-faint)' }}>
+      <b style={{ letterSpacing: '0.12em', color: 'var(--text-dim)' }}>TEMPA</b> · Ekosistem Modul Interaktif<br />
+      Muhamad Ikram · Pengembang Teknologi Pembelajaran
+    </footer>
+  );
 }
 
 export default App;

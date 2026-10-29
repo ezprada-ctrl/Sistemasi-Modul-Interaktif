@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { DraftSlide, ModuleData, Slide } from '../types';
 import { extractPptx } from '../api';
 import { uid as makeId, renumberModule } from '../types';
+import EmptyState from './EmptyState';
 
 interface Props {
   bank: DraftSlide[];
@@ -98,6 +99,13 @@ export default function SlideBank({ bank, setBank, module, setModule }: Props) {
       <input type="file" accept=".pptx" onChange={onUpload} />
       {loading && <p className="hint" style={{ marginTop: 10 }}>Mengunggah &amp; mengekstrak PPTX…</p>}
       {error && <p style={{ color: 'var(--danger)', marginTop: 10 }}>{error}</p>}
+      {bank.length === 0 && !loading && !error && (
+        <div style={{ marginTop: 18 }}>
+          <EmptyState icon="upload" judul="Belum ada slide yang diimpor">
+            Pilih berkas PPTX di atas. Tiap slide-nya jadi draft yang bisa Anda cek lalu tambahkan ke modul lewat tombol “+ Tambah ke Canvas”.
+          </EmptyState>
+        </div>
+      )}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 18 }}>
         {bank.map(s => (
           <div className="panel" key={s.slideNo} style={{ padding: 14 }}>

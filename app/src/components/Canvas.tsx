@@ -11,6 +11,7 @@ import { uid, renumberModule } from '../types';
 import BlockEditor from './BlockEditor';
 import SlidePreview from './SlidePreview';
 import Icon from './Icon';
+import EmptyState from './EmptyState';
 import { uploadMediaToStorage } from '../api';
 
 interface Props {
@@ -228,6 +229,12 @@ export default function Canvas({ module, setModule }: Props) {
             <button className="btn-danger btn-sm" onClick={() => removeSection(sec.id)}>Hapus section</button>
           </div>
 
+          {slidesFor(sec.id).length === 0 && (
+            <EmptyState icon="file" judul="Bagian ini belum punya slide"
+              aksi={<button className="btn-primary btn-sm" onClick={() => addBlankSlide(sec.id)}>+ Slide kosong</button>}>
+              Mulai dengan slide kosong lalu isi blok-bloknya, atau ambil slide dari tab Import PPTX.
+            </EmptyState>
+          )}
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd(sec.id)}>
             <SortableContext items={slidesFor(sec.id).map(s => s.id)} strategy={verticalListSortingStrategy}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -246,7 +253,9 @@ export default function Canvas({ module, setModule }: Props) {
               </div>
             </SortableContext>
           </DndContext>
-          <button className="btn-sm" style={{ marginTop: 10 }} onClick={() => addBlankSlide(sec.id)}>+ Slide kosong</button>
+          {slidesFor(sec.id).length > 0 && (
+            <button className="btn-sm" style={{ marginTop: 10 }} onClick={() => addBlankSlide(sec.id)}>+ Slide kosong</button>
+          )}
 
           <BundlePanel
             slides={slidesFor(sec.id)}
